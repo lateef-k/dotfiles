@@ -1,0 +1,4 @@
+--target=/home/alf
+--dir=.
+--ignore=.git
+--ignore=.stowrc
