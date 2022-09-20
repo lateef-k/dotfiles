@@ -179,6 +179,8 @@ return require('packer').startup(function(use)
                 }
             },
             ["core.norg.qol.toc"] = {
+            },
+            ["core.norg.concealer"] = {
             }
         }
     }
