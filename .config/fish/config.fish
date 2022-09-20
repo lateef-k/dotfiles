@@ -14,6 +14,7 @@ set XDG_CACHE_HOME "$HOME/.cache/"
 
 source /opt/asdf-vm/asdf.fish
 zoxide init fish | source
+starship init fish | source
 
 # Created by `pipx` on 2022-09-14 09:52:50
 set PATH $PATH /home/alf/.local/bin
