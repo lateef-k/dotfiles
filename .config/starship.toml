@@ -1,3 +1,5 @@
+# actually a preset from the website
+
 [aws]
 format = '\[[$symbol($profile)(\($region\))(\[$duration\])]($style)\]'
 
