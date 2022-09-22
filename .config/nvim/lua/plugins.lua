@@ -6,7 +6,10 @@ return require('packer').startup(function(use)
     --
     use 'christoomey/vim-tmux-navigator'
 
+    -- repeats whole commands, not just last component of command
+    -- try ys_{ then . without this, won't wokr properly
     use 'tpope/vim-surround'
+    use 'tpope/vim-repeat'
     use 'lukas-reineke/indent-blankline.nvim'
     use "windwp/nvim-autopairs"
 
