@@ -21,8 +21,11 @@ starship init fish | source
 set PATH $PATH /home/alf/.local/bin
 
 # for language tools installed by mason
-set PATH $PATH /home/alf/.local/share/nvim/mason/bin
-set PATH $PATH /home/alf/Housekeeping/dotfiles/.config/scripts/
+fish_add_path /home/alf/.local/share/nvim/mason/bin
+# personal scripts
+fish_add_path /home/alf/Housekeeping/dotfiles/.config/scripts/
+# installed without package manager
+fish_add_path /home/alf/Housekeeping/bin/
 
 #for fzf.fish plugin (jethrokuan/fzf)
 set -U FZF_COMPLETE 3
