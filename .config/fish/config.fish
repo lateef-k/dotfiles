@@ -29,7 +29,7 @@ set -U FZF_COMPLETE 3
 set -U FZF_LEGACY_KEYBINDINGS 0
 #options to pass to fzf, alt-enter to toggle multiple files
 set -U FZF_DEFAULT_OPTS "--bind tab:down,btab:up,alt-enter:toggle-out"
-'
+: '
 Ctrl-t 	Ctrl-o 	Find a file.
 Ctrl-r 	Ctrl-r 	Search through command history.
 Alt-c 	Alt-c 	cd into sub-directories (recursively searched).
