@@ -21,4 +21,4 @@ require('helper')
 require('mappings')
 require('mods')
 
-
+Today = require('helper').today
