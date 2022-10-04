@@ -131,7 +131,9 @@ return require('packer').startup(function(use)
     require("null-ls").setup({
         sources = {
             require("null-ls").builtins.formatting.black,
+            require("null-ls").builtins.formatting.prettier,
         },
+        on_attach = require("mappings").on_attach
     })
     require("catppuccin").setup({
         dim_inactive = {
