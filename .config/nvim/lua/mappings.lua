@@ -4,17 +4,30 @@ local opts = { noremap = true, silent = true }
 vim.keymap.set("i", "<S-Tab>", "<C-d>", opts)
 
 -- telescope
-vim.keymap.set('n', '<space>o', require("telescope.builtin").lsp_document_symbols, opts)
-vim.keymap.set('n', '<space>s', require("telescope.builtin").lsp_workspace_symbols, opts)
+vim.keymap.set('n', '<space>ss', require("telescope.builtin").lsp_document_symbols, opts)
+vim.keymap.set('n', '<space>sp', require("telescope.builtin").lsp_workspace_symbols, opts)
 vim.keymap.set('n', '<space>ee', (function() require("telescope.builtin").diagnostics { bufnr = 0 } end), opts)
 vim.keymap.set('n', '<space>ep', require("telescope.builtin").diagnostics, opts)
 -- telecsope menu
 vim.keymap.set('n', '<space>tt', require("telescope.builtin").builtin, opts)
 -- files
 vim.keymap.set('n', '<space>tp', ":Telescope projects<CR>", opts)
+vim.keymap.set('n', '<space>fp',
+    function()
+        local root = require("project_nvim.project").get_project_root()
+        if root ~= nil then
+            require("telescope.builtin").find_files {
+                cwd = root
+            }
+        else
+            print("No root found")
+        end
+    end, opts)
 vim.keymap.set('n', '<space>ff', require("telescope.builtin").find_files, opts)
 vim.keymap.set('n', '<space>fb', ":Telescope file_browser<CR>", opts)
 vim.keymap.set('n', '<space>fr', ":Telescope oldfiles<CR>", opts)
+vim.keymap.set('n', '<space>fg', require("telescope.builtin").git_files, opts)
+vim.keymap.set('n', '<space>tb', ":Telescope buffers<CR>", opts)
 
 -- text search
 vim.keymap.set('n', '<space>zz', ":Telescope current_buffer_fuzzy_find<CR>", opts)
@@ -55,7 +68,7 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
     vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
     vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-    vim.keymap.set('n', '<space>p', ":lua vim.lsp.buf.format { async = true }<CR>", bufopts)
+    vim.keymap.set('n', '<space>b', ":lua vim.lsp.buf.format { async = true }<CR>", bufopts)
 end
 
 return {
