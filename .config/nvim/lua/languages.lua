@@ -1,5 +1,5 @@
 local on_attach = require("mappings")["on_attach"]
-local cmp_capabilities = require("plugins_setup.config_cmp")
+local cmp_capabilities = require("config.nvim-cmp")
 
 require('lspconfig')['sumneko_lua'].setup {
     on_attach = on_attach,

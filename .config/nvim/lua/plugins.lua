@@ -66,7 +66,7 @@ return require('packer').startup(function(use)
     require('nvim-autopairs').setup()
     -- Lualine
     ------------------------------------------------------------------------------------------
-    require('plugins_setup.config_lualine')
+    require('config.lualine')
 
     -- Vim Slime
     ------------------------------------------------------------------------------------------
