@@ -2,29 +2,29 @@ local helper = require("helper")
 
 return require('packer').startup(function(use)
     -- Packer can manage itself
-    use 'wbthomason/packer.nvim'
+    use { 'wbthomason/packer.nvim' }
     --
-    use 'christoomey/vim-tmux-navigator'
+    use { 'christoomey/vim-tmux-navigator' }
 
     -- repeats whole commands, not just last component of command
     -- try ys_{ then . without this, won't wokr properly
-    use 'tpope/vim-surround'
-    use 'tpope/vim-repeat'
-    use 'lukas-reineke/indent-blankline.nvim'
-    use "windwp/nvim-autopairs"
+    use { 'tpope/vim-surround' }
+    use { 'tpope/vim-repeat' }
+    use { 'lukas-reineke/indent-blankline.nvim' }
+    use { "windwp/nvim-autopairs" }
 
-    use 'mbbill/undotree'
+    use { 'mbbill/undotree' }
 
-    use 'jpalardy/vim-slime'
+    use { 'jpalardy/vim-slime' }
 
-    use 'nvim-lualine/lualine.nvim'
+    use { 'nvim-lualine/lualine.nvim' }
 
-    use 'tpope/vim-fugitive'
-    use 'lewis6991/gitsigns.nvim'
+    use { 'tpope/vim-fugitive' }
+    use { 'lewis6991/gitsigns.nvim' }
 
-    use 'neovim/nvim-lspconfig'
-    use 'williamboman/mason.nvim'
-    use 'williamboman/mason-lspconfig.nvim'
+    use { 'neovim/nvim-lspconfig' }
+    use { 'williamboman/mason.nvim' }
+    use { 'williamboman/mason-lspconfig.nvim' }
     use {
         'nvim-treesitter/nvim-treesitter',
         run = ':TSUpdate'
@@ -38,30 +38,29 @@ return require('packer').startup(function(use)
     use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
     use { "nvim-telescope/telescope-file-browser.nvim" }
 
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'hrsh7th/cmp-buffer'
-    use 'hrsh7th/cmp-path'
-    use 'hrsh7th/cmp-cmdline'
-    use 'saadparwaiz1/cmp_luasnip'
+    use { 'hrsh7th/nvim-cmp' }
+    use { 'hrsh7th/cmp-nvim-lsp' }
+    use { 'hrsh7th/cmp-buffer' }
+    use { 'hrsh7th/cmp-path' }
+    use { 'hrsh7th/cmp-cmdline' }
+    use { 'saadparwaiz1/cmp_luasnip' }
 
-    use 'L3MON4D3/LuaSnip'
+    use { 'L3MON4D3/LuaSnip' }
 
-    use "folke/lua-dev.nvim"
+    use { "folke/lua-dev.nvim" }
 
-    use "jose-elias-alvarez/null-ls.nvim"
+    use { "jose-elias-alvarez/null-ls.nvim" }
 
     use { "catppuccin/nvim", as = "catppuccin" }
 
     -- Lua
-    use "ahmedkhalf/project.nvim"
+    use { "ahmedkhalf/project.nvim" }
 
 
     use {
         "nvim-neorg/neorg",
         requires = "nvim-lua/plenary.nvim"
     }
-
     -- setup functions
     --
     require('nvim-autopairs').setup()
