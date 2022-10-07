@@ -37,3 +37,7 @@ require('lspconfig')['jsonls'].setup {
     capabilities = cmp_capabilities
 }
 
+require('lspconfig')['bashls'].setup {
+    on_attach = on_attach,
+    capabilities = cmp_capabilities
+}

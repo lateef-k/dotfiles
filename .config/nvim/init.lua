@@ -13,7 +13,11 @@ vim.opt.completeopt = "menu,menuone,noselect,noinsert"
 vim.opt.termbidi = true
 
 vim.opt.undofile = true
-vim.opt.undodir = '/home/alf/.cache/nvim/undodir'
+vim.opt.undodir = '~/.cache/nvim/undodir'
+
+
+
+vim.opt.foldmethod = "expr"
 
 require('plugins')
 require('languages')
