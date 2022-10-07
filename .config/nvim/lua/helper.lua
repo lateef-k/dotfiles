@@ -14,10 +14,10 @@ function Helper.ShowAttachedLsp()
 end
 
 function Helper.today()
-  local pos = vim.api.nvim_win_get_cursor(0)[2]
-  local line = vim.api.nvim_get_current_line()
-  local nline = line:sub(0, pos) .. vim.fn.strftime('%c')  .. line:sub(pos + 1)
-  vim.api.nvim_set_current_line(nline)
+    local pos = vim.api.nvim_win_get_cursor(0)[2]
+    local line = vim.api.nvim_get_current_line()
+    local nline = line:sub(0, pos) .. vim.fn.strftime('%c') .. line:sub(pos + 1)
+    vim.api.nvim_set_current_line("(" .. nline .. ")")
 end
 
 return Helper

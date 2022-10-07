@@ -5,7 +5,6 @@ return require('packer').startup(function(use)
     use { 'wbthomason/packer.nvim' }
     --
     use { 'christoomey/vim-tmux-navigator' }
-
     -- repeats whole commands, not just last component of command
     -- try ys_{ then . without this, won't wokr properly
     use { 'tpope/vim-surround' }
@@ -13,7 +12,7 @@ return require('packer').startup(function(use)
     use { 'lukas-reineke/indent-blankline.nvim' }
     use { "windwp/nvim-autopairs" }
 
-    use { 'mbbill/undotree' }
+    use { 'mbbill/undotree'}
 
     use { 'jpalardy/vim-slime' }
 
@@ -36,7 +35,6 @@ return require('packer').startup(function(use)
         requires = { { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons' } }
     }
     use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-    use { "nvim-telescope/telescope-file-browser.nvim" }
 
     use { 'hrsh7th/nvim-cmp' }
     use { 'hrsh7th/cmp-nvim-lsp' }
@@ -61,15 +59,35 @@ return require('packer').startup(function(use)
         "nvim-neorg/neorg",
         requires = "nvim-lua/plenary.nvim"
     }
-    -- setup functions
-    --
-    require('nvim-autopairs').setup()
-    -- Lualine
-    ------------------------------------------------------------------------------------------
-    require('config.lualine')
 
-    -- Vim Slime
+    use({
+        "glepnir/lspsaga.nvim",
+        branch = "main",
+        config = function()
+            local saga = require("lspsaga")
+            saga.init_lsp_saga({
+                -- your configuration
+            })
+        end,
+    })
+    use { 'ggandor/lightspeed.nvim' }
+    use { 'ThePrimeagen/harpoon' }
+    use {
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v2.x",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "kyazdani42/nvim-web-devicons", -- not strictly required, but recommended
+            "MunifTanjim/nui.nvim",
+        },
+        config = function()
+            vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
+        end
+    }
     ------------------------------------------------------------------------------------------
+    require('nvim-autopairs').setup()
+    require('config.lualine')
+    -- Vim Slime
     vim.g.slime_target = "tmux"
     vim.g.slime_paste_file = vim.fn.tempname()
     -- so that the command is always sent to the other pane
@@ -77,56 +95,17 @@ return require('packer').startup(function(use)
         socket_name = helper.split(os.getenv("TMUX"), ",")[1],
         target_pane = "{next}"
     }
-
     -- this will manage all external LSP/code formatters etc
     require("mason").setup()
     require("mason-lspconfig").setup()
-
-    ------------------------------ Telescope
-    local telescopeConfig = require("telescope.config")
-    -- Clone the default Telescope configuration
-    local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
-    -- I want to search in hidden/dot files.
-    table.insert(vimgrep_arguments, "--hidden")
-    -- I don't want to search in the `.git` directory.
-    table.insert(vimgrep_arguments, "--glob")
-    table.insert(vimgrep_arguments, "!**/.git/*")
-    require('telescope').setup {
-        defaults = {
-            -- this is what's fed to ripgrep
-            -- `hidden = true` is not supported in text grep commands.
-            vimgrep_arguments = vimgrep_arguments,
-        },
-        pickers = {
-            find_files = {
-                find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
-            }
-
-        },
-        extensions = {
-            fzf = {
-                fuzzy = true, -- false will only do exact matching
-                override_generic_sorter = true, -- override the generic sorter
-                override_file_sorter = true, -- override the file sorter
-                case_mode = "smart_case", -- or "ignore_case" or "respect_case"
-                -- the default case_mode is "smart_case"
-            }
-        }
-    }
-    --------------------------------
     require 'nvim-web-devicons'.setup({
         -- globally enable default icons (default to false)
         -- will get overriden by `get_icons` option
         default = true;
     })
-    require('telescope').load_extension("projects")
-    require('telescope').load_extension("fzf")
-    require("telescope").load_extension("file_browser")
-
-    require("lua-dev").setup()
-
+    require("config.telescope")
+    require("lua-dev").setup({})
     require("luasnip.loaders.from_snipmate").lazy_load()
-
     require("null-ls").setup({
         sources = {
             require("null-ls").builtins.formatting.black,
@@ -138,18 +117,16 @@ return require('packer').startup(function(use)
         dim_inactive = {
             enabled = true,
             shade = "dark",
-            percentage = 0.15,
+            percentage = -1.15,
         },
     })
     vim.g.catppuccin_flavour = "macchiato" -- latte, frappe, macchiato, mocha
     vim.cmd("colorscheme catppuccin")
-
-
+    -----------------------------------------------
     require("project_nvim").setup({
         show_hidden = true,
         manual_mode = true,
     })
-
     require("nvim-treesitter.configs").setup({
         -- A list of parser names, or "all"
         ensure_installed = { "python", "lua", "norg" },
@@ -163,8 +140,6 @@ return require('packer').startup(function(use)
         -- Automatically install missing parsers when entering buffer
         auto_install = true,
     })
-
-
     require('neorg').setup {
         load = {
             ["core.defaults"] = {},
@@ -188,5 +163,10 @@ return require('packer').startup(function(use)
             }
         }
     }
-
+    require("neo-tree").setup({
+        source_selector = {
+            winbar = false,
+            statusline = false
+        }
+    })
 end)
