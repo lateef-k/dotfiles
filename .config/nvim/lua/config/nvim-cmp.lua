@@ -34,9 +34,6 @@ cmp.setup({
             end
         end, { "i", "s" })
         ,
-
-
-        ---@diagnostic disable-next-line: missing-parameter
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-x>'] = cmp.mapping.abort(),
         ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.

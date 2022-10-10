@@ -1,9 +1,6 @@
-local on_attach = require("mappings")["on_attach"]
-local cmp_capabilities = require("config.nvim-cmp")
-
 require('lspconfig')['sumneko_lua'].setup {
-    on_attach = on_attach,
-    capabilities = cmp_capabilities,
+    on_attach = require("mappings").on_attach,
+    capabilities = require("config.nvim-cmp"),
     settings = {
         Lua = {
             runtime = {
@@ -13,6 +10,7 @@ require('lspconfig')['sumneko_lua'].setup {
             diagnostics = {
                 -- Get the language server to recognize the `vim` global
                 globals = { 'vim' },
+                disable = { "missing-parameter" }
             },
             workspace = {
                 -- Make the server aware of Neovim runtime files
@@ -26,18 +24,4 @@ require('lspconfig')['sumneko_lua'].setup {
     },
 }
 
-
-require('lspconfig')['pyright'].setup {
-    on_attach = on_attach,
-    capabilities = cmp_capabilities
-}
-
-require('lspconfig')['jsonls'].setup {
-    on_attach = on_attach,
-    capabilities = cmp_capabilities
-}
-
-require('lspconfig')['bashls'].setup {
-    on_attach = on_attach,
-    capabilities = cmp_capabilities
-}
+require("lua-dev").setup({})
