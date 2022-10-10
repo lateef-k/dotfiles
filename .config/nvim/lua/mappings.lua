@@ -1,42 +1,57 @@
+
+local map = vim.keymap.set
+vim.g.mapleader = ' '
 local opts = { noremap = true, silent = true }
 
-
-vim.keymap.set("n", "]b", ":bn<CR>", opts)
-vim.keymap.set("n", "[b", ":bp<CR>", opts)
+local telescope = {
+    buffers = {
+        mappings = {
+            -- delete buffer from menu
+            n = {
+                ['<C-d>'] = require('telescope.actions').delete_buffer
+            },
+            i = {
+                ['<C-d>'] = require('telescope.actions').delete_buffer
+            }
+        }
+    }
+}
+map("n", "<esc>", ":noh<CR>", opts)
+map("n", "]b", ":bn<CR>", opts)
+map("n", "[b", ":bp<CR>", opts)
 
 -- so shift-tab works
-vim.keymap.set("i", "<S-Tab>", "<C-d>", opts)
+map("i", "<S-Tab>", "<C-d>", opts)
+
+map("n", "<leader>q", "q")
+map("n", "<leader>Q", "Q")
+-- never talk to me or my s key ever again
+map("n", "q", "<Plug>Lightspeed_s", opts)
+map("n", "Q", "<Plug>Lightspeed_S", opts)
+map("x", "q", "<Plug>Lightspeed_s", opts)
+map("x", "Q", "<Plug>Lightspeed_S", opts)
 
 -- telescope
-vim.keymap.set('n', '<space>ss', require("telescope.builtin").lsp_document_symbols, opts)
-vim.keymap.set('n', '<space>sp', require("telescope.builtin").lsp_workspace_symbols, opts)
-vim.keymap.set('n', '<space>ee', (function() require("telescope.builtin").diagnostics { bufnr = 0 } end), opts)
-vim.keymap.set('n', '<space>ep', require("telescope.builtin").diagnostics, opts)
+map('n', '<leader>ss', require("telescope.builtin").lsp_document_symbols, opts)
+map('n', '<leader>sp', require("telescope.builtin").lsp_workspace_symbols, opts)
+map('n', '<leader>ee', (function() require("telescope.builtin").diagnostics { bufnr = 0 } end), opts)
+map('n', '<leader>ep', require("telescope.builtin").diagnostics, opts)
 -- telecsope menu
-vim.keymap.set('n', '<space>tt', require("telescope.builtin").builtin, opts)
+map('n', '<leader>tt', require("telescope.builtin").builtin, opts)
 -- files
-vim.keymap.set('n', '<space>tp', ":Telescope projects<CR>", opts)
-vim.keymap.set('n', '<space>fp',
-    function()
-        local root = require("project_nvim.project").get_project_root()
-        if root ~= nil then
-            require("telescope.builtin").find_files {
-                cwd = root
-            }
-        else
-            print("No root found")
-        end
-    end, opts)
-vim.keymap.set('n', '<space>ff', require("telescope.builtin").find_files, opts)
-vim.keymap.set('n', '<space>fb', ":Telescope file_browser<CR>", opts)
-vim.keymap.set('n', '<space>fr', ":Telescope oldfiles<CR>", opts)
-vim.keymap.set('n', '<space>fg', require("telescope.builtin").git_files, opts)
-vim.keymap.set('n', '<space>b', ":Telescope buffers<CR>", opts)
+map('n', '<leader>tp', ":Telescope projects<CR>", opts)
+map('n', '<leader>fp', require("utils").find_files_in_root
+   , opts)
+map('n', '<leader>ff', require("telescope.builtin").find_files, opts)
+map('n', '<leader>fb', ":Neotree", opts)
+map('n', '<leader>fr', ":Telescope oldfiles<CR>", opts)
+map('n', '<leader>fg', require("telescope.builtin").git_files, opts)
+map('n', '<leader>b', ":Telescope buffers<CR>", opts)
 
 -- text search
-vim.keymap.set('n', '<space>zz', ":Telescope current_buffer_fuzzy_find<CR>", opts)
+map('n', '<leader>zz', ":Telescope current_buffer_fuzzy_find<CR>", opts)
 -- get all text and use fuzzy as a sorter
-vim.keymap.set('n', '<space>zp',
+map('n', '<leader>zp',
     (
     function() require('telescope.builtin').grep_string { shorten_path = true, word_match = "-w", only_sort_text = true,
             search = '' }
@@ -44,14 +59,14 @@ vim.keymap.set('n', '<space>zp',
     , opts)
 
 -- lsp
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<space>ne', ":Neorg<CR>", opts)
+map('n', '[d', vim.diagnostic.goto_prev, opts)
+map('n', ']d', vim.diagnostic.goto_next, opts)
+map('n', '<leader>ne', ":Neorg<CR>", opts)
 
 local on_attach = function(_, bufnr)
     --    -- Enable completion triggered by <c-x><c-o>
     --    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-    --
+    -- lspsaga
     --    finder_action_keys = {
     --    open = "o",
     --    vsplit = "s",
@@ -73,26 +88,27 @@ local on_attach = function(_, bufnr)
     -- Mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
-    vim.keymap.set('n', '<space>gf', "<cmd>Lspsaga lsp_finder<CR>", bufopts)
-    vim.keymap.set('n', '<space>gd', "<cmd>Lspsaga peek_definition<CR>", opts)
-    vim.keymap.set('n', '<space>rn', "<cmd>Lspsaga rename<CR>", bufopts)
-    vim.keymap.set('n', '<space>ca', "<cmd>Lspsaga code_action<CR>", bufopts)
-    vim.keymap.set('n', 'K', "<cmd>Lspsaga hover_doc<CR>", bufopts)
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-    vim.keymap.set('n', 'gd', require("telescope.builtin").lsp_definitions, opts)
-    vim.keymap.set('n', 'gr', require("telescope.builtin").lsp_references, opts)
-    vim.keymap.set('n', 'L', vim.lsp.buf.signature_help, bufopts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-    vim.keymap.set('n', '<space>wl', function()
+    map('n', 'gl', "<cmd>Lspsaga lsp_finder<CR>", bufopts)
+    map('n', '<leader>gd', "<cmd>Lspsaga peek_definition<CR>", opts)
+    map('n', '<leader>rn', "<cmd>Lspsaga rename<CR>", bufopts)
+    map('n', '<leader>ca', "<cmd>Lspsaga code_action<CR>", bufopts)
+    map('n', 'K', "<cmd>Lspsaga hover_doc<CR>", bufopts)
+    map('n', 'gD', vim.lsp.buf.declaration, bufopts)
+    map('n', 'gd', require("telescope.builtin").lsp_definitions, opts)
+    map('n', 'gr', require("telescope.builtin").lsp_references, opts)
+    map('n', 'L', vim.lsp.buf.signature_help, bufopts)
+    map('n', 'gi', vim.lsp.buf.implementation, bufopts)
+    map('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+    map('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+    map('n', '<leader>wl', function()
 
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        print(vim.inspect(vim.lsp.buf.list_workleader_folders()))
     end, bufopts)
-    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-    vim.keymap.set('n', '<space>p', ":lua vim.lsp.buf.format { async = true }<CR>", bufopts)
+    map('n', '<leader>D', vim.lsp.buf.type_definition, bufopts)
+    map('n', '<leader>p', ":lua vim.lsp.buf.format { async = true }<CR>", bufopts)
 end
 
 return {
-    on_attach = on_attach
+    on_attach = on_attach,
+    telescope = telescope
 }
