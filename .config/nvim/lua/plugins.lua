@@ -66,12 +66,6 @@ return require('packer').startup(function(use)
     -- this sequencing is for mason-lspconfig
     use {
         'williamboman/mason.nvim',
-        ft = {"lua", "python", "sh", "json"},
-        cmd = {
-            "Mason", "MasonInstall", "MasonUninstall", "MasonUninstallAll", "MasonLog",
-            "LspInstall", "LspUninstall", --mason-lspconfig commands
-            "LspLog", "LspInfo", "LspStart", "LspStop", "LspRestart" --lspconfig commands
-        },
         config = function()
             require("mason").setup()
         end,
