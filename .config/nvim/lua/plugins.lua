@@ -1,20 +1,21 @@
-local utils = require("utils")
-
-vim.api.nvim_exec([[
-
-]], false)
 vim.cmd [[packadd packer.nvim]]
+
 return require('packer').startup(function(use)
     -- Packer can manage itself
     use { 'wbthomason/packer.nvim', opt = true }
     use { 'christoomey/vim-tmux-navigator' }
     -- repeats whole commands, not just last component of command
-    -- try ys_{ then . without this, won't wokr properly
+    -- try ys_{ then . wethnet this, won't work properly
     use { 'tpope/vim-surround', keys = {
-        { "n", "y" },
+        { "n", "y" }, { "x", "g" }, { "n", "d" }, { "n", "c" }
     } }
     use { 'tpope/vim-repeat' }
-    use { 'lukas-reineke/indent-blankline.nvim' }
+    use { 'lukas-reineke/indent-blankline.nvim', config = function()
+        require('indent_blankline').setup {
+            filetype_exclude = { 'neo-tree' }
+        }
+    end
+    }
     use { "windwp/nvim-autopairs", event = "InsertEnter",
         config = function()
             require('nvim-autopairs').setup()
@@ -29,7 +30,8 @@ return require('packer').startup(function(use)
             vim.g.slime_target = "tmux"
             vim.g.slime_paste_file = vim.fn.tempname()
             vim.g.slime_default_config = {
-                socket_name = utils.split(os.getenv("TMUX"), ",")[1],
+                -- need require inside or will fail
+                socket_name = require("utils").split(os.getenv("TMUX"), ",")[1],
                 target_pane = "{next}"
             }
         end
@@ -54,6 +56,7 @@ return require('packer').startup(function(use)
     }
     use {
         'L3MON4D3/LuaSnip',
+        module = "luasnip",
         config = function()
             require("luasnip.loaders.from_snipmate").lazy_load()
         end
@@ -63,10 +66,12 @@ return require('packer').startup(function(use)
     -- this sequencing is for mason-lspconfig
     use {
         'williamboman/mason.nvim',
+        ft = {"lua", "python", "sh", "json"},
         cmd = {
             "Mason", "MasonInstall", "MasonUninstall", "MasonUninstallAll", "MasonLog",
+            "LspInstall", "LspUninstall", --mason-lspconfig commands
+            "LspLog", "LspInfo", "LspStart", "LspStop", "LspRestart" --lspconfig commands
         },
-        module = "lspconfig",
         config = function()
             require("mason").setup()
         end,
@@ -74,9 +79,6 @@ return require('packer').startup(function(use)
     use {
         'williamboman/mason-lspconfig.nvim',
         after = "mason.nvim",
-        cmd = {
-            "LspInstall", "LspUninstall",
-        },
         config = function()
             require("mason-lspconfig").setup()
         end
@@ -84,9 +86,9 @@ return require('packer').startup(function(use)
     use {
         'neovim/nvim-lspconfig',
         after = "mason-lspconfig.nvim",
-        cmd = {
-            "LspLog", "LspInfo", "LspStart", "LspStop", "LspRestart"
-        },
+        config = function()
+            require("lspsetup")
+        end
     }
     use { "jose-elias-alvarez/null-ls.nvim",
         after = "nvim-lspconfig",
@@ -121,14 +123,31 @@ return require('packer').startup(function(use)
 
     use {
         'nvim-telescope/telescope.nvim',
-        requires = { { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons' } },
-    }
-    use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make',
-    }
-    require("config.telescope")
+        requires = {
+            { 'nvim-lua/plenary.nvim' }, { 'kyazdani42/nvim-web-devicons' },
+            { "ahmedkhalf/project.nvim",
+                opt = true,
+                module = "project_nvim",
+                config = function()
+                    require("project_nvim").setup({
+                        show_hidden = true,
+                        manual_mode = true,
+                    })
+                end
+            },
+            use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', }
+        },
+        cmd = "Telescope",
+        module = "telescope", -- require telescope runs before command
+        after = { "telescope-fzf-native.nvim", "project.nvim" },
+        config = function()
+            require("config.telescope")
+        end
 
-    use { "folke/lua-dev.nvim",
-        module = "lua-dev"
+    }
+
+    use { "folke/neodev.nvim",
+        module = "neodev"
     }
 
     use { "catppuccin/nvim", as = "catppuccin",
@@ -145,11 +164,11 @@ return require('packer').startup(function(use)
     }
 
     -- Lua
-    use { "ahmedkhalf/project.nvim" }
     use {
         "nvim-neorg/neorg",
         requires = "nvim-lua/plenary.nvim",
         cmd = "Neorg",
+        ft = "norg",
         config = function()
             require('neorg').setup {
                 load = {
@@ -177,15 +196,13 @@ return require('packer').startup(function(use)
         end
     }
 
-    use { 'ggandor/lightspeed.nvim' }
-    use { 'ThePrimeagen/harpoon' }
+    use { 'ggandor/leap.nvim' }
     use {
         "MunifTanjim/nui.nvim",
         cmd = "Neotree",
     }
     use {
-        "nvim-neo-tree/neo-tree.nvim",
-        branch = "v2.x",
+        "~/Documents/Forks/neo-tree.nvim",
         requires = {
             "nvim-lua/plenary.nvim",
             "kyazdani42/nvim-web-devicons", -- not strictly required, but recommended
@@ -199,23 +216,35 @@ return require('packer').startup(function(use)
                 source_selector = {
                     winbar = false,
                     statusline = false
+                },
+                window = {
+                    position = "left",
+                    width = 30,
+                },
+                filesystem = {
+                    follow_current_file = true,
+                    use_libuv_file_watcher = true,
                 }
             })
         end,
     }
+    -- :help conjure-mappings, uses localmapleader which i set to \
+    use { 'Olical/conjure',
+        event = "LspAttach",
+        config = function()
+            vim.api.nvim_exec([[ let g:conjure#mapping#doc_word = ""]], false)
+        end
+    }
+
     use { 'lewis6991/impatient.nvim' }
+    use { 'tpope/vim-commentary' }
     ------------------------------------------------------------------------------------------
-    -- this will manage all external LSP/code formatters etc
     require 'nvim-web-devicons'.setup({
         -- globally enable default icons (default to false)
         -- will get overriden by `get_icons` option
         default = true;
     })
     -----------------------------------------------
-    require("project_nvim").setup({
-        show_hidden = true,
-        manual_mode = true,
-    })
     require("config.nvim-cmp")
     require("nvim-treesitter.configs").setup({
         -- A list of parser names, or "all"
@@ -224,16 +253,13 @@ return require('packer').startup(function(use)
             enable = true,
         },
         indent = {
-            enable = true
+            enable = true,
+            disable = { "python" }
         },
         incremental_selection = {
             enable = true,
-            keymaps = {
-                init_selection = "gnn",
-                node_incremental = "grn",
-                scope_incremental = "grc",
-                node_decremental = "grm",
-            },
+            keymaps = require("mappings").nvim_treesitter.incremental_selection.keymaps
+            ,
         },
 
         -- Install parsers synchronously (only applied to `ensure_installed`)

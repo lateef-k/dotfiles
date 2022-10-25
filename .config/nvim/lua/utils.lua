@@ -31,4 +31,10 @@ function Utils.find_files_in_root()
     end
 end
 
+function Utils.current_file_and_line()
+    local filename = vim.api.nvim_buf_get_name(0) 
+    local lineNo = unpack(vim.api.nvim_win_get_cursor(0))
+    return filename .. ":" .. lineNo
+end
+
 return Utils

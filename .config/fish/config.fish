@@ -43,3 +43,11 @@ Ctrl-g 	Alt-Shift-o 	Open a file/dir using xdg-open or open command
 function man 
     nvim -c "Man: $argv | only"
 end
+
+#need command to avoid calling echo,otherwise recursive
+#https://fishshell.com/docs/current/cmds/command.html
+#https://stackoverflow.com/questions/68223884/fish-how-to-prevent-recursive-function-calls (for another option, look at bototm)
+function mv
+    command mv --backup
+end
+
