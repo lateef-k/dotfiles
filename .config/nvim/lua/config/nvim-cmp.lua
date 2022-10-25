@@ -1,6 +1,5 @@
 -- Set up nvim-cmp.
 local cmp = require('cmp')
-local luasnip = require("luasnip")
 
 cmp.setup({
     snippet = {
@@ -13,31 +12,7 @@ cmp.setup({
         completion = cmp.config.window.bordered(),
         documentation = cmp.config.window.bordered(),
     },
-    mapping = cmp.mapping.preset.insert({
-        ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-                return luasnip.expand_or_jump()
-            else
-                fallback() -- The fallback function sends a already mapped key. In this case, it's probably `<Tab>`.
-            end
-        end, { "n", "i", "s" }),
-
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                return luasnip.jump(-1)
-            else
-                fallback()
-            end
-        end, { "i", "s" })
-        ,
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-x>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-    }),
+    mapping = require("mappings").cmp.mapping,
     sources = cmp.config.sources({
         { name = 'nvim_lsp' },
         { name = 'luasnip' }, -- For luasnip users.
@@ -71,5 +46,5 @@ cmp.setup.cmdline(':', {
 })
 
 -- Set up lspconfig.
-return require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+return require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.

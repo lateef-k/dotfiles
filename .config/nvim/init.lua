@@ -20,6 +20,12 @@ vim.opt.cursorline = true
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.expand('~/.cache/nvim/undodir')
 
+-- lower and uppercase search, unless uppercase
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 require('plugins')
 require('utils')
@@ -30,10 +36,9 @@ vim.api.nvim_exec([[
     augroup chdir
         autocmd BufEnter * silent! lcd %:p:h
     augroup END
-    augroup fx
-        autocmd FileType netrw Neotree 
+    augroup openNeotree
+        autocmd BufEnter * if isdirectory(expand("%")) | enew | Neotree 
     augroup END
 ]], false)
 
 vim.opt.foldmethod = "expr"
-

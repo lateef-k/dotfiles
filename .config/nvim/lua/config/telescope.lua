@@ -15,7 +15,12 @@ require('telescope').setup {
         -- `hidden = true` is not supported in text grep commands.
         vimgrep_arguments = vimgrep_arguments,
         layout_strategy = "vertical",
-        wrap_results = true
+        wrap_results = true,
+        -- also ignored everything listed in .rgignore .ignore .gitignore (see https://github.com/BurntSushi/ripgrep)
+        file_ignore_patterns = {
+            "__pycache__",
+            "node_modules"
+        }
     },
     pickers = {
         find_files = {
@@ -25,7 +30,7 @@ require('telescope').setup {
             fname_width = 100
         },
         buffers = {
-            mappings = require("mappings").telescope.buffers.mappings
+            mappings = require("mappings").telescope_lazy().buffers.mappings
         }
     },
     extensions = {
