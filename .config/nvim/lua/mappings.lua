@@ -62,6 +62,10 @@ local cmp = {
     })
 }
 
+local neorg_mapping = {
+    {"n", "<localleader>ts", ":Neorg toc split<CR>"},
+}
+
 map("n", "<esc>", ":noh<CR>", opts)
 map("n", "]b", ":bn<CR>", opts)
 map("n", "[b", ":bp<CR>", opts)
@@ -140,4 +144,5 @@ return {
     telescope_lazy  = telescope_lazy,
     nvim_treesitter = nvim_treesitter,
     cmp             = cmp,
+    neorg_mapping = neorg_mapping
 }

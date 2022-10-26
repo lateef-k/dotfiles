@@ -19,6 +19,7 @@ vim.opt.cursorline = true
 
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.expand('~/.cache/nvim/undodir')
+vim.opt.splitright = true -- vertical splits prefer right
 
 -- lower and uppercase search, unless uppercase
 vim.opt.ignorecase = true
@@ -39,6 +40,11 @@ vim.api.nvim_exec([[
     augroup openNeotree
         autocmd BufEnter * ++once if isdirectory(expand("%")) | enew | Neotree 
     augroup END
+    augroup dontCloseFoldsByDefault
+        autocmd BufRead * normal zR
+    augroup END
 ]], false)
 
 vim.opt.foldmethod = "expr"
+vim.opt.foldexpr="nvim_treesitter#foldexpr()"
+

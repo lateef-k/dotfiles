@@ -14,8 +14,11 @@ set XDG_CONFIG_HOME "$HOME/.config/"
 set XDG_CACHE_HOME "$HOME/.cache/"
 
 source /opt/asdf-vm/asdf.fish
-zoxide init fish | source
+zoxide init fish | source #try zi
 starship init fish | source
+
+direnv hook fish | source
+set -g direnv_fish_mode disable_arrow
 
 # Created by `pipx` on 2022-09-14 09:52:50
 set PATH $PATH /home/alf/.local/bin
@@ -47,7 +50,11 @@ end
 #need command to avoid calling echo,otherwise recursive
 #https://fishshell.com/docs/current/cmds/command.html
 #https://stackoverflow.com/questions/68223884/fish-how-to-prevent-recursive-function-calls (for another option, look at bototm)
-function mv
-    command mv --backup
-end
+
+## messes with directory rename
+#function mv
+#    command mv --backup
+#end
+
+
 

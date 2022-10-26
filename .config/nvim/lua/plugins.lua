@@ -262,6 +262,7 @@ return require('packer').startup(function(use)
                         }
                     },
                     ["core.norg.qol.toc"] = {
+                         close_split_on_jump = true
                     },
                     ["core.norg.concealer"] = {
                     }
@@ -270,4 +271,8 @@ return require('packer').startup(function(use)
         end
     }
 
+   ---- most useful plugin, can run for specific file with `:StartupTime -- file.ext`
+   use {
+    "tweekmonster/startuptime.vim"
+    } 
 end)
