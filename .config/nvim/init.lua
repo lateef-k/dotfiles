@@ -37,7 +37,7 @@ vim.api.nvim_exec([[
         autocmd BufEnter * silent! lcd %:p:h
     augroup END
     augroup openNeotree
-        autocmd BufEnter * if isdirectory(expand("%")) | enew | Neotree 
+        autocmd BufEnter * ++once if isdirectory(expand("%")) | enew | Neotree 
     augroup END
 ]], false)
 

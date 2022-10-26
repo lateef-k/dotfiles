@@ -162,40 +162,6 @@ return require('packer').startup(function(use)
             vim.cmd("colorscheme catppuccin")
         end
     }
-
-    -- Lua
-    use {
-        "nvim-neorg/neorg",
-        requires = "nvim-lua/plenary.nvim",
-        cmd = "Neorg",
-        ft = "norg",
-        config = function()
-            require('neorg').setup {
-                load = {
-                    ["core.defaults"] = {},
-                    ["core.norg.dirman"] = {
-                        config = {
-                            workspaces = {
-                                projects = "~/Documents/Library/Org/projects",
-                                notes = "~/Documents/Library/Org/notes",
-                                machine = "~/Documents/Library/Org/machine",
-                            }
-                        }
-                    },
-                    ["core.norg.completion"] = {
-                        config = {
-                            engine = "nvim-cmp"
-                        }
-                    },
-                    ["core.norg.qol.toc"] = {
-                    },
-                    ["core.norg.concealer"] = {
-                    }
-                }
-            }
-        end
-    }
-
     use { 'ggandor/leap.nvim' }
     use {
         "MunifTanjim/nui.nvim",
@@ -269,4 +235,39 @@ return require('packer').startup(function(use)
         auto_install = true,
     })
     -- Automatically set up your configuration after cloning packer.nvim
+    --
+
+    -- Lua
+    use {
+        "nvim-neorg/neorg",
+        requires = "nvim-lua/plenary.nvim",
+        cmd = "Neorg",
+        ft = "norg",
+        config = function()
+            require('neorg').setup {
+                load = {
+                    ["core.defaults"] = {},
+                    ["core.norg.dirman"] = {
+                        config = {
+                            workspaces = {
+                                projects = "~/Documents/Library/Org/projects",
+                                notes = "~/Documents/Library/Org/notes",
+                                machine = "~/Documents/Library/Org/machine",
+                            }
+                        }
+                    },
+                    ["core.norg.completion"] = {
+                        config = {
+                            engine = "nvim-cmp"
+                        }
+                    },
+                    ["core.norg.qol.toc"] = {
+                    },
+                    ["core.norg.concealer"] = {
+                    }
+                }
+            }
+        end
+    }
+
 end)
