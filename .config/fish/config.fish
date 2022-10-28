@@ -29,6 +29,7 @@ fish_add_path /home/alf/.local/share/nvim/mason/bin
 fish_add_path /home/alf/Housekeeping/dotfiles/.config/scripts/
 # installed without package manager
 fish_add_path /home/alf/Housekeeping/bin/
+fish_add_path ~/.cargo/bin
 
 #for fzf.fish plugin (jethrokuan/fzf)
 set -U FZF_COMPLETE 3

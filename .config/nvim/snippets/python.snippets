@@ -46,35 +46,6 @@ snippet awith
 	async with ${1:expr} as ${2:var}:
 		${0:${VISUAL}}
 
-# New Class
-snippet cl
-	class ${1:ClassName}(${2:object}):
-		"""${3:docstring for $1}"""
-		def __init__(self, ${4:arg}):
-			${5:super($1, self).__init__()}
-			self.$4 = $4
-			${0}
-snippet cla
-	class ${1:class_name}:
-		"""${0:description}"""
-
-snippet clai
-	class ${1:class_name}:
-		"""${2:description}"""
-		def __init__(self, ${3:args}):
-			${0}
-
-# Data class
-snippet dcl dataclass
-	@dataclass
-	class ${1:ClassName}:
-		"""${2:description}"""
-		${3:var_1}: ${4:int}
-		${5:var_2}: ${6:float} = ${7:0}
-
-		def ${8:total}(self): -> $6:
-			return ${0:self.$3 * self.$5}
-
 # New Function
 snippet def
 	def ${1:fname}(${2:`indent('.') ? 'self' : ''`}):

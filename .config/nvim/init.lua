@@ -1,4 +1,4 @@
-require('impatient')
+-- require('impatient')
 vim.opt.relativenumber = true
 
 -- vim.opt if for things you would set in vimscript. vim.g is for things you'd let.
@@ -9,8 +9,8 @@ vim.opt.expandtab = true -- use space char for tabbing
 vim.opt.smarttab = true
 vim.opt.wrap = true -- soft tab
 vim.opt.scrolloff = 999 -- keep cursor in center
-vim.opt.clipboard:append { 'unnamedplus' } -- use system clipboard
-vim.opt.switchbuf:append { "usetab", "newtab" } -- switch to tab if exists rather than create
+vim.opt.clipboard:append({ "unnamedplus" }) -- use system clipboard
+vim.opt.switchbuf:append({ "usetab", "newtab" }) -- switch to tab if exists rather than create
 vim.opt.shortmess:append("I") --disable intro
 vim.opt.completeopt = "menu,menuone,noselect,noinsert"
 
@@ -18,22 +18,30 @@ vim.opt.termbidi = true
 vim.opt.cursorline = true
 
 vim.opt.undofile = true
-vim.opt.undodir = vim.fn.expand('~/.cache/nvim/undodir')
+vim.opt.undodir = vim.fn.expand("~/.cache/nvim/undodir")
 vim.opt.splitright = true -- vertical splits prefer right
 
 -- lower and uppercase search, unless uppercase
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- security risk
+vim.opt.modeline = false
+
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
-require('plugins')
-require('utils')
-require('mappings')
+-- running `:StartupTime -- file.py` and then `checkhealth` showed the culprit of slow loading time to be the component which is loading the python provider
+-- not sure if this showed up recently or something happened
+vim.g.loaded_python3_provider = 1
+
+require("plugins")
+require("utils")
+require("mappings")
 
 -- follow the active file's working dir
-vim.api.nvim_exec([[
+vim.api.nvim_exec(
+	[[
     augroup chdir
         autocmd BufEnter * silent! lcd %:p:h
     augroup END
@@ -41,10 +49,11 @@ vim.api.nvim_exec([[
         autocmd BufEnter * ++once if isdirectory(expand("%")) | enew | Neotree 
     augroup END
     augroup dontCloseFoldsByDefault
-        autocmd BufRead * normal zR
+        autocmd BufRead * set nofoldenable
     augroup END
-]], false)
+]],
+	false
+)
 
 vim.opt.foldmethod = "expr"
-vim.opt.foldexpr="nvim_treesitter#foldexpr()"
-
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
