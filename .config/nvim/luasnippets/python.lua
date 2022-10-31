@@ -27,7 +27,7 @@ local function to_init_assign(args)
 		local cnt = 1
 		for e in string.gmatch(a, " ?([^,]*) ?") do
 			if #e > 0 then
-				table.insert(tab, t({ "", "\tself." }))
+				table.insert(tab, t({ "", "\t\tself." }))
 				-- use a restore-node to be able to keep the possibly changed attribute name
 				-- (otherwise this function would always restore the default, even if the user
 				-- changed the name)

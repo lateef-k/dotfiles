@@ -38,6 +38,9 @@ local addsnip = s(
 	";addsnip",
 	fmt(
 		[=[
+---@diagnostic disable: undefined-global
+
+
 local <> = s("<>", fmt([[
     <>
 ]],

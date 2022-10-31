@@ -3,10 +3,15 @@
 
 require("sniputils")
 
-local time = s(";time", p(os.date))
+local time = s(
+    ";time",
+    fmt([[({})]], {
+        p(os.date),
+    })
+)
 
 local snips = {
-	time,
+    time,
 }
 
 return snips
