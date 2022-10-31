@@ -1,6 +1,6 @@
 require("neodev").setup({})
 require("lspconfig")["sumneko_lua"].setup({
-	on_attach = require("mappings").on_attach,
+	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 	settings = {
 		Lua = {
@@ -26,16 +26,16 @@ require("lspconfig")["sumneko_lua"].setup({
 })
 
 require("lspconfig")["pyright"].setup({
-	on_attach = require("mappings").on_attach,
+	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 })
 
 require("lspconfig")["bashls"].setup({
-	on_attach = require("mappings").on_attach,
+	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 })
 
 require("lspconfig")["jsonls"].setup({
-	on_attach = require("mappings").on_attach,
+	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 })

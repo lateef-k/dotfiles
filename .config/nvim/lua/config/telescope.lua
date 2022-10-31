@@ -13,18 +13,25 @@ require("telescope").setup({
 		-- `hidden = true` is not supported in text grep commands.
 		vimgrep_arguments = vimgrep_arguments,
 		layout_strategy = "vertical",
+        layout_config = {
+            vertical = {
+                height = 0.99,
+                width = 0.99
+            }
+        },
 		wrap_results = true,
 		-- also ignored everything listed in .rgignore .ignore .gitignore (see https://github.com/BurntSushi/ripgrep)
 		file_ignore_patterns = {
 			"__pycache__",
 			"node_modules",
 		},
+        fname_width = 100,
 	},
 	pickers = {
 		find_files = {
 			find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
 		},
-		lsp_workspace_symbols = {
+		lsp_dynamic_workspace_symbols = {
 			fname_width = 100,
 		},
 		buffers = {

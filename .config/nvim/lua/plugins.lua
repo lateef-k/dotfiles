@@ -6,12 +6,15 @@ return require("packer").startup(function(use)
 	use({ "christoomey/vim-tmux-navigator" })
 	-- repeats whole commands, not just last component of command
 	-- try ys_{ then . wethnet this, won't work properly
-	use({ "tpope/vim-surround", keys = {
-		{ "n", "y" },
-		{ "x", "g" },
-		{ "n", "d" },
-		{ "n", "c" },
-	} })
+	use({
+		"tpope/vim-surround",
+		keys = {
+			{ "n", "y" },
+			{ "x", "g" },
+			{ "n", "d" },
+			{ "n", "c" },
+		},
+	})
 	use({ "tpope/vim-repeat" })
 	use({
 		"lukas-reineke/indent-blankline.nvim",
@@ -50,18 +53,6 @@ return require("packer").startup(function(use)
 	})
 	use({
 		"tpope/vim-fugitive",
-		cmd = {
-			"Git",
-			"Gsplit",
-			"Gedit",
-			"Gdiffsplit",
-			"Gread",
-			"Gwrite",
-			"Ggrep",
-			"GMove",
-			"GDelete",
-			"GBrowse",
-		},
 	})
 	use({ "lewis6991/gitsigns.nvim" })
 	use({
@@ -81,7 +72,7 @@ return require("packer").startup(function(use)
 			})
 			require("luasnip.loaders.from_snipmate").lazy_load() -- looks for snippets/ in rtp
 			require("luasnip.loaders.from_lua").lazy_load()
-			require("luasnip").filetype_extend("lua", { "luasnip" })
+			require("luasnip").filetype_extend("lua", { "luasnip", "luanvim" })
 		end,
 	})
 
@@ -131,7 +122,7 @@ return require("packer").startup(function(use)
 					require("null-ls").builtins.formatting.prettier,
 					require("null-ls").builtins.formatting.stylua,
 				},
-				on_attach = require("mappings").on_attach,
+				on_attach = require("mappings").on_attach_mappings,
 			})
 		end,
 	})
@@ -201,7 +192,7 @@ return require("packer").startup(function(use)
 		cmd = "Neotree",
 	})
 	use({
-		"~/Documents/Forks/neo-tree.nvim",
+		"nvim-neo-tree/neo-tree.nvim",
 		requires = {
 			"nvim-lua/plenary.nvim",
 			"kyazdani42/nvim-web-devicons", -- not strictly required, but recommended
@@ -248,7 +239,7 @@ return require("packer").startup(function(use)
 	require("config.nvim-cmp")
 	require("nvim-treesitter.configs").setup({
 		-- A list of parser names, or "all"
-		ensure_installed = { "python", "lua", "norg" },
+		ensure_installed = { "python", "lua", "norg", "vim" },
 		highlight = { -- Be sure to enable highlights if you haven't!
 			enable = true,
 		},
@@ -302,9 +293,19 @@ return require("packer").startup(function(use)
 			})
 		end,
 	})
-
+	-- Lua
+	use({
+		"folke/which-key.nvim",
+		config = function()
+			require("which-key").setup({
+				-- your configuration comes here
+				-- or leave it empty to use the default settings
+				-- refer to the configuration section below
+			})
+		end,
+	})
 	---- most useful plugin, can run for specific file with `:StartupTime -- file.ext`
-	-- use {
-	--  "tweekmonster/startuptime.vim"
-	--  }
+	-- use({
+	-- 	"tweekmonster/startuptime.vim",
+	-- })
 end)

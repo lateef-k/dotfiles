@@ -1,4 +1,4 @@
--- require('impatient')
+require('impatient')
 vim.opt.relativenumber = true
 
 -- vim.opt if for things you would set in vimscript. vim.g is for things you'd let.
@@ -9,10 +9,11 @@ vim.opt.expandtab = true -- use space char for tabbing
 vim.opt.smarttab = true
 vim.opt.wrap = true -- soft tab
 vim.opt.scrolloff = 999 -- keep cursor in center
-vim.opt.clipboard:append({ "unnamedplus" }) -- use system clipboard
-vim.opt.switchbuf:append({ "usetab", "newtab" }) -- switch to tab if exists rather than create
+vim.opt.clipboard:append{ "unnamedplus" } -- use system clipboard
+vim.opt.switchbuf:append{ "usetab", "newtab" } -- switch to tab if exists rather than create
 vim.opt.shortmess:append("I") --disable intro
 vim.opt.completeopt = "menu,menuone,noselect,noinsert"
+vim.opt.timeoutlen=500
 
 vim.opt.termbidi = true
 vim.opt.cursorline = true
@@ -28,6 +29,7 @@ vim.opt.smartcase = true
 -- security risk
 vim.opt.modeline = false
 
+-- turn off netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
@@ -35,25 +37,14 @@ vim.g.loaded_netrwPlugin = 1
 -- not sure if this showed up recently or something happened
 vim.g.loaded_python3_provider = 1
 
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+
+if vim.fn.executable("rg") == 1 then
+    vim.opt.grepprg =  "rg --vimgrep --smart-case"
+end
+
 require("plugins")
 require("utils")
 require("mappings")
-
--- follow the active file's working dir
-vim.api.nvim_exec(
-	[[
-    augroup chdir
-        autocmd BufEnter * silent! lcd %:p:h
-    augroup END
-    augroup openNeotree
-        autocmd BufEnter * ++once if isdirectory(expand("%")) | enew | Neotree 
-    augroup END
-    augroup dontCloseFoldsByDefault
-        autocmd BufRead * set nofoldenable
-    augroup END
-]],
-	false
-)
-
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+require("autocommands")
