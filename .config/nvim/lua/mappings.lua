@@ -25,17 +25,30 @@ map("n", "<esc>", ":noh<CR>", opts)
 -- to avoid evaluating requires right away
 local telescope_lazy = function()
 	return {
-		buffers = {
-			mappings = {
-				-- delete buffer from menu
-				n = {
-					["<C-d>"] = require("telescope.actions").delete_buffer,
-				},
-				i = {
-					["<C-d>"] = require("telescope.actions").delete_buffer,
-				},
-			},
-		},
+        default = {
+            mappings = {
+                -- this + send to quickfix is really useful, using fzf's filtering capabilities
+                n = {
+                    ["<C-g>"] = require("telescope.actions").select_all,
+                },
+                i = {
+                    ["<C-g>"] = require("telescope.actions").select_all,
+                }
+            }
+        },
+        pickers = {
+            buffers = {
+                mappings = {
+                    -- delete buffer from menu
+                    n = {
+                        ["<C-d>"] = require("telescope.actions").delete_buffer,
+                    },
+                    i = {
+                        ["<C-d>"] = require("telescope.actions").delete_buffer,
+                    },
+                },
+            },
+        }
 	}
 end
 

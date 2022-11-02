@@ -10,7 +10,7 @@ vim.opt.smarttab = true
 vim.opt.wrap = true -- soft tab
 vim.opt.scrolloff = 999 -- keep cursor in center
 vim.opt.clipboard:append{ "unnamedplus" } -- use system clipboard
-vim.opt.switchbuf:append{ "usetab", "newtab" } -- switch to tab if exists rather than create
+vim.opt.switchbuf:append{ "usetab", "newtab" } -- NOTE THIS AFFECTS QUICKFIX BEHAVIOR
 vim.opt.shortmess:append("I") --disable intro
 vim.opt.completeopt = "menu,menuone,noselect,noinsert"
 vim.opt.timeoutlen=500

@@ -11,7 +11,10 @@ require("telescope").setup({
 	defaults = {
 		-- this is what's fed to ripgrep
 		-- `hidden = true` is not supported in text grep commands.
+        mappings = require("mappings").telescope_lazy().default.mappings,
 		vimgrep_arguments = vimgrep_arguments,
+        dynamic_preview_title = true,
+        sorting_strategy = "ascending", -- for some reason the default "descending" setting isn't really descending..
 		layout_strategy = "vertical",
         layout_config = {
             vertical = {
@@ -35,7 +38,7 @@ require("telescope").setup({
 			fname_width = 100,
 		},
 		buffers = {
-			mappings = require("mappings").telescope_lazy().buffers.mappings,
+			mappings = require("mappings").telescope_lazy().pickers.buffers.mappings,
 		},
 	},
 	extensions = {
