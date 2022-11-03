@@ -39,3 +39,8 @@ require("lspconfig")["jsonls"].setup({
 	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 })
+
+require("lspconfig")["clangd"].setup({
+	on_attach = require("mappings").on_attach_mappings,
+	capabilities = require("config.nvim-cmp"),
+})

@@ -79,7 +79,7 @@ return require("packer").startup(function(use)
 	-- this sequencing is for mason-lspconfig
 	use({
 		"williamboman/mason.nvim",
-		ft = { "lua", "python", "sh", "json" },
+		ft = { "lua", "python", "sh", "json", "c" },
 		cmd = {
 			"Mason",
 			"MasonInstall",
@@ -297,15 +297,14 @@ return require("packer").startup(function(use)
 	use({
 		"folke/which-key.nvim",
 		config = function()
-			require("which-key").setup({
-				-- your configuration comes here
-				-- or leave it empty to use the default settings
-				-- refer to the configuration section below
-			})
+			require("which-key").setup({})
 		end,
 	})
-	---- most useful plugin, can run for specific file with `:StartupTime -- file.ext`
-	-- use({
-	-- 	"tweekmonster/startuptime.vim",
-	-- })
+	---- most useful perf plugin, can run for specific file with `:StartupTime -- file.ext`
+	use({
+		"tweekmonster/startuptime.vim",
+        cmd = "StartupTime"
+	})
+    use {"kevinhwang91/nvim-bqf", ft = 'qf'}
+    use {"elihunter173/dirbuf.nvim", cmd = "Dirbuf"}
 end)

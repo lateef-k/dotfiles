@@ -40,6 +40,9 @@ require("telescope").setup({
 		buffers = {
 			mappings = require("mappings").telescope_lazy().pickers.buffers.mappings,
 		},
+        quickfixhistory = {
+            mappings = require("mappings").telescope_lazy().pickers.quickfixhistory.mappings,
+        }
 	},
 	extensions = {
 		fzf = {

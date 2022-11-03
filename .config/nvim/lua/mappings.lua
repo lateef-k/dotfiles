@@ -7,7 +7,7 @@ local opts = { noremap = true, silent = true }
 
 -- Keymaps unrelated to plugins
 ----------------------------------------
--- use jj to exit insert mode, also avoid jumping cursor to left when exiting normal mode 
+-- use jj to exit insert mode, also avoid jumping cursor to left when exiting normal mode
 map("i", "jk", "<esc>`^", opts)
 map("i", "kj", "<esc>`^", opts)
 map("i", "<esc>", "<nop>") -- get the jk and kj to stick
@@ -15,7 +15,6 @@ map("n", "]b", ":bn<CR>", opts)
 map("n", "[b", ":bp<CR>", opts)
 map("n", "]q", ":cn<CR>", opts)
 map("n", "[q", ":cp<CR>", opts)
-map("n", "*",":keepjump !norm *")
 
 -- so shift-tab works
 map("i", "<S-Tab>", "<C-d>", opts)
@@ -25,30 +24,52 @@ map("n", "<esc>", ":noh<CR>", opts)
 -- to avoid evaluating requires right away
 local telescope_lazy = function()
 	return {
-        default = {
-            mappings = {
-                -- this + send to quickfix is really useful, using fzf's filtering capabilities
-                n = {
-                    ["<C-g>"] = require("telescope.actions").select_all,
-                },
-                i = {
-                    ["<C-g>"] = require("telescope.actions").select_all,
-                }
-            }
-        },
-        pickers = {
-            buffers = {
-                mappings = {
-                    -- delete buffer from menu
-                    n = {
-                        ["<C-d>"] = require("telescope.actions").delete_buffer,
-                    },
-                    i = {
-                        ["<C-d>"] = require("telescope.actions").delete_buffer,
-                    },
-                },
-            },
-        }
+		default = {
+			mappings = {
+				-- this + send to quickfix is really useful, using fzf's filtering capabilities
+				n = {
+					["<C-g>"] = require("telescope.actions").select_all,
+				},
+				i = {
+					["<C-g>"] = require("telescope.actions").select_all,
+				},
+			},
+		},
+		pickers = {
+			buffers = {
+				mappings = {
+					-- delete buffer from menu
+					n = {
+						["<C-d>"] = require("telescope.actions").delete_buffer,
+					},
+					i = {
+						["<C-d>"] = require("telescope.actions").delete_buffer,
+					},
+				},
+			},
+			quickfixhistory = {
+				mappings = {
+					n = {
+						["<CR>"] = function(prompt_bufnr)
+							local selection = require("telescope.actions.state").get_selected_entry()
+                            local qf_index = selection.index
+                            require("telescope.actions").close(prompt_bufnr)
+                            vim.cmd("silent " .. qf_index .. "chistory")
+                            vim.cmd("copen")
+						end,
+					},
+					i = {
+						["<CR>"] = function(prompt_bufnr)
+							local selection = require("telescope.actions.state").get_selected_entry()
+                            local qf_index = selection.index
+                            require("telescope.actions").close(prompt_bufnr)
+                            vim.cmd("silent " .. qf_index .. "chistory")
+                            vim.cmd("copen")
+						end,
+					},
+				},
+			},
+		},
 	}
 end
 
