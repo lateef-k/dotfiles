@@ -12,10 +12,9 @@ vim.api.nvim_exec([[
     augroup END
     augroup dontCloseFoldsByDefault
         autocmd!
-        autocmd BufRead * set nofoldenable
+        autocmd BufReadPost,FileReadPost * setlocal foldlevel=3
     augroup END
 ]],
 	false
 )
-
 

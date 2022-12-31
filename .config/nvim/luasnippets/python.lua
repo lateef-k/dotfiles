@@ -90,9 +90,28 @@ class {}:{}
 	)
 )
 
+local ilog = s("ilog", {
+	t({"import logging", "logger = logging.getLogger(__name__)"}),
+})
+
+local trybreak = utils.wrap_node(
+	"trybreak",
+	[[
+try:
+{wrapped}
+except Exception as e:
+    breakpoint()
+    raise e
+    {exit}]]
+)
+
+local print = utils.wrap_node("print", [[print({wrapped}){exit}]])
+
 local snips = {
 	dc,
 	cl,
+	ilog,
+	trybreak,
 }
 
 return snips

@@ -28,6 +28,13 @@ require("lspconfig")["sumneko_lua"].setup({
 require("lspconfig")["pyright"].setup({
 	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
+	settings = {
+		python = {
+			analysis = {
+				typeCheckingMode = "basic",
+			},
+		},
+	},
 })
 
 require("lspconfig")["bashls"].setup({
@@ -41,6 +48,19 @@ require("lspconfig")["jsonls"].setup({
 })
 
 require("lspconfig")["clangd"].setup({
+	on_attach = require("mappings").on_attach_mappings,
+	capabilities = require("config.nvim-cmp"),
+})
+
+require("lspconfig")["astro"].setup({
+	on_attach = require("mappings").on_attach_mappings,
+	capabilities = require("config.nvim-cmp"),
+})
+require("lspconfig")["tailwindcss"].setup({
+	on_attach = require("mappings").on_attach_mappings,
+	capabilities = require("config.nvim-cmp"),
+})
+require("lspconfig")["gopls"].setup({
 	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 })

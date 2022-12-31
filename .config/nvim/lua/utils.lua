@@ -37,4 +37,14 @@ function Utils.current_file_and_line()
 	return filename .. ":" .. lineNo
 end
 
+
+function Utils.toggle_qflist()
+	local win_status = (vim.fn.getqflist({ winid = 1 }))
+    if win_status.winid == 0 then 
+        vim.cmd("copen")
+    else
+        vim.cmd("cclose")
+    end
+end
+
 return Utils

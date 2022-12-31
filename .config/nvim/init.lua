@@ -14,6 +14,7 @@ vim.opt.switchbuf:append{ "usetab", "newtab" } -- NOTE THIS AFFECTS QUICKFIX BEH
 vim.opt.shortmess:append("I") --disable intro
 vim.opt.completeopt = "menu,menuone,noselect,noinsert"
 vim.opt.timeoutlen=500
+vim.opt.termguicolors = true -- for feline
 
 vim.opt.termbidi = true
 vim.opt.cursorline = true
@@ -29,13 +30,11 @@ vim.opt.smartcase = true
 -- security risk
 vim.opt.modeline = false
 
--- turn off netrw
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- running `:StartupTime -- file.py` and then `checkhealth` showed the culprit of slow loading time to be the component which is loading the python provider
 -- not sure if this showed up recently or something happened
-vim.g.loaded_python3_provider = 1
 
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
@@ -44,7 +43,9 @@ if vim.fn.executable("rg") == 1 then
     vim.opt.grepprg =  "rg --vimgrep --smart-case"
 end
 
-require("plugins")
+-- Only needed when i need to update packer_compiled, otherwise waste of startup time
+vim.cmd([[packadd packer.nvim]])
 require("utils")
 require("mappings")
 require("autocommands")
+require("plugins")
