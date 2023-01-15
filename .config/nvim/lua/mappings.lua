@@ -13,7 +13,7 @@ map("i", "kj", "<esc>`^", opts)
 map("i", "<esc>", "<nop>") -- get the jk and kj to stick
 map("n", "]q", ":cn<CR>", opts)
 map("n", "[q", ":cp<CR>", opts)
-map("n", "<leader>q", require("utils").toggle_qflist, opts)
+map("n", "<leader>q", require("utils.utils").toggle_qflist, opts)
 map("n", "<leader><leader>q", "q", opts)
 map("n", "<leader><leader>Q", "Q", opts)
 -- so shift-tab works
@@ -34,21 +34,48 @@ map({ "n", "x", "o" }, "<C-q>", "<Plug>(leap-cross-window)", opts)
 -- telescope
 -- if i change lua functions to vim string, can make telescope lazily loaded
 -- telecsope menu
-map("n", "<leader>ft", ":Telescope<CR>", opts)
+map("n", "<leader>tt", ":Telescope<CR>", opts)
 -- files
 map("n", "<leader>fj", ":Telescope projects<CR>", opts)
-map("n", "<leader>fp", require("utils").find_files_in_root, opts)
+map("n", "<leader>fp", require("utils.utils").find_files_in_root, opts)
 map("n", "<leader>ff", ":Telescope find_files<CR>", opts)
 map("n", "<leader>fb", ":Neotree position=left toggle=true action=focus<CR>", opts)
 map("n", "<leader>fo", ":Telescope oldfiles<CR>", opts)
 map("n", "<leader>fg", ":Telescope git_files<CR>", opts)
 -- text search
 -- get all text and use fuzzy as a sorter
-map("n", "<leader>fz", ':Telescope grep_string shorten_path=true only_sort_text=true search=""<CR>', opts)
+map("n", "<leader>Z", ':Telescope grep_string shorten_path=true only_sort_text=true search=""<CR>', opts)
 
 -- AFAIK, both :Rg and :Ag do pretty much what grep_string does, they search for something and feed the matches (or feed the entire lines of the project when used with no search string) to Telescope to be fuzzy searched.
 -- live_grep is a different story, each keystroke generates a new rg (or ag) command and the results are returned to Telescope, there's no fuzzy search here but rather a regex search of the typed query.
-local on_attach_mappings = function(_, bufnr)
+
+-- special 1 key command
+map("n", "<leader>b", ":Telescope buffers<CR>", opts)
+map("n", "<leader>z", ":Telescope current_buffer_fuzzy_find<CR>", opts)
+map("n", "<leader>r", ":Telescope resume<CR>", opts)
+
+map("t", "jk", [[<C-\><C-n>]], opts)
+map("t", "kj", [[<C-\><C-n>]], opts)
+map("t", "<C-h>", [[<Cmd>:TmuxNavigateLeft<CR>]], opts)
+map("t", "<C-j>", [[<Cmd>:TmuxNavigateDown<CR>]], opts)
+map("t", "<C-k>", [[<Cmd>:TmuxNavigateUp<CR>]], opts)
+map("t", "<C-l>", [[<Cmd>:TmuxNavigateRight<CR>]], opts)
+
+---
+map("n", "<leader>du", ":lua require('dapui').toggle()<CR>", opts)
+map("n", "<leader>db", ":lua require('dap').toggle_breakpoint()<CR>", opts)
+map("n", "<leader>dc", ":lua require('dap').continue()<CR>", opts)
+map("n", "<leader>dol", ":lua require('osv').launch({port=8086})<CR>", opts)
+
+map("n", "<leader>na", "<cmd>ZAll<CR>", opts)
+map("n", "<leader>nn", "<cmd>ZNotes<CR>", opts)
+map("n", "<leader>nj", "<cmd>ZJournal<CR>", opts)
+map("n", "<leader>nej", "<cmd>ZJournalNew<CR>", opts)
+map("n", "<leader>nen", "<cmd>ZkNew<CR>", opts)
+map({ "n", "v" }, "<leader>nvt", "<cmd>ZkNewFromTitleSelection<CR>", opts)
+map({ "n", "v" }, "<leader>nvc", "<cmd>ZkNewFromContentSelection<CR>", opts)
+
+local function on_attach_mappings(_, bufnr)
 	local bufopts = { noremap = true, silent = true, buffer = bufnr }
 	map("n", "]d", "<cmd>Lspsaga diagnostic_jump_next<CR>", bufopts)
 	map("n", "[d", "<cmd>Lspsaga diagnostic_jump_prev<CR>", bufopts)
@@ -66,7 +93,7 @@ local on_attach_mappings = function(_, bufnr)
 	map("n", "<leader>lr", "<cmd>Lspsaga rename<CR>", bufopts)
 	map("n", "<leader>la", "<cmd>Lspsaga code_action<CR>", bufopts)
 	map("n", "<leader>lt", vim.lsp.buf.type_definition, bufopts)
-	map({"n","v"}, "<leader>lb", ":lua vim.lsp.buf.format { async = true }<CR>", bufopts)
+	map({ "n", "v" }, "<leader>lb", ":lua vim.lsp.buf.format { async = true }<CR>", bufopts)
 	map("n", "<leader>ls", ":Telescope lsp_document_symbols<CR>", bufopts)
 	map("n", "<leader>lS", ":Telescope lsp_dynamic_workspace_symbols<CR>", bufopts)
 	map("n", "<leader>l0", "<cmd>LSoutlineToggle<CR>", bufopts)
@@ -86,6 +113,7 @@ local on_attach_mappings = function(_, bufnr)
 		print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 	end, bufopts)
 end
+
 local function on_attach_gitsigns(bufnr)
 	local gs = package.loaded.gitsigns
 
@@ -135,27 +163,11 @@ local function on_attach_gitsigns(bufnr)
 	map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", bufopts)
 end
 
--- special 1 key command
-map("n", "<leader>b", ":Telescope buffers<CR>", opts)
-map("n", "<leader>z", ":Telescope current_buffer_fuzzy_find<CR>", opts)
-map("n", "<leader>r", ":Telescope resume<CR>", opts)
-
-
-map('t', 'jk', [[<C-\><C-n>]], opts)
-map('t', 'kj', [[<C-\><C-n>]], opts)
-map('t', '<C-h>', [[<Cmd>:TmuxNavigateLeft<CR>]], opts)
-map('t', '<C-j>', [[<Cmd>:TmuxNavigateDown<CR>]], opts)
-map('t', '<C-k>', [[<Cmd>:TmuxNavigateUp<CR>]], opts)
-map('t', '<C-l>', [[<Cmd>:TmuxNavigateRight<CR>]], opts)
-
----
-
-
 local toggleterm = {
-    open_mapping = "<C-F>"
+	open_mapping = "<C-F>",
 }
 -- to avoid evaluating requires right away
-local telescope_lazy = function()
+local function telescope_lazy()
 	return {
 		default = {
 			mappings = {
@@ -217,7 +229,7 @@ local nvim_treesitter = {
 	},
 }
 
-local cmp = function()
+local function cmp()
 	return {
 		mapping = require("cmp").mapping.preset.insert({
 			["<Tab>"] = require("cmp").mapping(function(fallback)
@@ -276,10 +288,6 @@ local luasnip = {
 	store_selection_keys = "<M-v>",
 }
 
-local neorg_mapping = {
-	{ "n", "<localleader>ts", ":Neorg toc split<CR>" },
-}
-
 local mini = {
 	ai = {
 		goto_left = "[g",
@@ -296,5 +304,5 @@ return {
 	luasnip = luasnip,
 	mini = mini,
 	on_attach_gitsigns = on_attach_gitsigns,
-    toggleterm = toggleterm
+	toggleterm = toggleterm,
 }

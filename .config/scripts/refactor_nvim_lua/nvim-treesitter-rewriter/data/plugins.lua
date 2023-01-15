@@ -15,7 +15,7 @@ return require("packer").startup({
 				vim.g.slime_paste_file = vim.fn.tempname()
 				vim.g.slime_default_config = {
 					-- need require inside or will fail
-					socket_name = require("utils.utils").split(os.getenv("TMUX"), ",")[1],
+					socket_name = require("utils").split(os.getenv("TMUX"), ",")[1],
 					target_pane = "{next}",
 				}
 			end,
@@ -61,7 +61,7 @@ return require("packer").startup({
 		-- this sequencing is for mason-lspconfig
 		use({
 			"williamboman/mason.nvim",
-			ft = { "lua", "python", "sh", "json", "c", "css", "astro", "go", "html", "markdown" },
+			ft = { "lua", "python", "sh", "json", "c", "css", "astro", "go", "html" },
 			cmd = {
 				"Mason",
 				"MasonInstall",
@@ -91,7 +91,7 @@ return require("packer").startup({
 			"neovim/nvim-lspconfig",
 			after = "mason-lspconfig.nvim",
 			config = function()
-				require("setup.lsp")
+				require("lspsetup")
 			end,
 		})
 		use({
@@ -116,7 +116,7 @@ return require("packer").startup({
 			branch = "main",
 			config = function()
 				local saga = require("lspsaga")
-				saga.setup({
+				saga.init_lsp_saga({
 					-- your configuration
 				})
 			end,
@@ -127,10 +127,9 @@ return require("packer").startup({
 			config = function()
 				require("nvim-treesitter.configs").setup({
 					-- A list of parser names, or "all"
-					ensure_installed = { "python", "lua", "norg", "vim", "query", "org" },
+					ensure_installed = { "python", "lua", "norg", "vim" },
 					highlight = { -- Be sure to enable highlights if you haven't!
 						enable = true,
-						additional_vim_regex_highlighting = { "org" },
 					},
 					indent = {
 						enable = true,
@@ -143,6 +142,9 @@ return require("packer").startup({
 
 					-- Install parsers synchronously (only applied to `ensure_installed`)
 					sync_install = false,
+
+					-- Automatically install missing parsers when entering buffer
+					auto_install = true,
 				})
 			end,
 		})
@@ -184,7 +186,6 @@ return require("packer").startup({
 			as = "catppuccin",
 			config = function()
 				require("catppuccin").setup({
-					flavor = "macchiato",
 					dim_inactive = {
 						enabled = true,
 						shade = "dark",
@@ -303,8 +304,6 @@ return require("packer").startup({
 					},
 				})
 				require("mini.pairs").setup()
-				require("mini.pairs").unmap("i", "`", "``")
-				require("mini.pairs").unmap("i", "'", "''")
 			end,
 		})
 		use({ "machakann/vim-sandwich" })
@@ -318,6 +317,7 @@ return require("packer").startup({
 		})
 		use({
 			"akinsho/toggleterm.nvim",
+			cmd = "ToggleTerm",
 			keys = {
 				{ "n", "<C-F>" },
 				{ "i", "<C-F>" },
@@ -330,13 +330,13 @@ return require("packer").startup({
 					direction = "float",
 				})
 			end,
+			use({
+				"python-rope/ropevim",
+				ft = "python",
+			}),
 		})
 		use({
-			"python-rope/ropevim",
-			ft = "python",
-		})
-		use({
-			"mickael-menu/zk-nvim",
+			"/home/alf/Documents/Forks/zk-nvim",
 			cmd = {
 				"ZkIndex",
 				"ZkNew",
@@ -349,11 +349,6 @@ return require("packer").startup({
 				"ZkMatch",
 				"ZkTags",
 				"ZkDeleteNotes",
-				"ZkMain",
-				"ZAll",
-				"ZNotes",
-				"ZJournal",
-				"ZJournalNew",
 			},
 			config = function()
 				require("zk").setup({
@@ -361,6 +356,7 @@ return require("packer").startup({
 					lsp = {
 						config = {
 							on_attach = require("mappings").on_attach_mappings,
+							-- etc, see `:h vim.lsp.start_client()`
 						},
 					},
 				})
@@ -381,7 +377,7 @@ return require("packer").startup({
 		use({
 			"mfussenegger/nvim-dap",
 			config = function()
-				require("setup.dap")
+				require("dapsetup")
 			end,
 		})
 		use({
@@ -401,29 +397,6 @@ return require("packer").startup({
 				require("go").setup()
 			end,
 		})
-		use({
-			"nvim-treesitter/playground",
-			cmd = "TSPlaygroundToggle",
-			config = function()
-				local ts = require("nvim-treesitter.configs")
-				ts.setup({
-					highlight = {
-						enable = true,
-					},
-					indent = { enable = true },
-					playground = {
-						enable = true,
-						disable = {},
-						updatetime = 25,
-						persist_queries = false,
-						keybindings = {
-							-- probably not relevant
-						},
-					},
-				})
-			end,
-		})
-		use({ "bfredl/nvim-luadev", ft = "lua" })
-		use({ "stevearc/dressing.nvim" })
+		use({ "nvim-treesitter/playground", cmd = "TSPlaygroundToggle" })
 	end,
 })

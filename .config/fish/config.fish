@@ -8,6 +8,7 @@ if status is-interactive
     #vim mode
     fish_vi_key_bindings
 end
+
 set EDITOR "nvim"
 
 set XDG_CONFIG_HOME "$HOME/.config/"
@@ -25,10 +26,7 @@ set PATH $PATH /home/alf/.local/bin
 
 # for language tools installed by mason
 fish_add_path /home/alf/.local/share/nvim/mason/bin
-# personal scripts
-fish_add_path /home/alf/Housekeeping/dotfiles/.config/scripts/
 # installed without package manager
-fish_add_path /home/alf/Housekeeping/bin/
 fish_add_path ~/.cargo/bin
 
 #for fzf.fish plugin (jethrokuan/fzf)
@@ -47,6 +45,9 @@ Ctrl-g 	Alt-Shift-o 	Open a file/dir using xdg-open or open command
 function man 
     nvim -c "Man: $argv | only"
 end
+
+set -xg PYTHONPATH /home/alf/Documents/Utility/src $PYTHONPATH
+set -xg ZK_NOTEBOOK_DIR /home/alf/Documents/Library/Notes/zk_notes
 
 #need command to avoid calling echo,otherwise recursive
 #https://fishshell.com/docs/current/cmds/command.html

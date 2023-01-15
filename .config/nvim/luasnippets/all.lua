@@ -1,17 +1,19 @@
 ---@diagnostic disable: undefined-global
 --
 
-require("sniputils")
+require("utils.sniputils")
 
-local time = s(
-    ";time",
-    fmt([[({})]], {
-        p(os.date),
-    })
+local snips = {}
+
+snips.time = s(
+	";time",
+	fmt([[({})]], {
+		p(os.date),
+	})
 )
 
-local snips = {
-    time,
-}
-
-return snips
+local ret = {}
+for _, v in pairs(snips) do
+	table.insert(ret, v)
+end
+return ret

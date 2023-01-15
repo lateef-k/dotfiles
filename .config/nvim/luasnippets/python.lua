@@ -1,7 +1,8 @@
 ---@diagnostic disable: undefined-global
 
-local utils = require("sniputils")
+local utils = require("utils.sniputils")
 
+local snips = {}
 ----------------------------------------------------------------------------
 -- dynamically add arguments
 local function py_init()
@@ -41,7 +42,7 @@ local function to_init_assign(args)
 	return sn(nil, tab)
 end
 
-local cl = s(
+snips.cl = s(
 	"cl",
 	fmt(
 		[[
@@ -59,42 +60,11 @@ class {}:
 	)
 )
 
--- classname -> change choice -> jump 1 -> jump 2 -> jump to expand -> change choice
-local function dataclass_elm()
-	return sn(
-		nil,
-		c(1, {
-			t(""),
-			sn(1, {
-				t({ "", "\t" }),
-				i(1),
-				t(": "),
-				i(2),
-				d(3, dataclass_elm),
-			}),
-		})
-	)
-end
-
-local dc = s(
-	"dc",
-	fmt(
-		[[
-@dataclass
-class {}:{}
-]],
-		{
-			i(1),
-			d(2, dataclass_elm, {}),
-		}
-	)
-)
-
-local ilog = s("ilog", {
-	t({"import logging", "logger = logging.getLogger(__name__)"}),
+snips.ilog = s("ilog", {
+	t({ "import logging", "logger = logging.getLogger(__name__)" }),
 })
 
-local trybreak = utils.wrap_node(
+snips.trybreak = utils.wrap_node(
 	"trybreak",
 	[[
 try:
@@ -105,13 +75,10 @@ except Exception as e:
     {exit}]]
 )
 
-local print = utils.wrap_node("print", [[print({wrapped}){exit}]])
+snips.print = utils.wrap_node("print", [[print({wrapped}){exit}]])
 
-local snips = {
-	dc,
-	cl,
-	ilog,
-	trybreak,
-}
-
-return snips
+local ret = {}
+for _, v in pairs(snips) do
+	table.insert(ret, v)
+end
+return ret

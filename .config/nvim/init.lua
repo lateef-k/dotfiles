@@ -36,8 +36,8 @@ vim.g.loaded_netrwPlugin = 1
 -- running `:StartupTime -- file.py` and then `checkhealth` showed the culprit of slow loading time to be the component which is loading the python provider
 -- not sure if this showed up recently or something happened
 
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- vim.opt.foldmethod = "expr"
+-- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
 if vim.fn.executable("rg") == 1 then
     vim.opt.grepprg =  "rg --vimgrep --smart-case"
@@ -45,7 +45,9 @@ end
 
 -- Only needed when i need to update packer_compiled, otherwise waste of startup time
 vim.cmd([[packadd packer.nvim]])
-require("utils")
+
 require("mappings")
 require("autocommands")
 require("plugins")
+require("commands")
+
