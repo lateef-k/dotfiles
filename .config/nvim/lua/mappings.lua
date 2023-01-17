@@ -67,13 +67,8 @@ map("n", "<leader>db", ":lua require('dap').toggle_breakpoint()<CR>", opts)
 map("n", "<leader>dc", ":lua require('dap').continue()<CR>", opts)
 map("n", "<leader>dol", ":lua require('osv').launch({port=8086})<CR>", opts)
 
-map("n", "<leader>na", "<cmd>ZAll<CR>", opts)
-map("n", "<leader>nn", "<cmd>ZNotes<CR>", opts)
-map("n", "<leader>nj", "<cmd>ZJournal<CR>", opts)
-map("n", "<leader>nej", "<cmd>ZJournalNew<CR>", opts)
-map("n", "<leader>nen", "<cmd>ZkNew<CR>", opts)
-map({ "n", "v" }, "<leader>nvt", "<cmd>ZkNewFromTitleSelection<CR>", opts)
-map({ "n", "v" }, "<leader>nvc", "<cmd>ZkNewFromContentSelection<CR>", opts)
+
+
 
 local function on_attach_mappings(_, bufnr)
 	local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -218,17 +213,6 @@ local function telescope_lazy()
 	}
 end
 
-local nvim_treesitter = {
-	incremental_selection = {
-		keymaps = {
-			init_selection = "]ni",
-			scope_incremental = "]ns",
-			node_incremental = "]nn",
-			node_decremental = "[nn",
-		},
-	},
-}
-
 local function cmp()
 	return {
 		mapping = require("cmp").mapping.preset.insert({
@@ -298,9 +282,7 @@ local mini = {
 return {
 	on_attach_mappings = on_attach_mappings,
 	telescope_lazy = telescope_lazy,
-	nvim_treesitter = nvim_treesitter,
 	cmp = cmp,
-	neorg_mapping = neorg_mapping,
 	luasnip = luasnip,
 	mini = mini,
 	on_attach_gitsigns = on_attach_gitsigns,

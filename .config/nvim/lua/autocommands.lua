@@ -6,10 +6,6 @@ vim.api.nvim_exec([[
         autocmd!
         autocmd BufEnter * silent! lcd %:p:h
     augroup END
-    augroup openNeotree
-        autocmd!
-        autocmd BufEnter * ++once if isdirectory(expand("%")) | enew | Neotree 
-    augroup END
     augroup dontCloseFoldsByDefault
         autocmd!
         autocmd BufReadPost,FileReadPost * setlocal foldlevel=3

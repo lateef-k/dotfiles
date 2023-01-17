@@ -138,9 +138,7 @@ return require("packer").startup({
 					},
 					incremental_selection = {
 						enable = true,
-						keymaps = require("mappings").nvim_treesitter.incremental_selection.keymaps,
 					},
-
 					-- Install parsers synchronously (only applied to `ensure_installed`)
 					sync_install = false,
 				})
@@ -190,6 +188,14 @@ return require("packer").startup({
 						shade = "dark",
 						percentage = -1.15,
 					},
+					integrations = {
+						telekasten = true,
+						treesitter_context = true,
+						neotree = true,
+						mini = true,
+						lsp_saga = true,
+						leap = true,
+					},
 				})
 				vim.cmd("colorscheme catppuccin")
 			end,
@@ -238,31 +244,6 @@ return require("packer").startup({
 			cmd = "StartupTime",
 		})
 		use({
-			"feline-nvim/feline.nvim",
-			config = function()
-				--don't show full statusline in neo-tree window
-				table.insert(
-					require("feline.defaults").statusline.force_inactive.default_value.filetypes,
-					"^neo%-tree$"
-				)
-				--show actual mode instead of icon
-				require("feline.default_components").statusline.icons.active[1][2] = {
-					provider = "vi_mode",
-					hl = function()
-						return {
-							name = require("feline.providers.vi_mode").get_mode_highlight_name(),
-							fg = require("feline.providers.vi_mode").get_mode_color(),
-							style = "bold",
-						}
-					end,
-					right_sep = " ",
-					icon = "",
-				}
-				--so no need to setup anything since i changed the values in the above
-				require("feline").setup({})
-			end,
-		})
-		use({
 			"lukas-reineke/indent-blankline.nvim",
 			config = function()
 				require("indent_blankline").setup({
@@ -305,9 +286,11 @@ return require("packer").startup({
 				require("mini.pairs").setup()
 				require("mini.pairs").unmap("i", "`", "``")
 				require("mini.pairs").unmap("i", "'", "''")
+				require("mini.surround").setup()
+				require("mini.sessions").setup()
+				require("mini.statusline").setup()
 			end,
 		})
-		use({ "machakann/vim-sandwich" })
 		use({
 			"nvim-treesitter/nvim-treesitter-context",
 			config = function()
@@ -335,39 +318,6 @@ return require("packer").startup({
 			"python-rope/ropevim",
 			ft = "python",
 		})
-		use({
-			"mickael-menu/zk-nvim",
-			cmd = {
-				"ZkIndex",
-				"ZkNew",
-				"ZkNewFromTitleSelection",
-				"ZkNewFromContentSelection",
-				"ZkCd",
-				"ZkNotes",
-				"ZkBacklinks",
-				"ZkLinks",
-				"ZkMatch",
-				"ZkTags",
-				"ZkDeleteNotes",
-				"ZkMain",
-				"ZAll",
-				"ZNotes",
-				"ZJournal",
-				"ZJournalNew",
-			},
-			config = function()
-				require("zk").setup({
-					picker = "telescope",
-					lsp = {
-						config = {
-							on_attach = require("mappings").on_attach_mappings,
-						},
-					},
-				})
-				require("config.zk")
-			end,
-		})
-
 		use({
 			"mrjones2014/legendary.nvim",
 			-- sqlite is only needed if you want to use frecency sorting
@@ -425,5 +375,31 @@ return require("packer").startup({
 		})
 		use({ "bfredl/nvim-luadev", ft = "lua" })
 		use({ "stevearc/dressing.nvim" })
+		use({
+			"/home/alf/Documents/Forks/telekasten.nvim",
+			cmd = "Telekasten",
+			module = "telekasten",
+			config = function()
+				local home = "/home/alf/Documents/Library/Notes/tzk"
+				require("telekasten").setup({
+					home = home,
+					dailies = home .. "/" .. "daily",
+					weeklies = home .. "/" .. "weekly",
+					templates = home .. "/" .. "templates",
+					template_new_daily = home .. "/templates/daily.md",
+					image_subdir = "img",
+					new_note_filename = "title-uuid",
+					uuid_sep = "_",
+					filename_space_subst = "-",
+					journal_auto_open = true,
+					sort = "modified",
+					close_after_yanking = false,
+					insert_after_inserting = true,
+				})
+			end,
+		})
+		use({ "renerocksai/calendar-vim" })
+		use({ "https://github.com/chentoast/marks.nvim.git" })
+		-- Lua
 	end,
 })
