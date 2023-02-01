@@ -11,24 +11,24 @@ require("telescope").setup({
 	defaults = {
 		-- this is what's fed to ripgrep
 		-- `hidden = true` is not supported in text grep commands.
-        mappings = require("mappings").telescope_lazy().default.mappings,
+		mappings = require("mappings").telescope_lazy().default.mappings,
 		vimgrep_arguments = vimgrep_arguments,
-        dynamic_preview_title = true,
-        sorting_strategy = "ascending", -- for some reason the default "descending" setting isn't really descending..
+		dynamic_preview_title = true,
+		sorting_strategy = "ascending", -- for some reason the default "descending" setting isn't really descending..
 		layout_strategy = "vertical",
-        layout_config = {
-            vertical = {
-                height = 0.99,
-                width = 0.99
-            }
-        },
+		layout_config = {
+			vertical = {
+				height = 0.99,
+				width = 0.99,
+			},
+		},
 		wrap_results = true,
 		-- also ignored everything listed in .rgignore .ignore .gitignore (see https://github.com/BurntSushi/ripgrep)
 		file_ignore_patterns = {
 			"__pycache__",
 			"node_modules",
 		},
-        fname_width = 100,
+		fname_width = 100,
 	},
 	pickers = {
 		find_files = {
@@ -40,9 +40,9 @@ require("telescope").setup({
 		buffers = {
 			mappings = require("mappings").telescope_lazy().pickers.buffers.mappings,
 		},
-        quickfixhistory = {
-            mappings = require("mappings").telescope_lazy().pickers.quickfixhistory.mappings,
-        }
+		quickfixhistory = {
+			mappings = require("mappings").telescope_lazy().pickers.quickfixhistory.mappings,
+		},
 	},
 	extensions = {
 		fzf = {

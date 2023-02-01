@@ -44,7 +44,7 @@ map("n", "<leader>fo", ":Telescope oldfiles<CR>", opts)
 map("n", "<leader>fg", ":Telescope git_files<CR>", opts)
 -- text search
 -- get all text and use fuzzy as a sorter
-map("n", "<leader>Z", ':Telescope grep_string shorten_path=true only_sort_text=true search=""<CR>', opts)
+map("n", "<leader>Z", ':lua require("utils.telescope-utils").fuzz_project_text()<CR>', opts)
 
 -- AFAIK, both :Rg and :Ag do pretty much what grep_string does, they search for something and feed the matches (or feed the entire lines of the project when used with no search string) to Telescope to be fuzzy searched.
 -- live_grep is a different story, each keystroke generates a new rg (or ag) command and the results are returned to Telescope, there's no fuzzy search here but rather a regex search of the typed query.
@@ -67,7 +67,46 @@ map("n", "<leader>db", ":lua require('dap').toggle_breakpoint()<CR>", opts)
 map("n", "<leader>dc", ":lua require('dap').continue()<CR>", opts)
 map("n", "<leader>dol", ":lua require('osv').launch({port=8086})<CR>", opts)
 
+-- marks.nvim
+-- mx              Set mark x
+-- m,              Set the next available alphabetical (lowercase) mark
+-- m;              Toggle the next available mark at the current line
+-- dmx             Delete mark x
+-- dm-             Delete all marks on the current line
+-- dm<space>       Delete all marks in the current buffer
+-- m]              Move to next mark
+-- m[              Move to previous mark
+-- m:              Preview mark. This will prompt you for a specific mark to
+--                 preview; press <cr> to preview the next mark.
+-- m[0-9]          Add a bookmark from bookmark group[0-9].
+-- dm[0-9]         Delete all bookmarks from bookmark group[0-9].
+-- m}              Move to the next bookmark having the same type as the bookmark under
+--                 the cursor. Works across buffers.
+-- m{              Move to the previous bookmark having the same type as the bookmark under
+--                 the cursor. Works across buffers.
+-- dm=             Delete the bookmark under the cursor.
+--
 
+
+-- telekasten
+map("n", "<leader>ng", "<cmd>Telekasten goto_today<CR>", opts)
+map("n", "<leader>nj", "<cmd>Telekasten find_daily_notes<CR>", opts)
+map("n", "<leader>nf", "<cmd>Telekasten find_notes<CR>", opts)
+map("n", "<leader>nt", "<cmd>Telekasten show_tags<CR>", opts)
+map("n", "<leader>nz", "<cmd>Telekasten search_notes<CR>", opts)
+map("n", "<leader>ne", "<cmd>Telekasten new_note<CR>", opts)
+map("n", "<leader>ni", "<cmd>Telekasten insert_link<CR>", opts)
+map("n", "<leader>ny", "<cmd>Telekasten yank_notelink<CR>", opts)
+-- map("n<leader>"," ",":Telekasten follow_link<CR>", opts)
+map("n", "<leader>nd", "<cmd>:Telekasten toggle_todo<CR>", opts)
+map("n", "<leader>nn", "<cmd>:Telekasten<CR>", opts)
+
+
+-- sessions
+map("n","<leader>ss","<cmd>SessionToggle<CR>",opts)
+map("n","<leader>sr","<cmd>SessionRead<CR>",opts)
+map("n","<leader>sf","<cmd>SessionSelect<CR>",opts)
+map("n","<leader>sd","<cmd>SessionSelect delete<CR>",opts)
 
 
 local function on_attach_mappings(_, bufnr)
@@ -78,10 +117,10 @@ local function on_attach_mappings(_, bufnr)
 	map("n", "<leader>ld", ":Telescope diagnostics bufnr=0<CR>", bufopts)
 	map("n", "<leader>lD", ":Telescope diagnostics<CR>", bufopts)
 	map("n", "]e", function()
-		require("lspsaga.diagnostic").goto_next({ severity = vim.diagnostic.severity.ERROR })
+		require("lspsaga.diagnostic"):goto_next({ severity = vim.diagnostic.severity.ERROR })
 	end, { silent = true })
 	map("n", "[e", function()
-		require("lspsaga.diagnostic").goto_prev({ severity = vim.diagnostic.severity.ERROR })
+		require("lspsaga.diagnostic"):goto_prev({ severity = vim.diagnostic.severity.ERROR })
 	end, { silent = true })
 
 	map("n", "<leader>lp", "<cmd>Lspsaga peek_definition<CR>", bufopts)

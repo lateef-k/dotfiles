@@ -8,19 +8,6 @@ return require("packer").startup({
 		use({ "tpope/vim-repeat" })
 		use({ "mbbill/undotree", cmd = { "UndotreeToggle", "UndotreeFocus", "UndotreeHide", "UndotreeShow" } })
 		use({
-			"jpalardy/vim-slime",
-			keys = { { "n", "<C-c><C-c>" }, { "v", "<C-c><C-c>" }, { "n", "<C-c>v" } },
-			config = function()
-				vim.g.slime_target = "tmux"
-				vim.g.slime_paste_file = vim.fn.tempname()
-				vim.g.slime_default_config = {
-					-- need require inside or will fail
-					socket_name = require("utils.utils").split(os.getenv("TMUX"), ",")[1],
-					target_pane = "{next}",
-				}
-			end,
-		})
-		use({
 			"tpope/vim-fugitive",
 		})
 		use({
@@ -33,7 +20,6 @@ return require("packer").startup({
 		})
 		use({
 			"hrsh7th/nvim-cmp",
-			event = { "InsertEnter", "CmdlineEnter" },
 			requires = {
 				{ "hrsh7th/cmp-buffer", after = "nvim-cmp" },
 				{ "hrsh7th/cmp-path", after = "nvim-cmp" },
@@ -56,6 +42,7 @@ return require("packer").startup({
 				require("luasnip.loaders.from_snipmate").lazy_load() -- looks for snippets/ in rtp
 				require("luasnip.loaders.from_lua").lazy_load()
 				require("luasnip").filetype_extend("lua", { "luasnip", "luanvim" })
+				require("luasnip").filetype_extend("telekasten", { "markdown" })
 			end,
 		})
 		-- this sequencing is for mason-lspconfig
@@ -102,7 +89,6 @@ return require("packer").startup({
 					sources = {
 						require("null-ls").builtins.formatting.black,
 						require("null-ls").builtins.formatting.isort,
-						require("null-ls").builtins.diagnostics.flake8,
 						require("null-ls").builtins.formatting.prettier,
 						require("null-ls").builtins.formatting.stylua,
 					},
@@ -118,6 +104,9 @@ return require("packer").startup({
 				local saga = require("lspsaga")
 				saga.setup({
 					-- your configuration
+					rename = {
+						quit = "q",
+					},
 				})
 			end,
 		})
@@ -157,6 +146,7 @@ return require("packer").startup({
 					end,
 				},
 				{
+					-- i basically only use the root finder for this
 					"ahmedkhalf/project.nvim",
 					opt = true,
 					module = "project_nvim",
@@ -178,26 +168,12 @@ return require("packer").startup({
 		})
 		use({ "folke/neodev.nvim", module = "neodev" })
 		use({
-			"catppuccin/nvim",
-			as = "catppuccin",
+			"rebelot/kanagawa.nvim",
 			config = function()
-				require("catppuccin").setup({
-					flavor = "macchiato",
-					dim_inactive = {
-						enabled = true,
-						shade = "dark",
-						percentage = -1.15,
-					},
-					integrations = {
-						telekasten = true,
-						treesitter_context = true,
-						neotree = true,
-						mini = true,
-						lsp_saga = true,
-						leap = true,
-					},
+				require("kanagawa").setup({
+					dimInactive = false, -- dim inactive window `:h hl-NormalNC`
 				})
-				vim.cmd("colorscheme catppuccin")
+				vim.cmd("colorscheme kanagawa")
 			end,
 		})
 		use({ "ggandor/leap.nvim" })
@@ -288,9 +264,46 @@ return require("packer").startup({
 				require("mini.pairs").unmap("i", "'", "''")
 				require("mini.surround").setup()
 				require("mini.sessions").setup()
-				require("mini.statusline").setup()
+				require("mini.statusline").setup({
+					content = {
+						active = function()
+							local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
+							local git = MiniStatusline.section_git({ trunc_width = 75 })
+							local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75 })
+							local filename = MiniStatusline.section_filename({ trunc_width = 140 })
+							local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 120 })
+							local location = MiniStatusline.section_location({ trunc_width = 75 })
+
+							local session = vim.v.this_session
+							if session ~= "" then
+								for component in session:gmatch("[^%%]+") do
+									session = "[Session: " .. component .. " ]"
+								end
+							else
+								session = "NO SESSION"
+							end
+
+							return MiniStatusline.combine_groups({
+								{ hl = mode_hl, strings = { mode } },
+								{ hl = "MiniStatuslineDevinfo", strings = { git, diagnostics } },
+								"%<", -- Mark general truncate point
+								{ hl = "MiniStatuslineFilename", strings = { filename } },
+								"%=", -- End left alignment
+								{
+									hl = "MiniStatuslineDevinfo",
+									strings = { session },
+								},
+								{ hl = "MiniStatuslineFileinfo", strings = { fileinfo } },
+								{ hl = mode_hl, strings = { location } },
+							})
+						end,
+					},
+				})
+				vim.cmd([[doautocmd WinEnter]]) -- not triggering otherwise
 			end,
 		})
+		-- Lua
+		--
 		use({
 			"nvim-treesitter/nvim-treesitter-context",
 			config = function()
@@ -389,6 +402,9 @@ return require("packer").startup({
 					template_new_daily = home .. "/templates/daily.md",
 					image_subdir = "img",
 					new_note_filename = "title-uuid",
+					follow_creates_nonexisting = false,
+					take_over_my_home = false,
+					auto_set_filetype = false,
 					uuid_sep = "_",
 					filename_space_subst = "-",
 					journal_auto_open = true,
@@ -399,7 +415,19 @@ return require("packer").startup({
 			end,
 		})
 		use({ "renerocksai/calendar-vim" })
-		use({ "https://github.com/chentoast/marks.nvim.git" })
+		use({
+			"https://github.com/chentoast/marks.nvim",
+			config = function()
+				require("marks").setup()
+			end,
+		})
+		use({
+			"michaelb/sniprun",
+			run = "bash ./install.sh",
+			config = function()
+				require("sniprun").setup({})
+			end,
+		})
 		-- Lua
 	end,
 })

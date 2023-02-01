@@ -1,6 +1,6 @@
 ---@diagnostic disable: undefined-global
 
-local utils = require("utils.sniputils")
+local utils = require("utils.snip-utils")
 
 local snips = {}
 ----------------------------------------------------------------------------
@@ -76,6 +76,10 @@ except Exception as e:
 )
 
 snips.print = utils.wrap_node("print", [[print({wrapped}){exit}]])
+
+snips.typeignore = s("# type",{
+    t({"# type: ignore"})
+})
 
 local ret = {}
 for _, v in pairs(snips) do

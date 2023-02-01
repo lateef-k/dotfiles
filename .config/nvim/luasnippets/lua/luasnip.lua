@@ -2,7 +2,7 @@
 
 -- https://stackoverflow.com/questions/66382691/how-to-escape-brackets-in-a-multi-line-string-in-lua
 
-local utils = require("utils.sniputils")
+local utils = require("utils.snip-utils")
 
 local snips = {}
 

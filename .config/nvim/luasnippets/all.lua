@@ -1,7 +1,7 @@
 ---@diagnostic disable: undefined-global
 --
 
-require("utils.sniputils")
+require("utils.snip-utils")
 
 local snips = {}
 

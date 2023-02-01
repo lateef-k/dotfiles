@@ -40,12 +40,14 @@ snips.journal_section = s(
     ";journal_section",
     fmt(
         [[
-# ({})
+# {} 
+<!-- #{} -->
 - {}
 ]]       ,
         {
-            p(os.date),
             i(1),
+            rep(1),
+            i(2),
         }
     )
 )

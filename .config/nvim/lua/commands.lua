@@ -22,20 +22,45 @@ command("LuasnipEditCurrent", function()
 	require("luasnip.loaders").edit_snippet_files()
 end)
 
--- session management
-command("SessionWrite", function(input)
-	require("mini.sessions").write(input.args)
-end, { nargs = 1 })
-command("SessionRead", function(input)
-	if input.args ~= "" then
-		require("mini.sessions").read(input.args)
+-- Sessions
+local sessions = require("mini.sessions")
+command("SessionStart", function()
+	local path = vim.fn.getcwd()
+	path = vim.fn.fnameescape(path)
+	path = path:gsub("/", "%%")
+	sessions.write(path)
+end)
+
+command("SessionStop", function()
+	vim.v.this_session = ""
+end)
+
+command("SessionToggle", function()
+	if vim.v.this_session == "" then
+		vim.cmd([[SessionStart]])
 	else
-		require("mini.sessions").read()
+		vim.cmd([[ SessionStop ]])
 	end
-end, { nargs = "?" })
-command("SessionSelect", function()
-    require("mini.sessions").select()
 end)
-command("SessionDelete", function()
-    require("mini.sessions").select("delete")
+
+command("SessionRead", function()
+	local path = vim.fn.getcwd()
+	path = vim.fn.fnameescape(path)
+	path = path:gsub("/", "%%")
+
+	local existing_sessions = vim.tbl_keys(sessions.detected)
+	if not vim.tbl_contains(existing_sessions, path) then
+		vim.notify("No session for CWD exists", vim.log.levels.INFO)
+	else
+		sessions.read(path)
+	end
 end)
+
+command("SessionSelect", function(inp)
+	if inp.args == "" then
+		sessions.select()
+	else
+		sessions.select(inp.args)
+	end
+end)
+--

@@ -1,4 +1,5 @@
 require("neodev").setup({})
+
 require("lspconfig")["sumneko_lua"].setup({
 	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
@@ -16,7 +17,7 @@ require("lspconfig")["sumneko_lua"].setup({
 				-- Make the server aware of Neovim runtime files
 				-- NOTE: neodev will do this instead
 				-- library = vim.api.nvim_get_runtime_file("", true),
-                checkThirdParty = false
+				checkThirdParty = false,
 			},
 			-- Do not send telemetry data containing a randomized but unique identifier
 			telemetry = {
@@ -42,17 +43,14 @@ require("lspconfig")["bashls"].setup({
 	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 })
-
 require("lspconfig")["jsonls"].setup({
 	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 })
-
 require("lspconfig")["clangd"].setup({
 	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 })
-
 require("lspconfig")["astro"].setup({
 	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
@@ -62,6 +60,14 @@ require("lspconfig")["tailwindcss"].setup({
 	capabilities = require("config.nvim-cmp"),
 })
 require("lspconfig")["gopls"].setup({
+	on_attach = require("mappings").on_attach_mappings,
+	capabilities = require("config.nvim-cmp"),
+})
+require("lspconfig")["marksman"].setup({
+	on_attach = require("mappings").on_attach_mappings,
+	capabilities = require("config.nvim-cmp"),
+})
+require("lspconfig")["ruff_lsp"].setup({
 	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 })

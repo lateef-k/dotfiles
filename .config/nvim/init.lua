@@ -1,4 +1,4 @@
-require('impatient')
+require("impatient")
 vim.opt.relativenumber = true
 
 -- vim.opt if for things you would set in vimscript. vim.g is for things you'd let.
@@ -9,11 +9,11 @@ vim.opt.expandtab = true -- use space char for tabbing
 vim.opt.smarttab = true
 vim.opt.wrap = true -- soft tab
 vim.opt.scrolloff = 999 -- keep cursor in center
-vim.opt.clipboard:append{ "unnamedplus" } -- use system clipboard
-vim.opt.switchbuf:append{ "usetab", "newtab" } -- NOTE THIS AFFECTS QUICKFIX BEHAVIOR
+vim.opt.clipboard:append({ "unnamedplus" }) -- use system clipboard
+vim.opt.switchbuf:append({ "usetab", "newtab" }) -- NOTE THIS AFFECTS QUICKFIX BEHAVIOR
 vim.opt.shortmess:append("I") --disable intro
 vim.opt.completeopt = "menu,menuone,noselect,noinsert"
-vim.opt.timeoutlen=500
+vim.opt.timeoutlen = 500
 vim.opt.termguicolors = true -- for feline
 
 vim.opt.termbidi = true
@@ -40,7 +40,7 @@ vim.g.loaded_netrwPlugin = 1
 -- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
 if vim.fn.executable("rg") == 1 then
-    vim.opt.grepprg =  "rg --vimgrep --smart-case"
+	vim.opt.grepprg = "rg --vimgrep --smart-case"
 end
 
 -- Only needed when i need to update packer_compiled, otherwise waste of startup time
@@ -50,6 +50,4 @@ require("mappings")
 require("autocommands")
 require("plugins")
 require("commands")
-
-
 

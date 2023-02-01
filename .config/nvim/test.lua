@@ -1,13 +1,15 @@
+t = require("telekasten").escape("%")
+print(t)
 
 
 
 
 vim.ui.select({ 1, 2, 3 }, {}, function(choice)
-	print("choose: " .. choice)
+    print("choose: " .. choice)
 end)
 
 vim.ui.input({}, function(inp)
-	print("input " .. inp)
+    print("input " .. inp)
 end)
 
 local zk = require("zk")
@@ -32,9 +34,9 @@ print(false and 5 or 10)
 
 zapi = require("zk.api")
 if nil then
-	print("truthy")
+    print("truthy")
 else
-	print("false")
+    print("false")
 end
 
 -- vim.fs.basename(vim.fn.expand("%:p:h")) .. "/" .. vim.fn.expand("%t")
@@ -47,15 +49,15 @@ local r = zutils.resolve_notebook_path(0)
 r = zutils.notebook_root(r)
 r = vim.fs.dirname(r)
 local s = vim.fn.expand("%:p")
-local href = filename:gsub( root, ""):gsub("/","",n)
+local href = filename:gsub(root, ""):gsub("/", "", n)
 print(r)
 print(s)
-print(string.gsub(s,r,""))
+print(string.gsub(s, r, ""))
 
 local root = zutils.resolve_notebook_path(0)
 root = zutils.notebook_root(root)
 local filename = vim.fn.expand("%:p")
-local href = filename:gsub( root, ""):gsub("/","",n)
+local href = filename:gsub(root, ""):gsub("/", "", n)
 zapi.list(nil, { hrefs = { href }, select = { "title", "path" } }, function(err, inp)
     print(href)
     if err then
@@ -67,14 +69,14 @@ end)
 zapi = require("zk.api")
 
 zapi.list("daily/2023-01-15_0gei.md", { select = { "title", "path" } }, function(err, inp)
-	print(currentFilename)
-	if err then
-		vim.notify(err.message, vim.log.levels.ERROR)
-		return
-	end
-	print(vim.inspect(inp))
-	tbl = vim.tbl_map(function(value)
-		return value.title
-	end, inp)
-	vim.ui.select(tbl, {}, print)
+    print(currentFilename)
+    if err then
+        vim.notify(err.message, vim.log.levels.ERROR)
+        return
+    end
+    print(vim.inspect(inp))
+    tbl = vim.tbl_map(function(value)
+        return value.title
+    end, inp)
+    vim.ui.select(tbl, {}, print)
 end)

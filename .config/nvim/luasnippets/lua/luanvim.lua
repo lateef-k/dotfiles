@@ -1,15 +1,17 @@
 ---@diagnostic disable: undefined-global
 local snips = {}
 snips.addkey = s(
-	";addkey",
+	"map",
 	fmt(
 		[[
-    {} = "<Cmd>{}<Cr>"{}
+map("{}","{}","{}",opts)
+{}
 ]],
 		{
 			i(1),
 			i(2),
-			i(0),
+			i(3),
+            i(0)
 		}
 	)
 )
