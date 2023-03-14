@@ -75,11 +75,12 @@ except Exception as e:
     {exit}]]
 )
 
-snips.print = utils.wrap_node("print", [[print({wrapped}){exit}]])
+snips.print = utils.wrap_node("print", [[print(f"{wrapped}"){exit}]])
 
 snips.typeignore = s("# type",{
     t({"# type: ignore"})
 })
+
 
 local ret = {}
 for _, v in pairs(snips) do

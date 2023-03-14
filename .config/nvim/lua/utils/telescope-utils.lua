@@ -2,8 +2,11 @@
 
 M = {}
 
+local builtin = require("telescope.builtin")
+local actions = require("telescope.actions")
+local sorters = require("telescope.sorters")
+
 M.fuzz_project_text = function()
-	local builtin = require("telescope.builtin")
 	local root = require("project_nvim.project").get_project_root()
 	builtin.grep_string({
 		shorten_path = true,
@@ -12,5 +15,6 @@ M.fuzz_project_text = function()
 		cwd = root or vim.fn.expand("%:p:h"),
 	})
 end
+
 
 return M

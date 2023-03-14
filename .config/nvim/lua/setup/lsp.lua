@@ -1,6 +1,6 @@
 require("neodev").setup({})
 
-require("lspconfig")["sumneko_lua"].setup({
+require("lspconfig")["lua_ls"].setup({
 	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 	settings = {
@@ -68,6 +68,10 @@ require("lspconfig")["marksman"].setup({
 	capabilities = require("config.nvim-cmp"),
 })
 require("lspconfig")["ruff_lsp"].setup({
+	on_attach = require("mappings").on_attach_mappings,
+	capabilities = require("config.nvim-cmp"),
+})
+require("lspconfig")["svelte"].setup({
 	on_attach = require("mappings").on_attach_mappings,
 	capabilities = require("config.nvim-cmp"),
 })

@@ -1,4 +1,4 @@
-require("impatient")
+-- require("impatient")
 vim.opt.relativenumber = true
 
 -- vim.opt if for things you would set in vimscript. vim.g is for things you'd let.
@@ -44,7 +44,6 @@ if vim.fn.executable("rg") == 1 then
 end
 
 -- Only needed when i need to update packer_compiled, otherwise waste of startup time
-vim.cmd([[packadd packer.nvim]])
 
 require("mappings")
 require("autocommands")

@@ -63,4 +63,7 @@ command("SessionSelect", function(inp)
 		sessions.select(inp.args)
 	end
 end)
---
+
+command("TmuxPickRestore", function ()
+    require("utils.telescope-utils").choose_restore_tmux()
+end)
