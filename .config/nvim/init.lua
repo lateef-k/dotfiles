@@ -1,6 +1,32 @@
--- require("impatient")
-vim.opt.relativenumber = true
+-- Bootstrap
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
+end
+vim.opt.rtp:prepend(lazypath)
 
+vim.g.mapleader = " "
+vim.g.localmapleader = "\\"
+
+require("lazy").setup("plugins", {
+    performance = {
+        cache = {
+            enabled = true
+        }
+    }
+})
+require("keymaps")
+require("autocommands")
+require("commands")
+
+vim.opt.relativenumber = true
 -- vim.opt if for things you would set in vimscript. vim.g is for things you'd let.
 
 vim.opt.tabstop = 4 -- tabs should equal 4 characters
@@ -40,13 +66,5 @@ vim.g.loaded_netrwPlugin = 1
 -- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
 if vim.fn.executable("rg") == 1 then
-	vim.opt.grepprg = "rg --vimgrep --smart-case"
+    vim.opt.grepprg = "rg --vimgrep --smart-case"
 end
-
--- Only needed when i need to update packer_compiled, otherwise waste of startup time
-
-require("mappings")
-require("autocommands")
-require("plugins")
-require("commands")
-

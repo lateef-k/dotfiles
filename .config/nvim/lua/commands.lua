@@ -8,9 +8,6 @@ local function command(name, user_command, opts)
 end
 
 -- Neovim dev
-command("DebugLua", function()
-	require("osv").run_this()
-end)
 
 command("ReloadModule", function(input)
 	require("plenary.reload").reload_module(input.fargs[1])
