@@ -8,14 +8,36 @@ local function attach_keymap()
             mode = { "x" },
             description = "Evaluate lines",
         },
-        { "<localleader>le", ":LegendaryEvalLine<CR>",      opts = opts,          description = "Evaluate currnetline" },
-        { "<localleader>ls", ":LegendaryScratchToggle<CR>", opts = opts,          description = "Toggle scratch buffer" },
-        { "<C-p>",           ":Legendary<CR>",              modes = { "n", "i" }, opts = opts,                          description = "Toggle scratch buffer" },
+        {
+            "<localleader>le",
+            ":LegendaryEvalLine<CR>",
+            opts = opts,
+            description = "Evaluate currnetline",
+        },
+        {
+            "<localleader>ls",
+            ":LegendaryScratchToggle<CR>",
+            opts = opts,
+            description = "Toggle scratch buffer",
+        },
+        {
+            "<C-p>",
+            ":Legendary<CR>",
+            mode = { "n", "i", "v" },
+            opts = opts,
+            description = "Toggle scratch buffer",
+        },
     }
 
     require("legendary").itemgroup({
         itemgroup = "legendary.nvim",
         keymaps = keymaps,
+    })
+    require("legendary").commands({
+        { "Commands",  ":Legendary commands",  description = "Commands: List all commands" },
+        { "Keymaps",   ":Legendary keymaps",   description = "Keymaps: List all keymaps" },
+        { "Autocmds",  ":Legendary autocmds",  description = "Autocmds: List all autocmds" },
+        { "Functions", ":Legendary functions", description = "Functions: List all functions" },
     })
 end
 

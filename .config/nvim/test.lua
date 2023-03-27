@@ -1,5 +1,5 @@
 
-require("chatgpt.flows.chat.sessions").render_list()
+require("chatgpt.flows.chat.session").list_sessions()
 
 t = require("telekasten").escape("%")
 print(t)
