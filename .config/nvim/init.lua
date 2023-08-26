@@ -58,11 +58,13 @@ vim.opt.modeline = false
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-
+vim.g.do_filetype_lua = true
+vim.g.did_load_filetypes = false
 -- running `:StartupTime -- file.py` and then `checkhealth` showed the culprit of slow loading time to be the component which is loading the python provider
 -- not sure if this showed up recently or something happened
 
--- vim.opt.foldmethod = "expr"
+vim.opt.foldmethod = "indent"
+vim.opt.foldlevel = 4
 -- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 
 if vim.fn.executable("rg") == 1 then

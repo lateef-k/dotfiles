@@ -56,5 +56,5 @@ return {
         "<Plug>(leap-backward-till)",
         "<Plug>(leap-cross-window)",
     },
-    config = attach_keymap,
+    init = attach_keymap,
 }

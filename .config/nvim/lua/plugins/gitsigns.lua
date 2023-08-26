@@ -15,7 +15,6 @@ local function attach_keymaps(bufnr)
 		{
 			"<leader>gsb",
 			require("gitsigns").stage_buffer,
-			mode = { "i" },
 			description = "Stages the current buffer",
 			opts = bufopts,
 		},

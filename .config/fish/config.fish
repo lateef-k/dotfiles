@@ -10,7 +10,6 @@ if status is-interactive
 end
 
 set EDITOR "nvim"
-
 set XDG_CONFIG_HOME "$HOME/.config/"
 set XDG_CACHE_HOME "$HOME/.cache/"
 
@@ -46,17 +45,7 @@ function man
     nvim -c "Man: $argv | only"
 end
 
-set -xg PYTHONPATH /home/alf/Documents/Utility/src $PYTHONPATH
 set -xg ZK_NOTEBOOK_DIR /home/alf/Documents/Library/Notes/zk_notes
-
-#need command to avoid calling echo,otherwise recursive
-#https://fishshell.com/docs/current/cmds/command.html
-#https://stackoverflow.com/questions/68223884/fish-how-to-prevent-recursive-function-calls (for another option, look at bototm)
-
-## messes with directory rename
-#function mv
-#    command mv --backup
-#end
-
+alias make "rlwrap --always-readline make"
 
 

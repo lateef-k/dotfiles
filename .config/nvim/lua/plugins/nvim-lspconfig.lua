@@ -58,10 +58,6 @@ local function config()
         on_attach = require("keymaps").on_attach_mappings,
         capabilities = nvim_cmp_capabilities,
     })
-    require("lspconfig")["astro"].setup({
-        on_attach = require("keymaps").on_attach_mappings,
-        capabilities = nvim_cmp_capabilities,
-    })
     require("lspconfig")["tailwindcss"].setup({
         on_attach = require("keymaps").on_attach_mappings,
         capabilities = nvim_cmp_capabilities,
@@ -79,6 +75,10 @@ local function config()
         capabilities = nvim_cmp_capabilities,
     })
     require("lspconfig")["svelte"].setup({
+        on_attach = require("keymaps").on_attach_mappings,
+        capabilities = nvim_cmp_capabilities,
+    })
+    require("lspconfig")["rome"].setup({
         on_attach = require("keymaps").on_attach_mappings,
         capabilities = nvim_cmp_capabilities,
     })
@@ -103,7 +103,7 @@ return {
         "lua",
         "svelte",
         "javascript",
-        "typescript"
+        "typescript",
     },
     config = config,
 }

@@ -17,6 +17,20 @@ snippet sbash
 	set -euo pipefail
 	IFS=$'\n\t'
 
+
+snippet init
+	#!/usr/bin/env bash
+
+	set -Eeuo pipefail
+	trap cleanup SIGINT SIGTERM ERR EXIT
+
+
+	cleanup() {
+	  trap - SIGINT SIGTERM ERR EXIT
+	  echo "Stopping..got error"
+	}
+
+
 snippet if
 	if [ $1 ]; then
 		${0:${VISUAL}}

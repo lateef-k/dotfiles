@@ -116,7 +116,7 @@ local function config()
             -- also ignored everything listed in .rgignore .ignore .gitignore (see https://github.com/BurntSushi/ripgrep)
             file_ignore_patterns = {
                 "__pycache__",
-                "node_modules",
+                "lazy-lock",
             },
             fname_width = 100,
         },
@@ -190,8 +190,10 @@ return {
             "ahmedkhalf/project.nvim",
             config = function()
                 require("project_nvim").setup({
+                    patterns = { "=nvim", ".git", "package.json", },
+                    exclude_dirs = {".config", "dotfiles"},
+                    manual = false,
                     show_hidden = true,
-                    manual_mode = true,
                 })
             end,
         },

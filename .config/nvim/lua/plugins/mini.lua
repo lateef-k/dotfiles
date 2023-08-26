@@ -1,3 +1,11 @@
+
+local keymap = {
+	ai = {
+		goto_left = "[g",
+		goto_right = "]g",
+	},
+}
+
 return {
 	"echasnovski/mini.nvim",
     event = "UIEnter",
@@ -5,9 +13,11 @@ return {
 		local spec_treesitter = require("mini.ai").gen_spec.treesitter
 		require("mini.ai").setup({
 			n_lines = 10000,
-			mappings = require("keymaps").mini.ai,
+			mappings = keymap,
+
+            -- depends on nvim-treesitter-textobjects
 			custom_textobjects = {
-				a = spec_treesitter({ a = "@parameter.outer", i = "@parameter.inner" }), -- overide argument text object
+				A = spec_treesitter({ a = "@parameter.outer", i = "@parameter.inner" }), -- overide argument text object
 				f = spec_treesitter({ a = "@function.outer", i = "@function.inner" }),
 				o = spec_treesitter({
 					a = { "@conditional.outer", "@loop.outer" },
