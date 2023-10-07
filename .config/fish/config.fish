@@ -2,14 +2,16 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
 
     if not set -q TMUX
-    	exec tmux
+        exec tmux
     end
 
     #vim mode
-    fish_vi_key_bindings
+    if not set -q VIMRUNTIME
+        fish_vi_key_bindings
+    end
 end
 
-set EDITOR "nvim"
+set EDITOR nvim
 set XDG_CONFIG_HOME "$HOME/.config/"
 set XDG_CACHE_HOME "$HOME/.cache/"
 
@@ -41,11 +43,9 @@ Alt-Shift-c 	Alt-Shift-c 	cd into sub-directories, including hidden ones.
 Ctrl-o 	Alt-o 	Open a file/dir using default editor ($EDITOR)
 Ctrl-g 	Alt-Shift-o 	Open a file/dir using xdg-open or open command
 '
-function man 
-    nvim -c "Man: $argv | only"
+function man
+    nvim -c ":Man $argv | only"
 end
 
 set -xg ZK_NOTEBOOK_DIR /home/alf/Documents/Library/Notes/zk_notes
 alias make "rlwrap --always-readline make"
-
-
