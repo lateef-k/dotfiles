@@ -1,4 +1,5 @@
 {
+  "CodeGPT.nvim": { "branch": "master", "commit": "6e3714e8d336aea4a205081d44ed8b2e3505dee2" },
   "LazyVim": { "branch": "main", "commit": "8c20e0b5889ed254613dbac26b203130764d9c5f" },
   "LuaSnip": { "branch": "master", "commit": "cdbf6f41381e5ee4810b4b09284b603d8f18365d" },
   "SchemaStore.nvim": { "branch": "main", "commit": "82e9a8d3e0fb14c04b8791b4cfb929112ec49920" },

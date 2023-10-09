@@ -129,4 +129,19 @@ return {
       end,
     },
   },
+  {
+    "nvim-lualine/lualine.nvim",
+    opts = function(_, opts)
+      local CodeGPTModule = require("codegpt")
+      opts.sections.lualine_x = { CodeGPTModule.get_status, "encoding", "fileformat" }
+    end,
+  },
+  {
+    "L3MON4D3/LuaSnip",
+    event = "InsertEnter",
+    opts = function(_, opts)
+      require("luasnip.loaders.from_snipmate").lazy_load() -- looks for snippets/ in rtp
+      require("luasnip.loaders.from_lua").lazy_load()
+    end,
+  },
 }

@@ -46,6 +46,3 @@ Ctrl-g 	Alt-Shift-o 	Open a file/dir using xdg-open or open command
 function man
     nvim -c ":Man $argv | only"
 end
-
-set -xg ZK_NOTEBOOK_DIR /home/alf/Documents/Library/Notes/zk_notes
-alias make "rlwrap --always-readline make"
