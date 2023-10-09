@@ -1,5 +1,5 @@
 **/tmux/plugins/*
 **/.netrwhist
 **/packer_compiled.lua
-fish_variables
+fish_variables*
 /.config/nvim.bak/

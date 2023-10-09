@@ -119,7 +119,14 @@ return {
     opts = {
       dir = os.getenv("OBSIDIAN_HOME"), -- no need to call 'vim.fn.expand' here
       -- see below for full list of options 👇
-
+      daily_notes = {
+        -- Optional, if you keep daily notes in a separate directory.
+        folder = "Journal/Computer",
+        -- Optional, if you want to change the date format for the ID of daily notes.
+        date_format = "%Y-%m-%d",
+        -- Optional, if you want to change the date format of the default alias of daily notes.
+        alias_format = "%B %-d, %Y",
+      },
       overwrite_mappings = false,
       mappings = {},
     },
@@ -129,11 +136,44 @@ return {
     "stevearc/dressing.nvim",
     opts = {},
   },
-
   {
     "stevearc/oil.nvim",
-    opts = {},
+    opts = {
+      delete_to_trash = true,
+    },
+    keys = {
+      {
+        "<leader>fe",
+        function()
+          local dir = require("lazyvim.util").get_root()
+          require("oil").toggle_float(dir)
+        end,
+        desc = "Explorer NeoTree (root dir)",
+      },
+      {
+        "<leader>fE",
+        function()
+          require("oil").toggle_float()
+        end,
+        desc = "Explorer NeoTree (cwd)",
+      },
+      { "<leader>e", "<leader>fe", desc = "Explorer NeoTree (root dir)", remap = true },
+      { "<leader>E", "<leader>fE", desc = "Explorer NeoTree (cwd)", remap = true },
+    },
     -- Optional dependencies
     dependencies = { "nvim-tree/nvim-web-devicons" },
+  },
+  {
+    "dpayne/CodeGPT.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+    },
+    keys = {
+      { "ai" },
+    },
+    config = function()
+      require("codegpt.config")
+    end,
   },
 }
