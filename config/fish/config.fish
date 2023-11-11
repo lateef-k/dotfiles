@@ -6,9 +6,15 @@ if status is-interactive
     end
 
     #vim mode
-    if not set -q VIMRUNTIME
-        fish_vi_key_bindings
-    end
+      # https://stackoverflow.com/questions/48956984/how-to-remap-escape-insert-mode-to-jk-in-fish-shell
+end
+
+function fish_user_key_bindings
+    fish_vi_key_bindings
+    # bind -m default \$ end-of-line
+    # bind -m default ^ beginning-of-line
+    bind -M insert -m default jk backward-char force-repaint
+    bind -M insert -m default kj backward-char force-repaint
 end
 
 set EDITOR nvim

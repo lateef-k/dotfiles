@@ -12,6 +12,8 @@ vim.keymap.del("n", "<C-_>", opts)
 -- EXIT NORMAL MODE
 map({ "i", "t" }, "jk", "<Esc>", opts)
 map({ "i", "t" }, "kj", "<Esc>", opts)
+map({ "t" }, "<Esc>", "<C-\\><C-n>", opts)
+map({ "t" }, "<Esc>", "<C-\\><C-n>", opts)
 
 -- GIT
 map({ "n" }, "<leader>gg", "<cmd>Git<CR>", opts)
