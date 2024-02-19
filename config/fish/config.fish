@@ -6,7 +6,7 @@ if status is-interactive
     end
 
     #vim mode
-      # https://stackoverflow.com/questions/48956984/how-to-remap-escape-insert-mode-to-jk-in-fish-shell
+    # https://stackoverflow.com/questions/48956984/how-to-remap-escape-insert-mode-to-jk-in-fish-shell
 end
 
 function fish_user_key_bindings
@@ -42,12 +42,12 @@ set -U FZF_LEGACY_KEYBINDINGS 0
 #options to pass to fzf, alt-enter to toggle multiple files
 set -U FZF_DEFAULT_OPTS "--bind tab:down,btab:up,alt-enter:toggle-out"
 : '
-Ctrl-t 	Ctrl-o 	Find a file.
-Ctrl-r 	Ctrl-r 	Search through command history.
-Alt-c 	Alt-c 	cd into sub-directories (recursively searched).
-Alt-Shift-c 	Alt-Shift-c 	cd into sub-directories, including hidden ones.
-Ctrl-o 	Alt-o 	Open a file/dir using default editor ($EDITOR)
-Ctrl-g 	Alt-Shift-o 	Open a file/dir using xdg-open or open command
+Ctrl-o 	Find a file.
+Ctrl-r 	Search through command history.
+Alt-c 	cd into sub-directories (recursively searched).
+Alt-Shift-c 	cd into sub-directories, including hidden ones.
+Alt-o 	Open a file/dir using default editor ($EDITOR)
+Alt-Shift-o 	Open a file/dir using xdg-open or open command
 '
 function man
     nvim -c ":Man $argv | only"
