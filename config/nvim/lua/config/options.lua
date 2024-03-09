@@ -4,3 +4,4 @@
 --
 local opt = vim.opt
 opt.grepprg = "rg --vimgrep --smart-case"
+opt.cmdheight = 0

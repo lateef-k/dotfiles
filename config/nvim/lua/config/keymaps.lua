@@ -43,3 +43,9 @@ map(
   "<cmd>NvimTmuxNavigateRight<cr><esc>",
   { desc = "Move cursor to right pane", noremap = true, silent = true }
 )
+
+map({
+  "i",
+  "n",
+  "v",
+}, "<C-b>", "<cmd>w<CR><cmd>!tmux send-keys -t '~' just ^M <cr><esc>")

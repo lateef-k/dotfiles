@@ -27,3 +27,15 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
   end,
 })
+
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = augroup("justfile"),
+  pattern = "*",
+  callback = function()
+    -- check if a justfile exists in current dir
+    if vim.fn.filereadable("justfile") == 1 then
+      vim.o.makeprg = "just"
+      -- set makeprg to just
+    end
+  end,
+})

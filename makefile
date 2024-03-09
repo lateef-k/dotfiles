@@ -3,7 +3,7 @@ all: stow
 
 stow:
 	stow --adopt --target=$(shell realpath ~/.config) config
-	git restore .
+	# git restore .
 	tmux source ~/.config/tmux/tmux.conf
 
 unstow:

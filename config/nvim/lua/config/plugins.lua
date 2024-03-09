@@ -11,7 +11,6 @@ local disable = {
   -- "nvim-neo-tree/neo-tree.nvim",
   "zbirenbaum/copilot-cmp",
   "nvimdev/dashboard-nvim",
-  "stevearc/dressing.nvim",
   "nvim-telescope/telescope.nvim",
   "folke/flash.nvim",
   "echasnovski/mini.pairs",
@@ -19,12 +18,16 @@ local disable = {
 
 local disabled_plugins = {}
 
+--
+
 for _, plugin in ipairs(disable) do
   table.insert(disabled_plugins, {
     plugin,
     enabled = false,
   })
 end
+
+local cmd = vim.api.nvim_create_user_command
 
 return {
   {
@@ -162,9 +165,14 @@ return {
         { noremap = true, silent = true, desc = "Create new note in Obsidian" },
       },
       {
-        "<leader>nf",
+        "<leader>n<leader>",
         "<cmd>ObsidianQuickSwitch<CR><Esc>",
         { noremap = true, silent = true, desc = "Quick switch in Obsidian" },
+      },
+      {
+        "<leader>n/",
+        "<cmd>ObsidianSearch<CR><Esc>",
+        { noremap = true, silent = true, desc = "Search in Obsidian" },
       },
       {
         "<leader>nb",
@@ -180,11 +188,6 @@ return {
         "<leader>nt",
         "<cmd>ObsidianTemplate<CR><Esc>",
         { noremap = true, silent = true, desc = "Insert Obsidian template" },
-      },
-      {
-        "<leader>sn",
-        "<cmd>ObsidianSearch<CR><Esc>",
-        { noremap = true, silent = true, desc = "Search in Obsidian" },
       },
       {
         mode = { "n", "v" },
@@ -257,85 +260,126 @@ return {
         bashls = {},
       },
     },
+    init = function()
+      local keys = require("lazyvim.plugins.lsp.keymaps").get()
+      -- disable a keymap
+      keys[#keys + 1] = { "gd", false }
+      keys[#keys + 1] = { "gr", false }
+      keys[#keys + 1] = { "gy", false }
+      keys[#keys + 1] = { "gI", false }
+    end,
   },
   {
     "ibhagwan/fzf-lua",
     -- optional for icon support
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      -- calling `setup` is optional for customization
-      require("fzf-lua").setup({})
+    init = function()
+      cmd("FilesCwd", function()
+        require("fzf-lua").files({ cwd = vim.fn.getcwd() })
+        vim.api.nvim_feedkeys("IHello", "n", false)
+      end, {})
     end,
+    opts = {
+      "fzf-tmux", -- :help fzf-lua-profiles
+    },
     keys = {
-      { "<leader>,", "<cmd>lua require('fzf-lua').buffers()<cr>", desc = "Switch Buffer" },
+      { "<leader>p", "<cmd>lua require('fzf-lua').commands()<cr>", desc = "Commands" },
       { "<leader>/", "<cmd>lua require('fzf-lua').grep({ search = '' })<cr>", desc = "Grep (root dir)" },
-      { "<leader>:", "<cmd>lua require('fzf-lua').command_history()<cr>", desc = "Command History" },
       { "<leader><space>", "<cmd>lua require('fzf-lua').files()<cr>", desc = "Find Files (root dir)" },
-      { "<leader>fb", "<cmd>lua require('fzf-lua').buffers()<cr>", desc = "Buffers" },
+      { "<leader>b", "<cmd>lua require('fzf-lua').buffers()<cr>", desc = "Switch Buffer" },
+      { "<leader>j", "<cmd>lua require('fzf-lua').jumps()<cr>", desc = "Jumps" },
+      { "<leader>?", "<cmd>lua require('fzf-lua').builtin()<cr>", desc = "FzfLua" },
+      { "<leader>'", "<cmd>lua require('fzf-lua').resume()<cr>", desc = "FzfLua" },
+      -- TODO: move this to on_attach
       {
-        "<leader>fc",
-        "<cmd>lua require('fzf-lua').files({ cwd = '~/Housekeeping/dotfiles/config/' })<cr>",
-        desc = "Find Config File",
-      },
-      { "<leader>ff", "<cmd>lua require('fzf-lua').files()<cr>", desc = "Find Files (root dir)" },
-      { "<leader>fF", "<cmd>lua require('fzf-lua').files({ cwd = vim.fn.getcwd() })<cr>", desc = "Find Files (cwd)" },
-      { "<leader>fr", "<cmd>lua require('fzf-lua').oldfiles()<cr>", desc = "Recent" },
-      { "<leader>fR", "<cmd>lua require('fzf-lua').oldfiles({ cwd = vim.fn.getcwd() })<cr>", desc = "Recent (cwd)" },
-      { "<leader>gc", "<cmd>lua require('fzf-lua').git_commits()<CR>", desc = "commits" },
-      { "<leader>gs", "<cmd>lua require('fzf-lua').git_status()<CR>", desc = "status" },
-      { '<leader>s"', "<cmd>lua require('fzf-lua').registers()<cr>", desc = "Registers" },
-      { "<leader>sa", "<cmd>lua require('fzf-lua').autocommands()<cr>", desc = "Auto Commands" },
-      { "<leader>sb", "<cmd>lua require('fzf-lua').current_buffer()<cr>", desc = "Buffer" },
-      { "<leader>sc", "<cmd>lua require('fzf-lua').command_history()<cr>", desc = "Command History" },
-      { "<leader>sC", "<cmd>lua require('fzf-lua').commands()<cr>", desc = "Commands" },
-      { "<leader>sd", "<cmd>lua require('fzf-lua').diagnostics({ bufnr = 0 })<cr>", desc = "Document diagnostics" },
-      { "<leader>sD", "<cmd>lua require('fzf-lua').diagnostics()<cr>", desc = "Workspace diagnostics" },
-      { "<leader>sg", "<cmd>lua require('fzf-lua').grep({ search = '' })<cr>", desc = "Grep (root dir)" },
-      { "<leader>sG", "<cmd>lua require('fzf-lua').grep({ cwd = vim.fn.getcwd() })<cr>", desc = "Grep (cwd)" },
-      { "<leader>sh", "<cmd>lua require('fzf-lua').help_tags()<cr>", desc = "Help Pages" },
-      { "<leader>sH", "<cmd>lua require('fzf-lua').highlights()<cr>", desc = "Search Highlight Groups" },
-      { "<leader>sk", "<cmd>lua require('fzf-lua').keymaps()<cr>", desc = "Key Maps" },
-      { "<leader>sM", "<cmd>lua require('fzf-lua').man_pages()<cr>", desc = "Man Pages" },
-      { "<leader>sm", "<cmd>lua require('fzf-lua').marks()<cr>", desc = "Jump to Mark" },
-      { "<leader>so", "<cmd>lua require('fzf-lua').vim_options()<cr>", desc = "Options" },
-      { "<leader>sR", "<cmd>lua require('fzf-lua').resume()<cr>", desc = "Resume" },
-      { "<leader>sw", "<cmd>lua require('fzf-lua').grep_cword({ word_match = '-w' })<cr>", desc = "Word (root dir)" },
-      { "gr", "<cmd>lua require('fzf-lua').lsp_references()<cr>", desc = "References" },
-      { "gI", "<cmd>lua require('fzf-lua').lsp_implementations()<cr>", desc = "Goto Implementation" },
-      { "gd", "<cmd>lua require('fzf-lua').lsp_definitions()<cr>", desc = "Goto Definition" },
-      { "gy", "<cmd>lua require('fzf-lua').lsp_typedefs()<cr>", desc = "Goto Type Definition" },
-      {
-        "<leader>sW",
-        "<cmd>lua require('fzf-lua').grep_cword({ cwd = vim.fn.getcwd(), word_match = '-w' })<cr>",
-        desc = "Word (cwd)",
-      },
-      { "<leader>sw", "<cmd>lua require('fzf-lua').grep_visual()<cr>", mode = "v", desc = "Selection (root dir)" },
-      {
-        "<leader>sW",
-        "<cmd>lua require('fzf-lua').grep_visual({ cwd = vim.fn.getcwd() })<cr>",
-        mode = "v",
-        desc = "Selection (cwd)",
-      },
-      {
-        "<leader>uC",
-        "<cmd>lua require('fzf-lua').colorschemes({ preview = true })<cr>",
-        desc = "Colorscheme with preview",
-      },
-      {
-        "<leader>ss",
+        "<leader>s",
         function()
           require("fzf-lua").lsp_document_symbols({ lsp_symbols = require("lazyvim.config").get_kind_filter() })
         end,
         desc = "Goto Symbol",
       },
       {
-        "<leader>sS",
+        "<leader>S",
         function()
           require("fzf-lua").lsp_workspace_symbols({ lsp_symbols = require("lazyvim.config").get_kind_filter() })
         end,
         desc = "Goto Symbol (Workspace)",
       },
+      { "gr", "<cmd>lua require('fzf-lua').lsp_references()<cr>", desc = "References" },
+      { "gI", "<cmd>lua require('fzf-lua').lsp_implementations()<cr>", desc = "Goto Implementation" },
+      { "gd", "<cmd>lua require('fzf-lua').lsp_definitions()<cr>", desc = "Goto Definition" },
+      { "gy", "<cmd>lua require('fzf-lua').lsp_typedefs()<cr>", desc = "Goto Type Definition" },
+      { "<leader>d", "<cmd>lua require('fzf-lua').diagnostics({ bufnr = 0 })<cr>", desc = "Document diagnostics" },
+      { "<leader>D", "<cmd>lua require('fzf-lua').diagnostics()<cr>", desc = "Workspace diagnostics" },
+      {
+        mode = { "n", "v", "i" },
+        "<C-x><C-f>",
+        function()
+          require("fzf-lua").complete_path()
+        end,
+        { silent = true, desc = "Fuzzy complete path" },
+      },
+      {
+        mode = { "n", "v", "i" },
+        "<C-x><C-l>",
+        function()
+          require("fzf-lua").complete_line()
+        end,
+        { silent = true, desc = "Fuzzy complete path" },
+      },
+
+      -- -- TODO: make this work for LSPs
+      -- {
+      --   mode = { "n", "v", "i" },
+      --   "<C-x><C-l>",
+      --   function()
+      --     local result, err = vim.lsp.buf_request_sync(
+      --       vim.api.nvim_get_current_buf(),
+      --       "textDocument/completion",
+      --       vim.lsp.util.make_position_params(),
+      --       1000
+      --     )
+      --     if err then
+      --       print("Error fetching completions: ", err)
+      --     else
+      --       print("got it")
+      --       print(vim.inspect(result))
+      --       local buf = vim.api.nvim_get_current_buf()
+      --       -- Process the result which contains the completion items
+      --       -- Example: print the label of each completion item
+      --       if result and result.items then
+      --         for _, item in ipairs(result.items) do
+      --           print(item.label)
+      --         end
+      --       end
+      --     end
+      --   end,
+      --   { silent = true, desc = "Fuzzy complete path" },
+      -- },
     },
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      indent = {
+        disable = { "python" },
+      },
+    },
+  },
+  {
+    "sourcegraph/sg.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim", --[[ "nvim-telescope/telescope.nvim ]]
+    },
+    -- keys = {
+    --   {
+    --     mode = { "n", "v" },
+    --     "<leader>nx",
+    --     "<cmd>ObsidianLinkNew<CR><Esc>",
+    --     { noremap = true, silent = true, desc = "Create new Obsidian link" },
+    --   },
+    -- },
+    config = true,
   },
   unpack(disabled_plugins),
 }

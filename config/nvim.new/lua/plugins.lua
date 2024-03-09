@@ -26,34 +26,17 @@ return {
 			require("fzf-lua").setup({})
 		end,
 		keys = {
+			{ "<leader>z", "<cmd>lua require('fzf-lua')<cr>", desc = "Switch Buffer" },
 			{ "<leader>,", "<cmd>lua require('fzf-lua').buffers()<cr>", desc = "Switch Buffer" },
 			{ "<leader>/", "<cmd>lua require('fzf-lua').grep({ search = '' })<cr>", desc = "Grep (root dir)" },
 			{ "<leader>:", "<cmd>lua require('fzf-lua').command_history()<cr>", desc = "Command History" },
 			{ "<leader><space>", "<cmd>lua require('fzf-lua').files()<cr>", desc = "Find Files (root dir)" },
-			-- { "<leader>fb", "<cmd>lua require('fzf-lua').buffers()<cr>", desc = "Buffers" }, -- redundent
-			{ "<leader>fz", "<cmd>FzfLua<cr>", desc = "Open Fzf lua" },
+			{ "<leader>fo", "<cmd>lua require('fzf-lua').oldfiles()<cr>", desc = "Recent" },
 			{
-				"<leader>fc",
-				"<cmd>lua require('fzf-lua').files({ cwd = '~/Housekeeping/dotfiles/config/' })<cr>",
-				desc = "Find Config File",
-			},
-			{
-				"<leader>ff",
-				"<cmd>lua require('fzf-lua').files({ cwd = vim.fn.getcwd() })<cr>",
-				desc = "Find Files (cwd)",
-			},
-			{ "<leader>fr", "<cmd>lua require('fzf-lua').oldfiles()<cr>", desc = "Recent" },
-			{
-				"<leader>fR",
+				"<leader>fO",
 				"<cmd>lua require('fzf-lua').oldfiles({ cwd = vim.fn.getcwd() })<cr>",
 				desc = "Recent (cwd)",
 			},
-			{ "<leader>gb", "<cmd>lua require('fzf-lua').git_bcommits()<CR>", desc = "commits" },
-			{ "<leader>gc", "<cmd>lua require('fzf-lua').git_commits()<CR>", desc = "commits" },
-			{ "<leader>gs", "<cmd>lua require('fzf-lua').git_status()<CR>", desc = "status" },
-			{ "<leader>sq", "<cmd>lua require('fzf-lua').quickfix()<CR>", desc = "commits" },
-			{ '<leader>ss"', "<cmd>lua require('fzf-lua').registers()<cr>", desc = "Registers" },
-			{ "<leader>sa", "<cmd>lua require('fzf-lua').autocommands()<cr>", desc = "Auto Commands" },
 			{ "<leader>sb", "<cmd>lua require('fzf-lua').current_buffer()<cr>", desc = "Buffer" },
 			{ "<leader>sc", "<cmd>lua require('fzf-lua').command_history()<cr>", desc = "Command History" },
 			{ "<leader>sC", "<cmd>lua require('fzf-lua').commands()<cr>", desc = "Commands" },

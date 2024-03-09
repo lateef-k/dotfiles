@@ -49,6 +49,6 @@ Alt-Shift-c 	cd into sub-directories, including hidden ones.
 Alt-o 	Open a file/dir using default editor ($EDITOR)
 Alt-Shift-o 	Open a file/dir using xdg-open or open command
 '
-function man
-    nvim -c ":Man $argv | only"
-end
+# function man
+#     nvim -c ":Man $argv | only"
+# end
