@@ -37,6 +37,11 @@
           modules = [ 
             ./nixos/configuration.nix 
             disko.nixosModules.disko
+          {
+            # given the users in this list the right to specify additional substituters via:
+            #    1. `nixConfig.substituters` in `flake.nix`
+            nix.settings.trusted-users = [ "ludvi" ];
+          }
                   {
         disko.devices = {
           disk = {
