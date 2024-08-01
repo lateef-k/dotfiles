@@ -18,9 +18,7 @@
         sha256 = "1ygai8iax8i1rlpcmam0dpg855wggv1jv9c8gyxd7fgpalggqx5p";
       }
     }/module.nix"
-    ./disk-config.nix
     ./hardware-configuration.nix
-    /etc/nixos/cachix.nix
   ];
 
   nixpkgs = {
