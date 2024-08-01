@@ -10,14 +10,6 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./users.nix
-
-    # Import your generated (nixos-generate-config) hardware configuration
-    "${
-      builtins.fetchTarball {
-        url = "https://github.com/nix-community/disko/archive/${commit}.tar.gz";
-        sha256 = "1ygai8iax8i1rlpcmam0dpg855wggv1jv9c8gyxd7fgpalggqx5p";
-      }
-    }/module.nix"
     ./hardware-configuration.nix
   ];
 
