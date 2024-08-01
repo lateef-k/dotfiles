@@ -19,7 +19,7 @@
    disko.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, disko, ... }@inputs:
     let inherit (self) outputs;
     in {
       nixosConfigurations = {
