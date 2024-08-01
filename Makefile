@@ -7,6 +7,6 @@ nix:
 	sudo nixos-rebuild switch --flake .#ludnix --impure
 
 init-disk:
-	sudo nix --experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --flake '.#ludnix' --disk main /dev/vda
+	sudo nix --experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --write-efi-boot-entries --flake '.#ludnix' --disk main /dev/vda
 
 .PHONY: home, nix
