@@ -1,0 +1,8 @@
+
+set match-hidden-files on
+set page-completions off
+set completion-query-items 350
+set completion-ignore-case on
+set show-all-if-ambiguous on
+set bell-style none
+TAB: menu-complete
