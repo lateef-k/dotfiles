@@ -1,5 +1,4 @@
 --
-
 --                                                 *grr* *gra* *grn* *i_CTRL-S*
 -- Some keymaps are created unconditionally when Nvim starts:
 -- - "grn" is mapped in Normal mode to |vim.lsp.buf.rename()|
@@ -41,6 +40,8 @@ vim.opt.smartcase = true
 vim.opt.smartindent = true
 vim.opt.clipboard = "unnamedplus"
 
+vim.cmd("colorscheme retrobox")
+
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
@@ -67,18 +68,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Plugin specs
 local plugins = {
-	{
-		"catppuccin/nvim",
-		name = "catppuccin",
-		priority = 1000,
-		config = function()
-			require("catppuccin").setup({
-				flavour = "frappe",
-			})
-			vim.cmd.colorscheme("catppuccin")
-		end,
-	},
-	{ "aserowy/tmux.nvim", config = true },
+	{ "aserowy/tmux.nvim", config = true, event = "VeryLazy" },
 	{
 		"folke/lazydev.nvim",
 		ft = "lua", -- only load on lua files
@@ -112,6 +102,7 @@ local plugins = {
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-nvim-lua",
 		},
+		event = "InsertEnter",
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
@@ -180,6 +171,7 @@ local plugins = {
 				"pyright",
 				"nixd",
 				"lua_ls",
+				"bashls",
 			}
 			for _, lsp in ipairs(servers) do
 				lspconfig[lsp].setup({
@@ -189,9 +181,45 @@ local plugins = {
 			lspconfig.pyright.setup({})
 			lspconfig.nixd.setup({})
 		end,
+		event = "VeryLazy",
 	},
 	{
 		"ibhagwan/fzf-lua",
+		-- keymap = {
+		--   -- Below are the default binds, setting any value in these tables will override
+		--   -- the defaults, to inherit from the defaults change [1] from `false` to `true`
+		--   builtin = {
+		--     false,          -- do not inherit from defaults
+		--     -- neovim `:tmap` mappings for the fzf win
+		--     ["<F1>"]        = "toggle-help",
+		--     ["<F2>"]        = "toggle-fullscreen",
+		--     -- Only valid with the 'builtin' previewer
+		--     ["<F3>"]        = "toggle-preview-wrap",
+		--     ["<F4>"]        = "toggle-preview",
+		--     -- Rotate preview clockwise/counter-clockwise
+		--     ["<F5>"]        = "toggle-preview-ccw",
+		--     ["<F6>"]        = "toggle-preview-cw",
+		--     ["<S-down>"]    = "preview-page-down",
+		--     ["<S-up>"]      = "preview-page-up",
+		--     ["<S-left>"]    = "preview-page-reset",
+		--   },
+		--   fzf = {
+		--     false,          -- do not inherit from defaults
+		--     -- fzf '--bind=' options
+		--     ["ctrl-z"]      = "abort",
+		--     ["ctrl-u"]      = "unix-line-discard",
+		--     ["ctrl-f"]      = "half-page-down",
+		--     ["ctrl-b"]      = "half-page-up",
+		--     ["ctrl-a"]      = "beginning-of-line",
+		--     ["ctrl-e"]      = "end-of-line",
+		--     ["alt-a"]       = "toggle-all",
+		--     -- Only valid with fzf previewers (bat/cat/git/etc)
+		--     ["f3"]          = "toggle-preview-wrap",
+		--     ["f4"]          = "toggle-preview",
+		--     ["shift-down"]  = "preview-page-down",
+		--     ["shift-up"]    = "preview-page-up",
+		--   },
+		-- }
 		keys = {
 			{
 				"<leader>b",
@@ -293,28 +321,31 @@ local plugins = {
 				end,
 			})
 		end,
+		event = "InsertEnter",
 	},
 	{
 		"echasnovski/mini.nvim",
 		config = function()
 			require("mini.ai").setup({ search_method = "cover_or_nearest" })
+			require("mini.pairs").setup()
 			require("mini.surround").setup()
 			require("mini.tabline").setup()
 			require("mini.statusline").setup({
 				use_icons = false,
 			})
 		end,
+		event = "VeryLazy",
 	},
 	{
 		"L3MON4D3/LuaSnip",
 		dependencies = { "rafamadriz/friendly-snippets" },
+		event = "InsertEnter",
 		config = function()
 			require("luasnip.loaders.from_vscode").lazy_load()
 		end,
 	},
-	{ "windwp/nvim-autopairs", config = true },
 	{ "nvim-treesitter/nvim-treesitter", dev = true },
-	{ "folke/which-key.nvim", config = true },
+	{ "folke/which-key.nvim", config = true, event = "VeryLazy" },
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		dependencies = {
@@ -324,7 +355,7 @@ local plugins = {
 		},
 		config = true,
 		keys = {
-			{ "<leader>ne", "<cmd>Neotree toggle<CR>", desc = "Toggle Neotree" },
+			{ "<leader>e", "<cmd>Neotree toggle<CR>", desc = "Toggle Neotree" },
 		},
 	},
 }
