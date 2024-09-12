@@ -3,7 +3,7 @@ let
   # Import unstable packages
   unstable = import inputs.nixpkgs-unstable {
     system = pkgs.system;
-    config.allowUnfree = true; # If you need unfree packages
+    # config.allowUnfree = true; # If you need unfree packages
   };
 in {
   imports = [
@@ -48,12 +48,7 @@ in {
       tmuxPlugins.sensible
       tmuxPlugins.extrakto
       tmuxPlugins.yank
-      {
-        plugin = tmuxPlugins.continuum;
-        extraConfig = ''
-          set-option -g default-shell ${fish}/bin/fish
-        '';
-      }
+      tmuxPlugins.continuum
     ];
   };
 

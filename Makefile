@@ -1,7 +1,7 @@
 
 
 home:
-	home-manager switch --flake .#ludvi@ludnix --impure
+	home-manager switch --flake .#ludvi-full --impure
 
 nix:
 	sudo nixos-rebuild switch --flake .#ludnix --impure

@@ -5,9 +5,9 @@
   imports = [
 
     # TODO: I want a minimal module for server (with ripgrep, fd, tmux)
-    ./modules/shell.nix
-    ./modules/editor.nix
-    ./modules/applications.nix
+    # ./modules/shell.nix
+    # ./modules/editor.nix
+    # ./modules/applications.nix
   ];
 
   nixpkgs = {
