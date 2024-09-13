@@ -1,5 +1,5 @@
 {
-  description = "Your new nix config";
+  description = "Ludvi's Nix Config";
 
   inputs = {
     disko.url = "github:nix-community/disko";

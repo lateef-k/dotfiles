@@ -73,6 +73,14 @@
   #
   programs.ssh.startAgent = true;
 
+  programs.git = {
+    enable = true;
+    config = {
+      diff.tool = "nvimdiff";
+      difftool.nvimdiff.cmd = ''nvim -d "$LOCAL" "$REMOTE"'';
+    };
+  };
+
   services.avahi = {
     enable = true;
     nssmdns4 = true;

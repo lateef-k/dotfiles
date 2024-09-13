@@ -1,9 +1,9 @@
 { inputs, lib, config, pkgs, pkgs-unstable, rootPath, ... }: {
   imports = [
-    "${
-      fetchTarball
-      "https://github.com/msteen/nixos-vscode-server/tarball/master"
-    }/modules/vscode-server/home.nix"
+    # "${
+    #   fetchTarball
+    #   "https://github.com/msteen/nixos-vscode-server/tarball/master"
+    # }/modules/vscode-server/home.nix"
   ];
 
   home.packages = (with pkgs; [
@@ -19,8 +19,7 @@
     nerdfonts
     iw
     pipx
-    hello-unfree
-  ]) ++ (with pkgs-unstable; [ uv ]);
+  ]) ++ (with pkgs-unstable; [ uv lazygit ]);
 
   programs.zoxide.enable = true;
 
