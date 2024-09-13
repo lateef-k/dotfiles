@@ -1,5 +1,4 @@
-{ inputs, lib, config, pkgs, ... }: {
-
+{ inputs, lib, config, pkgs, ... }@args: {
   nix = let flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
 
   in {
@@ -28,21 +27,12 @@
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
-  nixpkgs = {
-    overlays = [ ];
-    config = {
-      allowUnfree = true;
-      # Workaround for https://github.com/nix-community/home-manager/issues/2942
-      allowUnfreePredicate = _: true;
-    };
-  };
-
-  # environment.systemPackages = with pkgs;
-  # [
-  # Other packages
-  # vscode # Add Visual Studio Code
-  # elfutils
-  # ];
+  environment.systemPackages = with pkgs; [
+    # #Other packages
+    # vscode # Add Visual Studio Code
+    elfutils
+    ranger
+  ];
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
 

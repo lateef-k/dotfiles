@@ -282,6 +282,12 @@ local plugins = {
 				end,
 			},
 			{
+				"<leader>xq",
+				function()
+					require("fzf-lua").quickfix()
+				end,
+			},
+			{
 				"<leader>j",
 				function()
 					require("fzf-lua").jumplist()

@@ -1,11 +1,4 @@
-{ inputs, lib, config, pkgs, rootPath, ... }:
-let
-  # Import unstable packages
-  unstable = import inputs.nixpkgs-unstable {
-    system = pkgs.system;
-    # config.allowUnfree = true; # If you need unfree packages
-  };
-in {
+{ inputs, lib, config, pkgs, pkgs-unstable, rootPath, ... }: {
   imports = [
     "${
       fetchTarball
@@ -26,7 +19,8 @@ in {
     nerdfonts
     iw
     pipx
-  ]) ++ (with unstable; [ uv ]);
+    hello-unfree
+  ]) ++ (with pkgs-unstable; [ uv ]);
 
   programs.zoxide.enable = true;
 

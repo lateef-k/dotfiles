@@ -11,11 +11,10 @@
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
-  outputs = { self, nixpkgs, home-manager, disko, ... }@inputs:
+  outputs = { ... }@inputs:
     let
-      inherit (self) outputs;
-      mkSystem = (import ./mkconfig.nix { inherit nixpkgs inputs; }).mkSystem;
-      mkHome = (import ./mkconfig.nix { inherit nixpkgs inputs; }).mkHome;
+      mkSystem = (import ./mkconfig.nix { inherit inputs; }).mkSystem;
+      mkHome = (import ./mkconfig.nix { inherit inputs; }).mkHome;
     in {
       nixosConfigurations.ludnix = mkSystem { name = "x86_64-linux-t480s"; };
       nixosConfigurations.vm_test = mkSystem { name = "x86_64-vm"; };
