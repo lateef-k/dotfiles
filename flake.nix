@@ -17,7 +17,9 @@
       mkHome = (import ./mkconfig.nix { inherit inputs; }).mkHome;
     in {
       nixosConfigurations.ludnix = mkSystem { name = "x86_64-linux-t480s"; };
-      nixosConfigurations.vm_test = mkSystem { name = "x86_64-vm"; };
+      nixosConfigurations.vm-test = mkSystem { name = "x86_64-vm"; };
+      nixosConfigurations.aarch64-ludnix-utm =
+        mkSystem { name = "aarch64-linux-utm"; };
 
       # Standalone home-manager configuration entrypoint
       homeConfigurations."ludvi-full" = mkHome [
@@ -25,5 +27,11 @@
         ./home-manager/modules/editor.nix
         ./home-manager/modules/applications.nix
       ];
+
+      homeConfigurations."ludvi-headless" = mkHome [
+        ./home-manager/modules/shell.nix
+        ./home-manager/modules/editor.nix
+      ];
+
     };
 }

@@ -1,12 +1,18 @@
-
+# Variables for configuration
+NIXOS_OUTPUT ?= NOT_SET
+HOME_PROFILE ?= NOT_SET
+DISK ?= NOT_SET
 
 home:
-	home-manager switch --flake .#ludvi-full --impure
+	# Example usage: make home HOME_PROFILE=ludvi-headless
+	home-manager switch --flake .#$(HOME_PROFILE) --impure
 
 nix:
-	sudo nixos-rebuild switch --flake .#ludnix --impure
+	# Example usage: make nix NIXOS_OUTPUT=ludnix
+	sudo nixos-rebuild switch --flake .#$(NIXOS_OUTPUT) --impure
 
 init-disk:
-	sudo nix --experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --write-efi-boot-entries --flake '.#ludnix' --disk main /dev/vda
+	# Example usage: make init-disk DISK=/dev/sda
+	sudo nix --experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --write-efi-boot-entries --flake '.#$(NIXOS_OUTPUT)' --disk main $(DISK)
 
-.PHONY: home, nix
+.PHONY: home nix init-disk

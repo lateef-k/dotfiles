@@ -19,6 +19,7 @@
     nerdfonts
     iw
     pipx
+    gh
   ]) ++ (with pkgs-unstable; [ uv lazygit ]);
 
   programs.zoxide.enable = true;
@@ -36,6 +37,7 @@
     mouse = true;
     escapeTime = 10;
     extraConfig = lib.strings.fileContents "${rootPath}/config/tmux.conf";
+    shell = "${pkgs.fish}/bin/fish";
     plugins = with pkgs; [
       # tmuxPlugins.resurrect
       tmuxPlugins.sensible
