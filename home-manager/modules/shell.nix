@@ -62,7 +62,6 @@
     }];
   };
 
-  programs.zsh = { enable = true; };
 
   programs.readline = {
     enable = true;

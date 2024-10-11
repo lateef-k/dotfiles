@@ -364,6 +364,10 @@ local plugins = {
 			{ "<leader>e", "<cmd>Neotree toggle<CR>", desc = "Toggle Neotree" },
 		},
 	},
+	{
+		"zbirenbaum/copilot.lua",
+		config = true,
+	},
 }
 
 -- Setup lazy.nvim
