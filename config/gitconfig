@@ -1,3 +1,8 @@
+
+[user]
+    name = "lateef";
+    email = "dev@lateefk.com";
+
 [alias]
     co = checkout
     ci = commit
@@ -32,3 +37,5 @@
 
 [merge]
 	conflictstyle = "zdiff3"
+
+

@@ -14,3 +14,4 @@ abbr -a cd 'z'
 # Environment
 set -x MANPAGER 'nvim +Man!'
 
+fish_vi_key_bindings

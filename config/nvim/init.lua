@@ -49,8 +49,8 @@ map({ "i", "t" }, "jk", "<Esc>", opts)
 map({ "i", "t" }, "kj", "<Esc>", opts)
 map("n", "]b", "<cmd>bnext<CR>")
 map("n", "[b", "<cmd>bprevious<CR>")
-map("n", "]c", "<cmd>cnext<CR>")
-map("n", "[c", "<cmd>cprevious<CR>")
+map("n", "]q", "<cmd>cnext<CR>")
+map("n", "[q", "<cmd>cprevious<CR>")
 
 vim.opt.rtp:prepend(lazypath)
 
@@ -334,7 +334,9 @@ local plugins = {
 		config = function()
 			require("mini.ai").setup({ search_method = "cover_or_nearest" })
 			require("mini.pairs").setup()
-			require("mini.surround").setup()
+			require("mini.surround").setup({
+				search_method = "cover_or_next",
+			})
 			require("mini.tabline").setup()
 			require("mini.statusline").setup({
 				use_icons = false,
@@ -366,6 +368,13 @@ local plugins = {
 	},
 	{
 		"zbirenbaum/copilot.lua",
+		config = true,
+	},
+	{
+		"tpope/vim-fugitive",
+	},
+	{
+		"lewis6991/gitsigns.nvim",
 		config = true,
 	},
 }

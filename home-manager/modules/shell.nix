@@ -26,8 +26,7 @@
 
   programs.git = {
     enable = true;
-    userName = "lateef";
-    userEmail = "dev@lateefk.com";
+    includes = [ { path = "${rootPath}/config/gitconfig"; } ];
   };
 
   programs.tmux = {
@@ -61,7 +60,6 @@
       src = pkgs.fishPlugins.pure;
     }];
   };
-
 
   programs.readline = {
     enable = true;

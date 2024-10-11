@@ -17,6 +17,7 @@
     sqlite
     gnumake
     python312
+    nodejs_22
     pyright
     nixd
     lua-language-server
@@ -37,7 +38,7 @@
   xdg.configFile = {
     "nvim" = {
       source = config.lib.file.mkOutOfStoreSymlink
-        "${config.home.homeDirectory}/dotfiles/config/nvim";
+        "${config.home.homeDirectory}/Dotfiles/config/nvim";
     };
   };
 
