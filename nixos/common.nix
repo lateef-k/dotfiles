@@ -27,19 +27,13 @@
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
-  environment.systemPackages = with pkgs; [
-    # #Other packages
-    # vscode # Add Visual Studio Code
-    elfutils
-    ranger
-  ];
-
-  # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
+  # environment.systemPackages = with pkgs; [ ];
 
   system.stateVersion = "24.05";
   time.timeZone = "Asia/Kuwait";
   i18n.defaultLocale = "en_US.UTF-8";
 
+  programs.fish.enable = true;
   users.users = {
     ludvi = {
       initialPassword = "correcthorse";
@@ -47,11 +41,10 @@
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINS0KKNvykU3vD9MAmNAR6TRTOUwxiB5CIUjuDBrnOBK lutfi@lutfis-MBP"
       ];
-      extraGroups = [ "wheel" "docker" "audio" ];
+      extraGroups = [ "wheel" "audio" ];
       shell = pkgs.fish;
     };
   };
-  programs.fish.enable = true;
 
   boot = {
     loader.systemd-boot.enable = true;
@@ -62,33 +55,7 @@
     networkmanager.enable = true;
     nameservers = [ "8.8.8.8" "8.8.4.4" ];
   };
-  #
-  # services.openssh = {
-  #   enable = true;
-  #   settings = {
-  #     PermitRootLogin = "no";
-  #     PasswordAuthentication = false;
-  #   };
-  # };
-  #
+
   programs.ssh.startAgent = true;
-
-  programs.git = {
-    enable = true;
-    config = {
-      diff.tool = "nvimdiff";
-      difftool.nvimdiff.cmd = ''nvim -d "$LOCAL" "$REMOTE"'';
-    };
-  };
-
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-    # openFirewall = true;
-    publish = {
-      enable = true;
-      addresses = true;
-    };
-
-  };
+  programs.git.enable = true;
 }
