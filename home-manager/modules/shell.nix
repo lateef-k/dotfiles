@@ -38,7 +38,7 @@
     extraConfig = lib.strings.fileContents "${rootPath}/config/tmux.conf";
     shell = "${pkgs.fish}/bin/fish";
     plugins = with pkgs; [
-      # tmuxPlugins.resurrect
+      tmuxPlugins.resurrect
       tmuxPlugins.sensible
       tmuxPlugins.extrakto
       tmuxPlugins.yank
