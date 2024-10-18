@@ -23,7 +23,10 @@ in {
     nerdfonts
     iw
     pipx
+    file
+    ncdu
     gh
+    discord
   ]) ++ (with pkgs-unstable; [ uv lazygit ]);
 
   programs.zoxide.enable = true;
