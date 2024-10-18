@@ -1,4 +1,8 @@
-{ inputs, lib, config, pkgs, pkgs-unstable, rootPath, ... }: {
+{ inputs, lib, config, pkgs, pkgs-unstable, rootPath, ... }:
+
+let util = (import ../util.nix config.lib);
+
+in {
   imports = [
     # "${
     #   fetchTarball
@@ -54,11 +58,19 @@
   programs.fish = {
     enable = true;
     interactiveShellInit =
-      lib.strings.fileContents "${rootPath}/config/config.fish";
+      lib.strings.fileContents "${rootPath}/config/fish/config.fish";
     plugins = [{
       name = "pure";
       src = pkgs.fishPlugins.pure;
     }];
+  };
+
+  xdg.configFile = util.symlinkFiles {
+    sourceDir = "${config.home.homeDirectory}/Dotfiles/config/fish/conf.d";
+    targetDir = "fish/conf.d";
+  } // util.symlinkFiles {
+    sourceDir = "${config.home.homeDirectory}/Dotfiles/config/fish/functions";
+    targetDir = "fish/functions";
   };
 
   programs.readline = {

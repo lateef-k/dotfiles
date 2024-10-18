@@ -1,25 +1,4 @@
-# Disable greeting
-set fish_greeting
-
-# theme
-fish_config theme choose "Seaweed"
-
-alias nvimdiff="nvim -d"
-alias lg="lazygit"
-
-# Abbreviations
-abbr -a nix-shell 'nix-shell --command fish'
-abbr -a cd 'z'
-
-# Environment
-set -x MANPAGER 'nvim +Man!'
-
-fish_vi_key_bindings
-
-fish_add_path ~/.local/bin
-
-
-function ghcs
+function cs
     set -l TARGET "shell"
     set GH_DEBUG $GH_DEBUG
 
@@ -91,7 +70,7 @@ EXAMPLES
     end
 end
 
-function ghce
+function ce
     set GH_DEBUG $GH_DEBUG
 
     set -l __USAGE "Wrapper around 'gh copilot explain' to explain a given input command in natural language.
