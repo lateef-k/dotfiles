@@ -33,7 +33,7 @@ in {
 
   programs.git = {
     enable = true;
-    includes = [ { path = "${rootPath}/config/gitconfig"; } ];
+    includes = [{ path = "${rootPath}/config/gitconfig"; }];
   };
 
   programs.tmux = {
@@ -71,9 +71,6 @@ in {
   xdg.configFile = util.symlinkFiles {
     sourceDir = "${config.home.homeDirectory}/Dotfiles/config/fish/conf.d";
     targetDir = "fish/conf.d";
-  } // util.symlinkFiles {
-    sourceDir = "${config.home.homeDirectory}/Dotfiles/config/fish/functions";
-    targetDir = "fish/functions";
   };
 
   programs.readline = {
