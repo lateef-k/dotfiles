@@ -1,6 +1,6 @@
 { inputs, lib, config, pkgs, ... }: {
 
-  home.packages = with pkgs; [ obsidian ];
+  home.packages = with pkgs; [ obsidian discord ];
 
   # TODO: change into nightly 
   programs.firefox.enable = true;

@@ -16,18 +16,17 @@ in {
     fd
     fzf
     xclip
-    just
-    tldr
     mosh
-    obsidian
     nerdfonts
     iw
     pipx
     file
     ncdu
     gh
-    discord
-  ]) ++ (with pkgs-unstable; [ uv lazygit ]);
+    tldr
+    just
+  ]) ++ (with pkgs.python312Packages; [ llm ])
+    ++ (with pkgs-unstable; [ uv lazygit ]);
 
   programs.zoxide.enable = true;
 

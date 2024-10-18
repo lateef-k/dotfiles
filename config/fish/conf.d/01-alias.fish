@@ -1,7 +1,7 @@
 
 alias nvimdiff="nvim -d"
 alias lg="lazygit"
-alias c="llm -t direct"
+alias c="llm --system 'Answer directly. Do not elaborate unless instructed. If you are asked to provide code or a command, provide only that and nothing more'"
 
 # man flag search
 function mf
