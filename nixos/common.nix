@@ -3,6 +3,7 @@
 
   in {
     settings = {
+      auto-optimise-store = true;
       # Opinionated: disable global registry
       flake-registry = "";
       # Workaround for https://github.com/NixOS/nix/issues/9574
@@ -18,7 +19,13 @@
       ];
       keep-outputs = true;
       keep-derivations = true;
-      experimental-features = "nix-command flakes";
+      experimental-features = "nix-command flakes repl-flake";
+    };
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
     };
     # Opinionated: disable channels
     channel.enable = false;
@@ -34,12 +41,14 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   programs.fish.enable = true;
+
   users.users = {
     ludvi = {
       initialPassword = "correcthorse";
       isNormalUser = true;
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINS0KKNvykU3vD9MAmNAR6TRTOUwxiB5CIUjuDBrnOBK lutfi@lutfis-MBP"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPIsweTazEmuWG1IEEuzepI5vprijq5RwIWmx/hEiI+M ludvi@tnovo"
       ];
       extraGroups = [ "wheel" "audio" ];
       shell = pkgs.fish;

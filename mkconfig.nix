@@ -14,13 +14,14 @@ let
 
 in {
 
-  mkSystem = { name }:
+  mkSystem = { name, system }:
     inputs.nixpkgs.lib.nixosSystem {
-      system = builtins.currentSystem;
+      system = system;
       specialArgs = { inherit inputs; };
       modules = [
         pkg-config
         inputs.disko.nixosModules.disko
+        inputs.nix-index-database.nixosModules.nix-index
         ./nixos/machines/${name}/configuration.nix
       ];
     };
