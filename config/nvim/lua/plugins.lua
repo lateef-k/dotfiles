@@ -172,6 +172,13 @@ local plugins = {
 				function()
 					require("fzf-lua").builtin()
 				end,
+				desc = "Show fzf-lua builtin search",
+			},
+			{
+				"<leader>p",
+				function()
+					require("fzf-lua").commands()
+				end,
 				desc = "Show built-in commands",
 			},
 			{
@@ -314,9 +321,29 @@ local plugins = {
 	},
 	{
 		"CopilotC-Nvim/CopilotChat.nvim",
+		init = function()
+			-- Define a function to toggle CopilotChat
+
+			-- Set the keybinding to call the toggle function
+			vim.keymap.set({ "n", "v" }, "<leader>c", function()
+				local copilot_chat_win = nil
+				for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+					local buf = vim.api.nvim_win_get_buf(win)
+					local filetype = vim.bo[buf].filetype
+					if filetype == "copilot-chat" then
+						copilot_chat_win = win
+					end
+				end
+				if copilot_chat_win ~= nil then
+					vim.api.nvim_win_close(copilot_chat_win, true)
+				else
+					vim.cmd("CopilotChat") -- Open CopilotChat if it's closed
+				end
+			end, { noremap = true, silent = true })
+		end,
 		config = {
 
-			system_prompt = "Only share code. Any information you wish to communicate must be comments. Do not include line numbers.",
+			-- Define keymap for starting CopilotChat
 			mappings = {
 				complete = {
 					detail = "Use @<Tab> or /<Tab> for options.",

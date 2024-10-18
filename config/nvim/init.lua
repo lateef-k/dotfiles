@@ -42,6 +42,7 @@ vim.opt.undofile = true
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.smartcase = true
+vim.opt.ignorecase = true
 vim.opt.smartindent = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.grepprg = "rg --vimgrep --smart-case"
@@ -60,13 +61,25 @@ vim.g.mapleader = " "
 
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
-
-map({ "i", "t" }, "jk", "<Esc>", opts)
-map({ "i", "t" }, "kj", "<Esc>", opts)
-map("n", "]b", "<cmd>bnext<CR>")
-map("n", "[b", "<cmd>bprevious<CR>")
-map("n", "]q", "<cmd>cnext<CR>")
-map("n", "[q", "<cmd>cprevious<CR>")
+map({ "i", "t" }, "jk", "<Esc>", { desc = "Exit insert/terminal mode with 'jk'" })
+map({ "i", "t" }, "kj", "<Esc>", { desc = "Exit insert/terminal mode with 'kj'" })
+map("n", "]b", "<cmd>bnext<CR>", { desc = "Go to the next buffer" })
+map("n", "[b", "<cmd>bprevious<CR>", { desc = "Go to the previous buffer" })
+map("n", "]q", "<cmd>cnext<CR>", { desc = "Go to the next quickfix item" })
+map("n", "[q", "<cmd>cprevious<CR>", { desc = "Go to the previous quickfix item" })
+map("n", "grd", function()
+	vim.diagnostic.open_float(nil, { scope = "line" })
+end, { desc = "Show diagnostics for the current line in a floating window", unpack(opts) })
+vim.g["diagnostics_active"] = true
+map("n", "<leader>td", function()
+	if vim.g.diagnostics_active then
+		vim.g.diagnostics_active = false
+		vim.diagnostic.enable(false)
+	else
+		vim.g.diagnostics_active = true
+		vim.diagnostic.enable()
+	end
+end, { desc = "Toggle diagnostics on and off" })
 
 -- AutoCmds
 local autocmd = vim.api.nvim_create_autocmd
@@ -78,7 +91,12 @@ autocmd("FileType", {
 	pattern = "lua",
 	command = "setlocal tabstop=4 shiftwidth=4 softtabstop=4",
 })
-
+autocmd("TextYankPost", {
+	pattern = "*",
+	callback = function()
+		vim.highlight.on_yank({ higroup = "Visual", timeout = 500 })
+	end,
+})
 -- Commands
 local command = vim.api.nvim_create_user_command
 -- Setup lazy.nvim
