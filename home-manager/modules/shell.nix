@@ -1,6 +1,6 @@
 { inputs, lib, config, pkgs, pkgs-unstable, rootPath, ... }:
 
-let util = (import ../util.nix config.lib);
+let util = (import ../../lib/util.nix config.lib);
 
 in {
   imports = [
@@ -25,7 +25,8 @@ in {
     gh
     tldr
     just
-  ]) ++ (with pkgs.python312Packages; [ llm ])
+    nix-doc
+  ]) ++ (with pkgs.python311Packages; [ llm ])
     ++ (with pkgs-unstable; [ uv lazygit ]);
 
   programs.zoxide.enable = true;
@@ -61,6 +62,13 @@ in {
     enable = true;
     interactiveShellInit =
       lib.strings.fileContents "${rootPath}/config/fish/config.fish";
+    # # this messes with nix itself, but fixes numpy
+    # shellInitLast = ''
+    #   set -x LD_LIBRARY_PATH "${pkgs.stdenv.cc.cc.lib}/lib:$LD_LIBRARY_PATH"
+    #   set -x LD_LIBRARY_PATH "${
+    #     pkgs.lib.makeLibraryPath [ pkgs.python312 pkgs.zlib pkgs.poetry ]
+    #   }/lib:$LD_LIBRARY_PATH"
+    # '';
     plugins = [{
       name = "pure";
       src = pkgs.fishPlugins.pure;

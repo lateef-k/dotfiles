@@ -1,7 +1,12 @@
 
 alias nvimdiff="nvim -d"
-alias lg="lazygit"
+alias ,lg="lazygit"
 alias c="llm --system 'Answer directly. Do not elaborate unless instructed. If you are asked to provide code or a command, provide only that and nothing more'"
+
+
+
+alias ,hmi="nix-store --query --references ~/.nix-profile/ | head -n 1 | xargs nix-store --query --references"
+alias ,ni="nix-store --query --references /run/current-system/sw | xargs nix-store --query --references"
 
 # man flag search
 function mf
@@ -21,4 +26,5 @@ end
 abbr -a nix-shell 'nix-shell --command fish'
 abbr -a cd 'z'
 abbr -a cd 'z'
+
 

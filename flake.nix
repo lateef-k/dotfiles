@@ -17,10 +17,9 @@
 
   outputs = { ... }@inputs:
     let
-      mkSystem = (import ./mkconfig.nix { inherit inputs; }).mkSystem;
-      mkHome = (import ./mkconfig.nix { inherit inputs; }).mkHome;
+      mkSystem = (import ./lib/mkconfig.nix { inherit inputs; }).mkSystem;
+      mkHome = (import ./lib/mkconfig.nix { inherit inputs; }).mkHome;
     in {
-
       # t480 thinkpad
       nixosConfigurations.ludnix = mkSystem {
         name = "x86_64-linux-t480s";

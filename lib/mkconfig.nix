@@ -22,7 +22,7 @@ in {
         pkg-config
         inputs.disko.nixosModules.disko
         inputs.nix-index-database.nixosModules.nix-index
-        ./nixos/machines/${name}/configuration.nix
+        ../nixos/machines/${name}/configuration.nix
       ];
     };
 
@@ -36,9 +36,9 @@ in {
         inherit inputs;
         pkgs-unstable =
           inputs.nixpkgs-unstable.legacyPackages.${builtins.currentSystem};
-        rootPath = ./.;
+        rootPath = ../.;
       };
-      modules = [ pkg-config ./home-manager/home.nix ] ++ home-modules;
+      modules = [ pkg-config ../home-manager/home.nix ] ++ home-modules;
     };
 
 }

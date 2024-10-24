@@ -117,41 +117,6 @@ local plugins = {
 	},
 	{
 		"ibhagwan/fzf-lua",
-		-- keymap = {
-		--   -- below are the default binds, setting any value in these tables will override
-		--   -- the defaults, to inherit from the defaults change [1] from `false` to `true`
-		--   builtin = {
-		--     false,          -- do not inherit from defaults
-		--     -- neovim `:tmap` mappings for the fzf win
-		--     ["<f1>"]        = "toggle-help",
-		--     ["<f2>"]        = "toggle-fullscreen",
-		--     -- only valid with the 'builtin' previewer
-		--     ["<f3>"]        = "toggle-preview-wrap",
-		--     ["<f4>"]        = "toggle-preview",
-		--     -- rotate preview clockwise/counter-clockwise
-		--     ["<f5>"]        = "toggle-preview-ccw",
-		--     ["<f6>"]        = "toggle-preview-cw",
-		--     ["<s-down>"]    = "preview-page-down",
-		--     ["<s-up>"]      = "preview-page-up",
-		--     ["<s-left>"]    = "preview-page-reset",
-		--   },
-		--   fzf = {
-		--     false,          -- do not inherit from defaults
-		--     -- fzf '--bind=' options
-		--     ["ctrl-z"]      = "abort",
-		--     ["ctrl-u"]      = "unix-line-discard",
-		--     ["ctrl-f"]      = "half-page-down",
-		--     ["ctrl-b"]      = "half-page-up",
-		--     ["ctrl-a"]      = "beginning-of-line",
-		--     ["ctrl-e"]      = "end-of-line",
-		--     ["alt-a"]       = "toggle-all",
-		--     -- only valid with fzf previewers (bat/cat/git/etc)
-		--     ["f3"]          = "toggle-preview-wrap",
-		--     ["f4"]          = "toggle-preview",
-		--     ["shift-down"]  = "preview-page-down",
-		--     ["shift-up"]    = "preview-page-up",
-		--   },
-		-- }
 		keys = {
 			{
 				"<leader>b",
@@ -314,7 +279,22 @@ local plugins = {
 			"nvim-tree/nvim-web-devicons",
 			"MunifTanjim/nui.nvim",
 		},
-		config = true,
+		config = function()
+			require("neo-tree").setup({
+				buffer = {
+					follow_current_file = {
+						enabled = true,
+						leave_dirs_open = false,
+					},
+				},
+				filesystem = {
+					follow_current_file = {
+						enabled = true,
+						leave_dirs_open = false,
+					},
+				},
+			})
+		end,
 		keys = {
 			{ "<leader>e", "<cmd>Neotree toggle<CR>", desc = "Toggle Neotree" },
 		},

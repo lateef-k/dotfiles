@@ -20,6 +20,13 @@ nix:
 
 init-disk:
 	# Example usage: make init-disk DISK=/dev/sda
-	sudo nix --experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --write-efi-boot-entries --flake '.#$(NIXOS_OUTPUT)' --disk main $(DISK)
+	sudo nix --experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --show-trace --write-efi-boot-entries --flake '.#$(NIXOS_OUTPUT)' --disk main $(DISK)
 
+vm:
+	sudo nixos-rebuild build-vm --flake .#thinkcentre
+
+vm-with-boot:
+	sudo nix --show-trace build -L '.#nixosConfigurations.vm-test.config.system.build.vmWithBootLoader'
 .PHONY: home nix init-disk
+
+
