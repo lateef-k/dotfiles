@@ -1,6 +1,6 @@
 
 
-{ inputs, lib, config, pkgs, rootPath, ... }: {
+{ inputs, lib, config, pkgs, pkgs-unstable, rootPath, ... }: {
 
   imports = [
     "${
@@ -9,7 +9,7 @@
     }/modules/vscode-server/home.nix"
   ];
 
-  home.packages = with pkgs; [
+  home.packages = (with pkgs; [
     nixfmt-classic
     stylua
     black
@@ -23,7 +23,7 @@
     lua-language-server
     nodePackages.bash-language-server
     vim
-  ];
+  ]) ++ (with pkgs-unstable; [ ruff nodePackages.typescript-language-server ]);
 
   home.sessionVariables.EDITOR = "nvim";
 
@@ -33,7 +33,7 @@
     enable = true;
     package =
       inputs.neovim-nightly-overlay.packages.${pkgs.system}.default; # If you want to use Neovim nightly
-    plugins = [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
+    plugins = [ pkgs-unstable.vimPlugins.nvim-treesitter.withAllGrammars ];
   };
   xdg.configFile = {
     "nvim" = {
@@ -43,15 +43,13 @@
   };
 
   xdg.dataFile = {
-    "nvim/nix/nvim-treesitter" = {
-      source = pkgs.vimPlugins.nvim-treesitter.withAllGrammars;
-      recursive = true;
-    };
-
+    # prepend this path when starting treesitter, and it'll see the parsers
+    # `:echo &runtimepath` and `:echo nvim_get_runtime_file('parser', v:true)` 
     "nvim/nix/nvim-treesitter/parser" = {
       source = pkgs.symlinkJoin {
         name = "treesitter-parsers";
-        paths = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
+        paths =
+          pkgs-unstable.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
       };
       recursive = true;
     };

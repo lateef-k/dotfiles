@@ -1,6 +1,6 @@
-{ inputs, lib, config, pkgs, ... }: {
+{ inputs, lib, config, pkgs, pkgs-unstable, ... }: {
 
-  home.packages = with pkgs; [ obsidian discord ];
+  home.packages = with pkgs; [ obsidian discord dbeaver-bin libreoffice-qt ];
 
   # TODO: change into nightly 
   programs.firefox.enable = true;
@@ -12,5 +12,9 @@
       			shell ${pkgs.fish}/bin/fish
             	'';
     shellIntegration.mode = "";
+  };
+  programs.vscode = {
+    enable = true;
+    package = pkgs-unstable.vscode.fhs;
   };
 }

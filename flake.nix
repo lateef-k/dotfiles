@@ -49,6 +49,7 @@
         ./home-manager/modules/shell.nix
         ./home-manager/modules/editor.nix
         ./home-manager/modules/applications.nix
+        ./home-manager/modules/pentest.nix
       ];
 
       # shell only environment

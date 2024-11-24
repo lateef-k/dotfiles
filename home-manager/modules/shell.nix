@@ -26,6 +26,13 @@ in {
     tldr
     just
     nix-doc
+    wget
+    binutils
+    htop
+    rlwrap
+    gocryptfs
+    zotero_7
+    libarchive
   ]) ++ (with pkgs.python311Packages; [ llm ])
     ++ (with pkgs-unstable; [ uv lazygit ]);
 
@@ -56,6 +63,7 @@ in {
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+    config = { global = { load_dotenv = true; }; };
   };
 
   programs.fish = {

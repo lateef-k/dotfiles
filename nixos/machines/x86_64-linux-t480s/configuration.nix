@@ -1,12 +1,24 @@
 { inputs, lib, config, pkgs, ... }: {
 
-  imports = [ ../../common.nix ./hardware-configuration.nix ];
+  imports =
+    [ ../../common.nix ./hardware-configuration.nix ../../modules/docker.nix ];
 
+  environment.systemPackages = with pkgs; [ virt-manager ];
   networking.hostName = "nix-t480s";
   services.logrotate.checkConfig = false;
+
+  # services.tailscale.enable = true;
+  # networking.wireguard.enable = false;
+  # networking.wg-quick.interfaces.wg0.configFile =
+  #   "/etc/wireguard/MullvadConfig/il-tlv-wg-101.conf";
   networking.firewall.extraCommands = ''
     iptables -A nixos-fw -p tcp -s 192.168.8.0/24 -j nixos-fw-accept
   '';
+
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = { package = pkgs.qemu_kvm; };
+  };
 
   services.xserver = {
     enable = true;

@@ -33,9 +33,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Colorscheme
-vim.cmd("colorscheme retrobox")
-
 -- Options
 vim.opt.cmdheight = 0
 vim.opt.undofile = true
@@ -46,6 +43,7 @@ vim.opt.ignorecase = true
 vim.opt.smartindent = true
 vim.opt.clipboard = "unnamedplus"
 vim.opt.grepprg = "rg --vimgrep --smart-case"
+vim.opt.splitright = true
 vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
 -- Folding Options
@@ -54,7 +52,8 @@ vim.opt.foldmethod = "indent"
 vim.opt.foldenable = false
 vim.opt.foldlevel = 99
 vim.g.markdown_folding = 1 -- enable markdown folding
-
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 -- Mapping (not including plugins)
 
 vim.g.mapleader = " "
@@ -71,7 +70,7 @@ map("n", "grd", function()
 	vim.diagnostic.open_float(nil, { scope = "line" })
 end, { desc = "Show diagnostics for the current line in a floating window", unpack(opts) })
 vim.g["diagnostics_active"] = true
-map("n", "<leader>td", function()
+vim.api.nvim_create_user_command("ToggleDiagnostics", function()
 	if vim.g.diagnostics_active then
 		vim.g.diagnostics_active = false
 		vim.diagnostic.enable(false)
@@ -80,7 +79,6 @@ map("n", "<leader>td", function()
 		vim.diagnostic.enable()
 	end
 end, { desc = "Toggle diagnostics on and off" })
-
 -- AutoCmds
 local autocmd = vim.api.nvim_create_autocmd
 autocmd("FileType", {
@@ -96,6 +94,16 @@ autocmd("TextYankPost", {
 	callback = function()
 		vim.highlight.on_yank({ higroup = "Visual", timeout = 500 })
 	end,
+})
+-- Auto commands for saving and loading folds
+autocmd("BufWinLeave", {
+	pattern = "*.*",
+	command = "mkview",
+})
+
+autocmd("BufWinEnter", {
+	pattern = "*.*",
+	command = "silent! loadview",
 })
 -- Commands
 local command = vim.api.nvim_create_user_command

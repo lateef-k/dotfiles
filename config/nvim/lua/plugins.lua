@@ -25,93 +25,61 @@ local plugins = {
 		end,
 	},
 	{
-		"hrsh7th/nvim-cmp",
-		dependencies = {
-			"L3MON4D3/LuaSnip",
-			"saadparwaiz1/cmp_luasnip",
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-path",
-			"hrsh7th/cmp-nvim-lua",
+		"saghen/blink.cmp",
+		lazy = false, -- lazy loading handled internally
+		-- optional: provides snippets for the snippet source
+		dependencies = "rafamadriz/friendly-snippets",
+
+		-- use a release tag to download pre-built binaries
+		build = "nix run .#build-plugin",
+
+		opts = {
+			keymap = {
+				["<C-p>"] = { "select_prev", "fallback" },
+				["<C-n>"] = { "select_next", "fallback" },
+				["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+				["<Tab>"] = { "snippet_forward", "fallback" },
+				["<S-Tab>"] = { "snippet_backward", "fallback" },
+				["<Esc>"] = { "hide", "fallback" },
+				["<CR>"] = { "accept", "fallback" },
+				["<C-CR>"] = { "select_and_accept", "fallback" },
+				["<C-b>"] = { "scroll_documentation_up", "fallback" },
+				["<C-f>"] = { "scroll_documentation_down", "fallback" },
+			},
+			highlight = {
+				use_nvim_cmp_as_default = true,
+			},
+			windows = {
+				documentation = {
+					auto_show = true,
+				},
+			},
+			nerd_font_variant = "mono",
+			-- experimental auto-brackets support
+			-- accept = { auto_brackets = { enabled = true } }
+			-- experimental signature help support
+			-- trigger = { signature_help = { enabled = true } }
 		},
-		event = "InsertEnter",
-		config = function()
-			local cmp = require("cmp")
-			local luasnip = require("luasnip")
-			cmp.setup({
-				snippet = {
-					expand = function(args)
-						require("luasnip").lsp_expand(args.body)
-					end,
-				},
-				mapping = cmp.mapping.preset.insert({
-					["<CR>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							if luasnip.expandable() then
-								luasnip.expand()
-							else
-								cmp.confirm({
-									select = true,
-								})
-							end
-						else
-							fallback()
-						end
-					end),
-					["<Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						elseif luasnip.locally_jumpable(1) then
-							luasnip.jump(1)
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-					["<S-Tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_prev_item()
-						elseif luasnip.locally_jumpable(-1) then
-							luasnip.jump(-1)
-						else
-							fallback()
-						end
-					end, { "i", "s" }),
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-Space>"] = cmp.mapping.complete(),
-				}),
-				sources = cmp.config.sources({
-					{ name = "path" },
-					{ name = "nvim_lsp" },
-					{ name = "nvim_lsp_signature_help" },
-					{ name = "nvim_lua" },
-					{ name = "luasnip" },
-					{ name = "buffer", option = { get_bufnrs = vim.api.nvim_list_bufs } },
-				}),
-				experimental = {
-					ghost_text = true,
-				},
-			})
-		end,
+		-- allows extending the enabled_providers array elsewhere in your config
+		-- without having to redefining it
+		opts_extend = { "sources.completion.enabled_providers" },
 	},
 	{
 		"neovim/nvim-lspconfig",
 		config = function()
-			local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local lspconfig = require("lspconfig")
 			local servers = {
 				"pyright",
 				"nixd",
 				"lua_ls",
 				"bashls",
+				"ts_ls",
 			}
 			for _, lsp in ipairs(servers) do
-				lspconfig[lsp].setup({
-					capabilities = lsp_capabilities,
-				})
+				lspconfig[lsp].setup({})
 			end
-			lspconfig.pyright.setup({})
-			lspconfig.nixd.setup({})
+
+			-- print(vim.inspect(lspconfig["ruff_lsp"]))
 		end,
 		event = "VeryLazy",
 	},
@@ -124,6 +92,13 @@ local plugins = {
 					require("fzf-lua").buffers()
 				end,
 				desc = "List open buffers",
+			},
+			{
+				"<leader>t",
+				function()
+					require("fzf-lua").tabs()
+				end,
+				desc = "List tabs",
 			},
 			{
 				"<leader><leader>",
@@ -205,7 +180,7 @@ local plugins = {
 			{
 				"<leader>j",
 				function()
-					require("fzf-lua").jumplist()
+					require("fzf-lua").jumps()
 				end,
 				desc = "Show jumplist",
 			},
@@ -234,14 +209,15 @@ local plugins = {
 					["_"] = { "trim_whitespace" },
 					lua = { "stylua" },
 					nix = { "nixfmt" },
-					python = { "isort", "black" },
+					python = { "black", "isort" },
+					-- python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
 					markdown = { "mdformat" },
 				},
 				format_on_save = function(bufnr)
 					if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
 						return
 					end
-					return { timeout_ms = 500, lsp_fallback = true }
+					return { timeout_ms = 3000, lsp_fallback = true }
 				end,
 			})
 		end,
@@ -256,22 +232,32 @@ local plugins = {
 				search_method = "cover_or_next",
 			})
 			require("mini.tabline").setup()
-			require("mini.statusline").setup({
-				use_icons = false,
-			})
+			require("mini.statusline").setup()
 		end,
 		event = "VeryLazy",
 	},
 	{
-		"L3MON4D3/LuaSnip",
-		dependencies = { "rafamadriz/friendly-snippets" },
-		event = "InsertEnter",
+		"nvim-treesitter/nvim-treesitter",
 		config = function()
-			require("luasnip.loaders.from_vscode").lazy_load()
+			vim.cmd("set runtimepath^=" .. vim.fn.expand("~/.local/share/nvim/nix/nvim-treesitter/parser/"))
+			require("nvim-treesitter.configs").setup({
+				-- parser_install_dir = "~/.local/share/nvim/nix/nvim-treesitter/parser/parser",
+				auto_install = false,
+				highlight = {
+					enable = true,
+					additional_vim_regex_highlighting = false,
+				},
+			})
 		end,
 	},
-	{ "nvim-treesitter/nvim-treesitter", dev = true },
 	{ "folke/which-key.nvim", config = true, event = "VeryLazy" },
+	{
+		"stevearc/oil.nvim",
+		opts = {
+			delete_to_trash = false,
+		},
+		cmd = "Oil",
+	},
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		dependencies = {
@@ -293,107 +279,114 @@ local plugins = {
 						leave_dirs_open = false,
 					},
 				},
+				window = {
+					mappings = {
+						["Z"] = "expand_all_nodes",
+					},
+				},
+				use_libuv_file_watcher = true,
 			})
 		end,
 		keys = {
 			{ "<leader>e", "<cmd>Neotree toggle<CR>", desc = "Toggle Neotree" },
 		},
 	},
-	{
-		"CopilotC-Nvim/CopilotChat.nvim",
-		init = function()
-			-- Define a function to toggle CopilotChat
-
-			-- Set the keybinding to call the toggle function
-			vim.keymap.set({ "n", "v" }, "<leader>c", function()
-				local copilot_chat_win = nil
-				for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-					local buf = vim.api.nvim_win_get_buf(win)
-					local filetype = vim.bo[buf].filetype
-					if filetype == "copilot-chat" then
-						copilot_chat_win = win
-					end
-				end
-				if copilot_chat_win ~= nil then
-					vim.api.nvim_win_close(copilot_chat_win, true)
-				else
-					vim.cmd("CopilotChat") -- Open CopilotChat if it's closed
-				end
-			end, { noremap = true, silent = true })
-		end,
-		config = {
-
-			-- Define keymap for starting CopilotChat
-			mappings = {
-				complete = {
-					detail = "Use @<Tab> or /<Tab> for options.",
-					insert = "<Tab>",
-				},
-				close = {
-					normal = "q",
-					insert = "<C-c>",
-				},
-				reset = {
-					normal = "<C-r>",
-				},
-				submit_prompt = {
-					normal = "<CR>",
-					insert = "<C-s>",
-				},
-				accept_diff = {
-					normal = "<C-y>",
-					insert = "<C-y>",
-				},
-				yank_diff = {
-					normal = "gy",
-					register = '"',
-				},
-				show_diff = {
-					normal = "gd",
-				},
-				show_system_prompt = {
-					normal = "gp",
-				},
-				show_user_selection = {
-					normal = "gs",
-				},
-			},
-		},
-		build = "make tiktoken",
-	},
-	{
-		"zbirenbaum/copilot.lua",
-		config = true,
-		-- panel = {
-		--   enabled = true,
-		--   auto_refresh = false,
-		--   keymap = {
-		--     jump_prev = "[[",
-		--     jump_next = "]]",
-		--     accept = "<CR>",
-		--     refresh = "gr",
-		--     open = "<M-CR>"
-		--   },
-		--   layout = {
-		--     position = "bottom", -- | top | left | right
-		--     ratio = 0.4
-		--   },
-		-- },
-		-- suggestion = {
-		--   enabled = true,
-		--   auto_trigger = false,
-		--   hide_during_completion = true,
-		--   debounce = 75,
-		--   keymap = {
-		--     accept = "<M-l>",
-		--     accept_word = false,
-		--     accept_line = false,
-		--     next = "<M-]>",
-		--     prev = "<M-[>",
-		--     dismiss = "<C-]>",
-		--   },
-		-- },
-	},
+	-- {
+	-- 	"CopilotC-Nvim/CopilotChat.nvim",
+	-- 	init = function()
+	-- 		-- Define a function to toggle CopilotChat
+	--
+	-- 		-- Set the keybinding to call the toggle function
+	-- 		vim.keymap.set({ "n", "v" }, "<leader>c", function()
+	-- 			local copilot_chat_win = nil
+	-- 			for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+	-- 				local buf = vim.api.nvim_win_get_buf(win)
+	-- 				local filetype = vim.bo[buf].filetype
+	-- 				if filetype == "copilot-chat" then
+	-- 					copilot_chat_win = win
+	-- 				end
+	-- 			end
+	-- 			if copilot_chat_win ~= nil then
+	-- 				vim.api.nvim_win_close(copilot_chat_win, true)
+	-- 			else
+	-- 				vim.cmd("CopilotChat") -- Open CopilotChat if it's closed
+	-- 			end
+	-- 		end, { noremap = true, silent = true })
+	-- 	end,
+	-- 	config = {
+	--
+	-- 		-- Define keymap for starting CopilotChat
+	-- 		mappings = {
+	-- 			complete = {
+	-- 				detail = "Use @<Tab> or /<Tab> for options.",
+	-- 				insert = "<Tab>",
+	-- 			},
+	-- 			close = {
+	-- 				normal = "q",
+	-- 				insert = "<C-c>",
+	-- 			},
+	-- 			reset = {
+	-- 				normal = "<C-r>",
+	-- 			},
+	-- 			submit_prompt = {
+	-- 				normal = "<CR>",
+	-- 				insert = "<C-s>",
+	-- 			},
+	-- 			accept_diff = {
+	-- 				normal = "<C-y>",
+	-- 				insert = "<C-y>",
+	-- 			},
+	-- 			yank_diff = {
+	-- 				normal = "gy",
+	-- 				register = '"',
+	-- 			},
+	-- 			show_diff = {
+	-- 				normal = "gd",
+	-- 			},
+	-- 			show_system_prompt = {
+	-- 				normal = "gp",
+	-- 			},
+	-- 			show_user_selection = {
+	-- 				normal = "gs",
+	-- 			},
+	-- 		},
+	-- 	},
+	-- 	build = "make tiktoken",
+	-- 	dependencies = { { "nvim-lua/plenary.nvim" } },
+	-- },
+	-- {
+	-- 	"zbirenbaum/copilot.lua",
+	-- 	config = true,
+	-- 	-- panel = {
+	-- 	--   enabled = true,
+	-- 	--   auto_refresh = false,
+	-- 	--   keymap = {
+	-- 	--     jump_prev = "[[",
+	-- 	--     jump_next = "]]",
+	-- 	--     accept = "<CR>",
+	-- 	--     refresh = "gr",
+	-- 	--     open = "<M-CR>"
+	-- 	--   },
+	-- 	--   layout = {
+	-- 	--     position = "bottom", -- | top | left | right
+	-- 	--     ratio = 0.4
+	-- 	--   },
+	-- 	-- },
+	-- 	-- suggestion = {
+	-- 	--   enabled = true,
+	-- 	--   auto_trigger = false,
+	-- 	--   hide_during_completion = true,
+	-- 	--   debounce = 75,
+	-- 	--   keymap = {
+	-- 	--     accept = "<M-l>",
+	-- 	--     accept_word = false,
+	-- 	--     accept_line = false,
+	-- 	--     next = "<M-]>",
+	-- 	--     prev = "<M-[>",
+	-- 	--     dismiss = "<C-]>",
+	-- 	--   },
+	-- 	-- },
+	-- },
 	{
 		"tpope/vim-fugitive",
 	},
@@ -426,6 +419,20 @@ local plugins = {
 				require("persistence").stop()
 			end, { desc = "Stop Persistence (session won't be saved on exit)" })
 		end,
+	},
+	{ "nvim-treesitter/nvim-treesitter-context", config = true },
+	{
+		"sainnhe/gruvbox-material",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.g.gruvbox_material_enable_italic = true
+			vim.g.gruvbox_material_background = "hard"
+			vim.cmd.colorscheme("gruvbox-material")
+		end,
+	},
+	{
+		"mbbill/undotree",
 	},
 }
 

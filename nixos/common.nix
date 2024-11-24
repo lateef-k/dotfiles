@@ -50,7 +50,7 @@
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINS0KKNvykU3vD9MAmNAR6TRTOUwxiB5CIUjuDBrnOBK lutfi@lutfis-MBP"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPIsweTazEmuWG1IEEuzepI5vprijq5RwIWmx/hEiI+M ludvi@tnovo"
       ];
-      extraGroups = [ "wheel" "audio" ];
+      extraGroups = [ "wheel" "audio" "libvirt" ];
       shell = pkgs.fish;
     };
   };
