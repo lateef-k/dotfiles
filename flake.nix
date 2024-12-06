@@ -57,5 +57,8 @@
         ./home-manager/modules/shell.nix
         ./home-manager/modules/editor.nix
       ];
+
+      homeConfigurations."ludvi-minimal" =
+        mkHome [ ./home-manager/modules/shell_minimal.nix ];
     };
 }
