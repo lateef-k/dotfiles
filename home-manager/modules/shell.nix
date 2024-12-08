@@ -38,6 +38,11 @@ in {
 
   programs.zoxide.enable = true;
 
+  programs.rofi = {
+    enable = true;
+    terminal = "${pkgs.kitty}/bin/kitty";
+  };
+
   programs.git = {
     enable = true;
     includes = [{ path = "${rootPath}/config/gitconfig"; }];
@@ -77,16 +82,23 @@ in {
     #     pkgs.lib.makeLibraryPath [ pkgs.python312 pkgs.zlib pkgs.poetry ]
     #   }/lib:$LD_LIBRARY_PATH"
     # '';
-    plugins = [{
-      name = "pure";
-      src = pkgs.fishPlugins.pure;
-    }];
+    # plugins = [{
+    #   name = "pure";
+    #   src = pkgs.fishPlugins.pure;
+    # }];
+
   };
+
+  programs.starship = { enable = true; };
 
   xdg.configFile = util.symlinkFiles {
     sourceDir = "${config.home.homeDirectory}/Dotfiles/config/fish/conf.d";
     targetDir = "fish/conf.d";
-  };
+  }
+  // {
+     "starship.toml".source =
+       config.lib.file.mkOutOfStoreSymlink "${rootPath}/config/starship.toml";
+   };
 
   programs.readline = {
     enable = true;
