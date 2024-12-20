@@ -9,11 +9,14 @@
 
   # services.tailscale.enable = true;
   # networking.wireguard.enable = false;
-  # networking.wg-quick.interfaces.wg0.configFile =
-  #   "/etc/wireguard/MullvadConfig/il-tlv-wg-101.conf";
+  networking.wg-quick.interfaces.wg3.configFile =
+    "/etc/wireguard/MullvadConfig/il-tlv-wg-101.conf";
   networking.firewall.extraCommands = ''
     iptables -A nixos-fw -p tcp -s 192.168.8.0/24 -j nixos-fw-accept
   '';
+
+  networking.extraHosts =
+    "	192.168.122.246 kali\n	107.172.145.108 racknerd_vps\n	192.168.8.69 thinkcenter\n";
 
   virtualisation.libvirtd = {
     enable = true;

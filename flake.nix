@@ -50,15 +50,16 @@
         ./home-manager/modules/editor.nix
         ./home-manager/modules/applications.nix
         ./home-manager/modules/pentest.nix
+        ./home-manager/modules/base.nix
       ];
 
-      # shell only environment
       homeConfigurations."ludvi-headless" = mkHome [
         ./home-manager/modules/shell.nix
         ./home-manager/modules/editor.nix
+        ./home-manager/modules/base.nix
       ];
 
       homeConfigurations."ludvi-minimal" =
-        mkHome [ ./home-manager/modules/shell_minimal.nix ];
+        mkHome [ ./home-manager/modules/base.nix ];
     };
 }

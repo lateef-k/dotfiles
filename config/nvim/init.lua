@@ -18,7 +18,24 @@
 -- - |K| is mapped to |vim.lsp.buf.hover()| unless |'keywordprg'| is customized or
 --   a custom keymap for `K` exists.
 --
+if vim.g.neovide then
+	-- Set font size for zoomed-out appearance
+	vim.o.guifont = "FiraCode Nerd Font:h7" -- Replace with your preferred font and size
 
+	-- Disable animated cursor
+
+	vim.g.neovide_position_animation_length = 0
+	vim.g.neovide_cursor_animation_length = 0.00
+	vim.g.neovide_cursor_trail_size = 0
+	vim.g.neovide_cursor_animate_in_insert_mode = false
+	vim.g.neovide_cursor_animate_command_line = false
+	vim.g.neovide_scroll_animation_far_lines = 0
+	vim.g.neovide_scroll_animation_length = 0.00
+
+	-- Optional: Adjust Neovide-specific settings for performance
+	vim.g.neovide_refresh_rate = 120
+	vim.g.neovide_transparency = 1
+end
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then

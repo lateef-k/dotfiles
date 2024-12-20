@@ -9,21 +9,19 @@
     }/modules/vscode-server/home.nix"
   ];
 
-  home.packages = (with pkgs; [
-    nixfmt-classic
-    stylua
-    black
-    isort
-    sqlite
-    gnumake
-    python312
-    nodejs_22
-    pyright
-    nixd
-    lua-language-server
-    nodePackages.bash-language-server
-    vim
-  ]) ++ (with pkgs-unstable; [ ruff nodePackages.typescript-language-server ]);
+  home.packages = (with pkgs; [ sqlite gnumake python312 nodejs_22 ])
+    ++ (with pkgs-unstable; [
+      nixfmt-classic
+      stylua
+      black
+      isort
+      nodePackages.typescript-language-server
+      nodePackages.bash-language-server
+      pyright
+      ruff
+      nixd
+      lua-language-server
+    ]);
 
   home.sessionVariables.EDITOR = "nvim";
 

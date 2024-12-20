@@ -3,36 +3,22 @@
 let util = (import ../../lib/util.nix config.lib);
 
 in {
+  home.packages = (with pkgs; [ cachix ripgrep fd xclip mosh rlwrap file iw ]);
 
-  home.packages = (with pkgs; [
-    cachix
-    ripgrep
-    fd
-    fzf
-    xclip
-    mosh
-    pipx
-    file
-    wget
-    binutils
-    htop
-    rlwrap
-    libarchive
-  ]) ++ (with pkgs-unstable; [ uv ]);
-
-  programs.zoxide.enable = true;
+  programs.git.enable = true;
 
   programs.vim = {
     enable = true;
     extraConfig = ''
-            " Map jk and kj to Escape in insert mode
-      			      inoremap jk <Esc>
-      						      inoremap kj <Esc>
+      " Map jk and kj to Escape in insert mode
+      inoremap jk <Esc>
+      inoremap kj <Esc>
 
-      									      " Use the system clipboard
-      												      set clipboard=unnamedplus
-      															    '';
+      " Use the system clipboard
+      set clipboard=unnamedplus
+    '';
   };
+  programs.zoxide.enable = true;
 
   programs.tmux = {
     enable = true;
@@ -51,25 +37,20 @@ in {
     ];
   };
 
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    config = { global = { load_dotenv = true; }; };
-  };
-
   programs.fish = {
     enable = true;
     interactiveShellInit =
       lib.strings.fileContents "${rootPath}/config/fish/config.fish";
-    plugins = [{
-      name = "pure";
-      src = pkgs.fishPlugins.pure;
-    }];
   };
+
+  programs.starship = { enable = true; };
 
   xdg.configFile = util.symlinkFiles {
     sourceDir = "${config.home.homeDirectory}/Dotfiles/config/fish/conf.d";
     targetDir = "fish/conf.d";
+  } // {
+    "starship.toml".source =
+      config.lib.file.mkOutOfStoreSymlink "${rootPath}/config/starship.toml";
   };
 
   programs.readline = {

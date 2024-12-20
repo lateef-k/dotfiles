@@ -1,6 +1,18 @@
 { inputs, lib, config, pkgs, pkgs-unstable, ... }: {
 
-  home.packages = with pkgs; [ obsidian discord dbeaver-bin libreoffice-qt ];
+  home.packages = with pkgs; [
+    obsidian
+    discord
+    dbeaver-bin
+    libreoffice-qt
+    zotero_7
+    neovide
+  ];
+
+  programs.rofi = {
+    enable = true;
+    terminal = "${pkgs.kitty}/bin/kitty";
+  };
 
   # TODO: change into nightly 
   programs.firefox.enable = true;
