@@ -55,6 +55,10 @@
           [ ./home-manager/modules/base.nix ./home-manager/modules/sway.nix ];
       };
 
+      darwinConfigurations."mini" = inputs.nix-darwin.lib.darwinSystem {
+        modules = [ ./nixos/machines/aarch64-darwin-mini/configuration.nix ];
+      };
+
       # Home config with gui
       homeConfigurations."ludvi-full" = mkHome [
         ./home-manager/modules/shell.nix
