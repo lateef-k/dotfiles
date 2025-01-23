@@ -1,7 +1,10 @@
 { inputs, lib, config, pkgs, ... }: {
 
-  imports =
-    [ ../../common.nix ./hardware-configuration.nix ../../modules/docker.nix ];
+  imports = [
+    ../../common-linux.nix
+    ./hardware-configuration.nix
+    ../../modules/docker.nix
+  ];
 
   environment.systemPackages = with pkgs; [ virt-manager ];
   networking.hostName = "nix-t480s";

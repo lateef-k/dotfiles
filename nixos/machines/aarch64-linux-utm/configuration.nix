@@ -3,7 +3,7 @@
 { inputs, lib, config, pkgs, ... }: {
   # You can import other NixOS modules here
 
-  imports = [ ../../common.nix ./hardware-configuration.nix ];
+  imports = [ ../../common-linux.nix ./hardware-configuration.nix ];
 
   # networking.hostName = "nixos"; # Define your hostname.
   # Pick only one of the below networking options.
