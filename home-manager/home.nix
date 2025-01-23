@@ -11,6 +11,16 @@
     homeDirectory = "/home/ludvi";
   };
 
+  nixpkgs = {
+    # Configure your nixpkgs instance
+    config = {
+      # Disable if you don't want unfree packages
+      allowUnfree = true;
+      allowUnsupportedSystem = true;
+      allowUnfreePredicate = (_: true);
+    };
+  };
+
   # Nicely reload system units when changing configs
   systemd.user.startServices = "sd-switch";
 

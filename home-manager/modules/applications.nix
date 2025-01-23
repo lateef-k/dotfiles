@@ -1,8 +1,8 @@
-{ inputs, lib, config, pkgs, pkgs-unstable, ... }: {
+{ inputs, lib, config, pkgs, ... }: {
 
   home.packages = with pkgs; [
     obsidian
-    discord
+    # discord
     dbeaver-bin
     libreoffice-qt
     zotero_7
@@ -34,7 +34,7 @@
   };
   programs.vscode = {
     enable = true;
-    package = pkgs-unstable.vscode.fhs;
+    package = pkgs.vscode.fhs;
   };
 
   services.gnome-keyring = {

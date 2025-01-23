@@ -1,4 +1,4 @@
-{ inputs, lib, config, pkgs, pkgs-unstable, rootPath, ... }:
+{ inputs, lib, config, pkgs, rootPath, ... }:
 
 let util = (import ../../lib/util.nix config.lib);
 
@@ -17,8 +17,9 @@ in {
     nix-doc
     gocryptfs
     nerdfonts
-  ]) ++ (with pkgs.python311Packages; [ llm ])
-    ++ (with pkgs-unstable; [ uv lazygit ]);
+    uv
+    lazygit
+  ]) ++ (with pkgs.python311Packages; [ llm ]);
 
   programs.rofi = {
     enable = true;

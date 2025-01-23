@@ -1,6 +1,6 @@
 
 
-{ inputs, lib, config, pkgs, pkgs-unstable, rootPath, ... }: {
+{ inputs, lib, config, pkgs, rootPath, ... }: {
 
   imports = [
     "${
@@ -9,19 +9,22 @@
     }/modules/vscode-server/home.nix"
   ];
 
-  home.packages = (with pkgs; [ sqlite gnumake python312 nodejs_22 ])
-    ++ (with pkgs-unstable; [
-      nixfmt-classic
-      stylua
-      black
-      isort
-      nodePackages.typescript-language-server
-      nodePackages.bash-language-server
-      pyright
-      ruff
-      nixd
-      lua-language-server
-    ]);
+  home.packages = (with pkgs; [
+    sqlite
+    gnumake
+    python312
+    nodejs_22
+    nixfmt-classic
+    stylua
+    black
+    isort
+    nodePackages.typescript-language-server
+    nodePackages.bash-language-server
+    pyright
+    ruff
+    nixd
+    lua-language-server
+  ]);
 
   home.sessionVariables.EDITOR = "nvim";
 
@@ -32,7 +35,7 @@
     viAlias = true;
     package =
       inputs.neovim-nightly-overlay.packages.${pkgs.system}.default; # If you want to use Neovim nightly
-    plugins = [ pkgs-unstable.vimPlugins.nvim-treesitter.withAllGrammars ];
+    plugins = [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
   };
   xdg.configFile = {
     "nvim" = {
@@ -47,8 +50,7 @@
     "nvim/nix/nvim-treesitter/parser" = {
       source = pkgs.symlinkJoin {
         name = "treesitter-parsers";
-        paths =
-          pkgs-unstable.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
+        paths = pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
       };
       recursive = true;
     };

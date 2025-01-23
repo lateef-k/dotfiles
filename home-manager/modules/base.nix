@@ -1,4 +1,4 @@
-{ inputs, lib, config, pkgs, pkgs-unstable, rootPath, ... }:
+{ inputs, lib, config, pkgs, rootPath, ... }:
 
 let util = (import ../../lib/util.nix config.lib);
 

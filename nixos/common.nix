@@ -34,6 +34,15 @@
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
+  nixpkgs = {
+    # Configure your nixpkgs instance
+    config = {
+      # Disable if you don't want unfree packages
+      allowUnfree = true;
+      allowUnsupportedSystem = true;
+    };
+  };
+
   # environment.systemPackages = with pkgs; [ ];
 
   system.stateVersion = "24.05";
@@ -41,6 +50,8 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   programs.fish.enable = true;
+  programs.ssh.startAgent = true;
+  programs.git.enable = true;
 
   users.users = {
     ludvi = {
@@ -55,16 +66,34 @@
     };
   };
 
+  networking = {
+    networkmanager.enable = true;
+    nameservers = [ "8.8.8.8" "8.8.4.4" ];
+    extraHosts = ''
+      107.172.145.108 racknerd_vps	
+      192.168.68.69 thinkcenter
+      192.168.8.69 thinkcenter-wifi
+    '';
+  };
+
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    # openFirewall = true;
+    publish = {
+      enable = true;
+      addresses = true;
+    };
+  };
+
+  # fileSystems."/mnt/synology" = {
+  #   device = "fatboy.local:/volume1/main";
+  #   fsType = "nfs";
+  #   options = [ "defaults" "nfsvers=4" "x-systemd.automount" "noauto" ];
+  # };
+  #
   boot = {
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
   };
-
-  networking = {
-    networkmanager.enable = true;
-    nameservers = [ "8.8.8.8" "8.8.4.4" ];
-  };
-
-  programs.ssh.startAgent = true;
-  programs.git.enable = true;
 }

@@ -1,21 +1,4 @@
-{ inputs }:
-let
-  nixpkgs-config = {
-    # Disable if you don't want unfree packages
-    allowUnfree = true;
-    # Workaround for https://github.com/nix-community/home-manager/issues/2942
-    allowUnfreePredicate = _: true;
-  };
-  # Instantiate nixpkgs
-  pkgs = import inputs.nixpkgs {
-    system = builtins.currentSystem;
-    config = nixpkgs-config;
-  };
-  pkgs-unstable = import inputs.nixpkgs-unstable {
-    system = builtins.currentSystem;
-    config = nixpkgs-config;
-  };
-in {
+{ inputs }: {
 
   mkSystem = { name, system }:
     inputs.nixpkgs.lib.nixosSystem {
@@ -31,11 +14,11 @@ in {
   mkHome = home-modules:
     # Standalone home-manager configuration entrypoint
     inputs.home-manager.lib.homeManagerConfiguration {
-      inherit pkgs; # Home-manager requires 'pkgs' instance
+      pkgs =
+        inputs.nixpkgs.legacyPackages.${builtins.currentSystem}; # Home-manager requires 'pkgs' instance
       # These get passed to home.nix
       extraSpecialArgs = {
         inherit inputs;
-        inherit pkgs-unstable;
         rootPath = ../.;
       };
       modules = [ ../home-manager/home.nix ] ++ home-modules;

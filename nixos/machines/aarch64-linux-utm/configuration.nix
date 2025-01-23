@@ -8,34 +8,20 @@
   # networking.hostName = "nixos"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable =
-    true; # Easiest to use and most distros use this by default.
-  networking.hostName = "nix-utm";
-  networking.interfaces.enp0s1.ipv4.addresses = [{
-    address = "192.168.64.42";
-    prefixLength = 24;
-  }];
-  networking.nameservers = [ "8.8.8.8" "8.8.4.4" ]; # Example using Google DNS
-  networking.defaultGateway = "192.168.64.1";
 
-  # Set your time zone.
-  time.timeZone = "Asia/Kuwait";
+  networking = {
+    defaultGateway = "192.168.64.1";
+    networkmanager.enable =
+      true; # Easiest to use and most distros use this by default.
+    hostName = "nix-utm";
+    interfaces.enp0s1.ipv4.addresses = [{
+      address = "192.168.64.42";
+      prefixLength = 24;
+    }];
+  };
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-  # environment.systemPackages = with pkgs;
-  #   [
-  #     # Other packages
-  #     vscode # Add Visual Studio Code
-  #   ];
-  # virtualisation.docker.enable = true;
-  # virtualisation.containers.enable = true;
 
-  # This setups a SSH server. Very important if you're setting up a headless system.
   # Feel free to remove if you don't need it.
   services.openssh = {
     enable = true;

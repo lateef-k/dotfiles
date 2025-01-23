@@ -35,19 +35,13 @@ local plugins = {
 				["<C-b>"] = { "scroll_documentation_up", "fallback" },
 				["<C-f>"] = { "scroll_documentation_down", "fallback" },
 			},
-			highlight = {
-				use_nvim_cmp_as_default = true,
-			},
-			windows = {
-				documentation = {
-					auto_show = true,
-				},
-			},
-			nerd_font_variant = "mono",
 			-- experimental auto-brackets support
 			-- accept = { auto_brackets = { enabled = true } }
 			-- experimental signature help support
 			-- trigger = { signature_help = { enabled = true } }
+			sources = {
+				cmdline = {},
+			},
 		},
 		-- allows extending the enabled_providers array elsewhere in your config
 		-- without having to redefining it
