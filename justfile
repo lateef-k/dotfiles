@@ -9,7 +9,7 @@ home HOME_PROFILE:
 nix NIXOS_OUTPUT:
 	#!/usr/bin/env sh
 	if [ "{{system}}" = "Darwin" ]; then
-		nix run --extra-experimental-features nix-command --extra-experimental-features flakes --show-trace  nix-darwin -- switch --flake .#mini --impure
+		nix run --extra-experimental-features nix-command --extra-experimental-features flakes --show-trace  nix-darwin -- switch --flake .#{{NIXOS_OUTPUT}} --impure
 	elif [ "{{system}}" = "Linux" ]; then
 		sudo nixos-rebuild switch --flake .#{{NIXOS_OUTPUT}} --impure
 	else

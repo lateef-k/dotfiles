@@ -1,15 +1,16 @@
+
+
 { inputs, lib, config, pkgs, ... }: {
-
-  imports = [ ];
-
   nix = let flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
   in {
     settings = {
       flake-registry = "";
       nix-path = config.nix.nixPath;
       trusted-users = [ "ludvi" ];
-      substituters =
-        [ "https://nix-community.cachix.org" "https://cache.nixos.org/" ];
+      substituters = [
+        "https://nix-community.cachix.org?priority=20"
+        "https://cache.nixos.org?priority=30"
+      ];
       trusted-public-keys = [
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -41,8 +42,10 @@
     };
   };
 
-  environment.systemPackages = with pkgs;
-    [ (python3Packages.callPackage ../../../packages/exo.nix { }) ];
+  environment.systemPackages = with pkgs; [
+    (python3Packages.callPackage ../packages/exo.nix { })
+    ollama
+  ];
 
   users.users.ludvi = {
     home = "/Users/ludvi";
@@ -59,5 +62,4 @@
   services.nix-daemon.enable = true;
   nixpkgs.hostPlatform = "aarch64-darwin";
   documentation.info.enable = true;
-  system.stateVersion = 5;
 }

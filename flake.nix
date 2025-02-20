@@ -32,19 +32,13 @@
     in {
       # t480 thinkpad
       nixosConfigurations.ludnix = mkSystem {
-        name = "x86_64-linux-t480s";
-        system = "x86_64-linux";
-      };
-
-      # Thinkcentre Server
-      nixosConfigurations.thinkcentre = mkSystem {
-        name = "x86_64-thinkcentre";
+        name = "linux-t480s";
         system = "x86_64-linux";
       };
 
       # linux VM on aarch64 mac
       nixosConfigurations.aarch64-ludnix-utm = mkSystem {
-        name = "aarch64-linux-utm";
+        name = "linux-utm";
         system = "aarch64-linux";
       };
 
@@ -56,10 +50,35 @@
           [ ./home-manager/modules/base.nix ./home-manager/modules/sway.nix ];
       };
 
-      darwinConfigurations."mini" = inputs.nix-darwin.lib.darwinSystem {
-        specialArgs = { inherit inputs; };
+      darwinConfigurations."mini-uno" = inputs.nix-darwin.lib.darwinSystem {
+        specialArgs = {
+          inherit inputs;
+          rootPath = ./.;
+        };
         modules = [
-          ./nixos/machines/aarch64-darwin-mini/configuration.nix
+          ./nixos/machines/darwin-mini-uno/configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            nixpkgs = { config = { allowUnfree = true; }; };
+            # `home-manager` config
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.ludvi = import ./home-manager/home-darwin.nix;
+            home-manager.extraSpecialArgs = {
+              rootPath = ./.;
+              inherit inputs;
+            };
+          }
+        ];
+      };
+
+      darwinConfigurations."mini-deux" = inputs.nix-darwin.lib.darwinSystem {
+        specialArgs = {
+          inherit inputs;
+          rootPath = ./.;
+        };
+        modules = [
+          ./nixos/machines/darwin-mini-deux/configuration.nix
           home-manager.darwinModules.home-manager
           {
             nixpkgs = { config = { allowUnfree = true; }; };

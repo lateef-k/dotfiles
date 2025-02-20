@@ -3,7 +3,10 @@
   mkSystem = { name, system }:
     inputs.nixpkgs.lib.nixosSystem {
       system = system;
-      specialArgs = { inherit inputs; };
+      specialArgs = {
+        inherit inputs;
+        rootPath = ../.;
+      };
       modules = [
         inputs.disko.nixosModules.disko
         inputs.nix-index-database.nixosModules.nix-index
