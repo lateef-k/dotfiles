@@ -1,4 +1,4 @@
-{ inputs, lib, config, pkgs, rootPath, ... }: {
+{ inputs, lib, config, pkgs, ... }: {
 
   imports = [ ../../common-darwin.nix ];
 
@@ -10,6 +10,8 @@
   # `wget localhost:8123/nar/{hash}.nar.xz`
 
   nix.settings.substituters = [ "http://localhost:8123?priority=10" ];
+
+  environment.systemPackages = with pkgs; [ nginx ];
 
   # this runs a persistent vm btw https://nixcademy.com/posts/macos-linux-builder/
   # to ssh: 
@@ -35,7 +37,7 @@
 
   launchd.user.agents.nginx = {
     command =
-      "${pkgs.nginx}/bin/nginx -c ${rootPath}/config/nginx-cache/nginx-server.conf -e /Users/ludvi/.local/state/nginx-cache/error.log";
+      "${pkgs.nginx}/bin/nginx -c config/nginx-cache/nginx-server.conf -e /Users/ludvi/.local/state/nginx-cache/error.log";
     serviceConfig = {
       KeepAlive = true;
       RunAtLoad = true;

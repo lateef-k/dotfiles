@@ -16,10 +16,6 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    attic.url = "github:zhaofengli/attic";
-
-    deploy-rs.url = "github:serokell/deploy-rs";
-
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
@@ -50,53 +46,15 @@
           [ ./home-manager/modules/base.nix ./home-manager/modules/sway.nix ];
       };
 
-      darwinConfigurations."mini-uno" = inputs.nix-darwin.lib.darwinSystem {
-        specialArgs = {
-          inherit inputs;
-          rootPath = ./.;
-        };
-        modules = [
-          ./nixos/machines/darwin-mini-uno/configuration.nix
-          home-manager.darwinModules.home-manager
-          {
-            nixpkgs = { config = { allowUnfree = true; }; };
-            # `home-manager` config
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.ludvi = import ./home-manager/home-darwin.nix;
-            home-manager.extraSpecialArgs = {
-              rootPath = ./.;
-              inherit inputs;
-            };
-          }
-        ];
+      darwinConfigurations."mini-uno" = mkSystem {
+        name = "darwin-mini-uno";
+        system = "aarch64-darwin";
       };
 
-      darwinConfigurations."mini-deux" = inputs.nix-darwin.lib.darwinSystem {
-        specialArgs = {
-          inherit inputs;
-          rootPath = ./.;
-        };
-        modules = [
-          ./nixos/machines/darwin-mini-deux/configuration.nix
-          home-manager.darwinModules.home-manager
-          {
-            nixpkgs = { config = { allowUnfree = true; }; };
-            # `home-manager` config
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.ludvi = import ./home-manager/home-darwin.nix;
-            home-manager.extraSpecialArgs = {
-              rootPath = ./.;
-              inherit inputs;
-            };
-          }
-        ];
+      darwinConfigurations."mini-deux" = mkSystem {
+        name = "darwin-mini-deux";
+        system = "aarch64-darwin";
       };
-
-      checks = builtins.mapAttrs
-        (system: deployLib: deployLib.deployChecks self.deploy)
-        inputs.deploy-rs.lib;
 
       # Home config with gui
       homeConfigurations."full" = mkHome [

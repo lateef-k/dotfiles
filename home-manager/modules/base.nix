@@ -1,4 +1,4 @@
-{ inputs, lib, config, pkgs, rootPath, ... }:
+{ inputs, lib, config, pkgs, ... }:
 
 let util = (import ../../lib/util.nix config.lib);
 
@@ -6,8 +6,10 @@ in {
   home.packages =
     (with pkgs; [ just libarchive cachix ripgrep fd mosh rlwrap file fzf ]);
 
-  programs.git.enable = true;
-
+  programs.git = {
+    enable = true;
+    includes = [{ path = "${inputs.self}/config/gitconfig"; }];
+  };
   programs.vim = {
     enable = true;
     defaultEditor = true;
@@ -30,7 +32,7 @@ in {
     shortcut = "a";
     mouse = true;
     escapeTime = 10;
-    extraConfig = lib.strings.fileContents "${rootPath}/config/tmux.conf";
+    extraConfig = lib.strings.fileContents "${inputs.self}/config/tmux.conf";
     shell = "${pkgs.fish}/bin/fish";
     plugins = with pkgs; [
       tmuxPlugins.resurrect
@@ -44,7 +46,7 @@ in {
   programs.fish = {
     enable = true;
     interactiveShellInit =
-      lib.strings.fileContents "${rootPath}/config/fish/config.fish";
+      lib.strings.fileContents "${inputs.self}/config/fish/config.fish";
   };
 
   programs.starship = { enable = true; };
@@ -54,12 +56,12 @@ in {
     targetDir = "fish/conf.d";
   } // {
     "starship.toml".source =
-      config.lib.file.mkOutOfStoreSymlink "${rootPath}/config/starship.toml";
+      config.lib.file.mkOutOfStoreSymlink "${inputs.self}/config/starship.toml";
   };
 
   programs.readline = {
     enable = true;
-    extraConfig = lib.strings.fileContents "${rootPath}/config/inputrc";
+    extraConfig = lib.strings.fileContents "${inputs.self}/config/inputrc";
   };
 
 }

@@ -11,7 +11,7 @@ nix NIXOS_OUTPUT:
 	if [ "{{system}}" = "Darwin" ]; then
 		nix run --extra-experimental-features nix-command --extra-experimental-features flakes --show-trace  nix-darwin -- switch --flake .#{{NIXOS_OUTPUT}} --impure
 	elif [ "{{system}}" = "Linux" ]; then
-		sudo nixos-rebuild switch --flake .#{{NIXOS_OUTPUT}} --impure
+		sudo nixos-rebuild switch --show-trace --flake .#{{NIXOS_OUTPUT}} --impure
 	else
 		echo "Unsupported operating system: {{system}}"
 		exit 1
@@ -32,7 +32,7 @@ rollback GENERATION_NUM:
 
 # Initial setup
 # --------------------------------------------------------------------------------
-home-init HOME_MANAGER_RELEASE='release-24.05':
+home-init HOME_MANAGER_RELEASE='release-24.11':
 	nix run github:nix-community/home-manager/{{HOME_MANAGER_RELEASE}} -- init --switch
 
 

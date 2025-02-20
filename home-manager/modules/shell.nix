@@ -1,4 +1,4 @@
-{ inputs, lib, config, pkgs, rootPath, ... }:
+{ inputs, lib, config, pkgs, ... }:
 
 let util = (import ../../lib/util.nix config.lib);
 
@@ -26,11 +26,6 @@ in {
     theme = "gruvbox-dark-hard";
     terminal = "${pkgs.kitty}/bin/kitty";
     extraConfig = { modi = "window,drun,ssh,combi"; };
-  };
-
-  programs.git = {
-    enable = true;
-    includes = [{ path = "${rootPath}/config/gitconfig"; }];
   };
 
   programs.direnv = {

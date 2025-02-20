@@ -1,6 +1,6 @@
 
 
-{ inputs, lib, config, pkgs, rootPath, ... }: {
+{ inputs, lib, config, pkgs, ... }: {
 
   imports = [
     # "${
