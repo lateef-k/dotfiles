@@ -3,12 +3,14 @@
 let util = (import ../../lib/util.nix config.lib);
 
 in {
-  home.packages = (with pkgs; [ cachix ripgrep fd xclip mosh rlwrap file iw ]);
+  home.packages =
+    (with pkgs; [ just libarchive cachix ripgrep fd mosh rlwrap file fzf ]);
 
   programs.git.enable = true;
 
   programs.vim = {
     enable = true;
+    defaultEditor = true;
     extraConfig = ''
       " Map jk and kj to Escape in insert mode
       inoremap jk <Esc>
@@ -19,6 +21,8 @@ in {
     '';
   };
   programs.zoxide.enable = true;
+
+  home.sessionVariables.EDITOR = lib.mkDefault "vim";
 
   programs.tmux = {
     enable = true;

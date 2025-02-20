@@ -1,28 +1,84 @@
 # This is your system's configuration file.
 # Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
 { inputs, lib, config, pkgs, ... }: {
-  # You can import other NixOS modules here
 
-  imports = [ ../../common-linux.nix ./hardware-configuration.nix ];
+  imports = [ ./hardware-configuration.nix ../../modules/attic.nix ];
 
-  # networking.hostName = "nixos"; # Define your hostname.
-  # Pick only one of the below networking options.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  nix = let flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
+  in {
+    settings = {
+      auto-optimise-store = true;
+      flake-registry = "";
+      nix-path = config.nix.nixPath;
+      trusted-users = [ "ludvi" ];
+      substituters = [
+        # "http://192.168.68.59:8501"
+        "https://nix-community.cachix.org"
+        "https://cache.nixos.org/"
+      ];
+      trusted-public-keys = [
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        # "uno-mac:ZWIvua1MoJFN6gg31lBriL0EmJcyohfAWdrw9SPGjk7c4SXFZNNOElQ3RM7wxU1lHhS13zpjV+MCXuWjxBwaJg==⏎"
+      ];
+      keep-outputs = true;
+      keep-derivations = true;
+      experimental-features = "nix-command flakes";
+    };
+
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+    channel.enable = false;
+    registry = lib.mapAttrs (_: flake: { inherit flake; }) flakeInputs;
+    nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+  };
+
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      allowUnsupportedSystem = true;
+    };
+  };
+
+  time.timeZone = "Asia/Kuwait";
+  i18n.defaultLocale = "en_US.UTF-8";
+  programs.fish.enable = true;
+  programs.ssh.startAgent = true;
+  programs.git.enable = true;
 
   networking = {
     defaultGateway = "192.168.64.1";
-    networkmanager.enable =
-      true; # Easiest to use and most distros use this by default.
+    networkmanager.enable = true;
     hostName = "nix-utm";
+    nameservers = [ "8.8.8.8" "8.8.4.4" ];
     interfaces.enp0s1.ipv4.addresses = [{
       address = "192.168.64.42";
       prefixLength = 24;
     }];
+    extraHosts = ''
+            107.172.145.108 racknerd_vps	
+            192.168.68.69 thinkcenter
+            192.168.8.69 thinkcenter-wifi
+      			192.168.68.59 uno-mac 
+    '';
   };
 
-  i18n.defaultLocale = "en_US.UTF-8";
+  users.users = {
+    ludvi = {
+      initialPassword = "correcthorse";
+      isNormalUser = true;
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINS0KKNvykU3vD9MAmNAR6TRTOUwxiB5CIUjuDBrnOBK lutfi@lutfis-MBP"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPIsweTazEmuWG1IEEuzepI5vprijq5RwIWmx/hEiI+M ludvi@tnovo"
+      ];
+      extraGroups = [ "wheel" "audio" "libvirt" ];
+      shell = pkgs.fish;
+    };
+  };
 
-  # Feel free to remove if you don't need it.
   services.openssh = {
     enable = true;
     settings = {
@@ -34,6 +90,15 @@
     };
   };
 
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    # openFirewall = true;
+    publish = {
+      enable = true;
+      addresses = true;
+    };
+  };
   disko.devices = {
     disk = {
       main = {
@@ -69,6 +134,11 @@
         };
       };
     };
+  };
+
+  boot = {
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
   };
 
   # https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion

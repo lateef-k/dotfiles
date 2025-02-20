@@ -3,10 +3,10 @@
 { inputs, lib, config, pkgs, rootPath, ... }: {
 
   imports = [
-    "${
-      fetchTarball
-      "https://github.com/msteen/nixos-vscode-server/tarball/master"
-    }/modules/vscode-server/home.nix"
+    # "${
+    #   fetchTarball
+    #   "https://github.com/msteen/nixos-vscode-server/tarball/master"
+    # }/modules/vscode-server/home.nix"
   ];
 
   home.packages = (with pkgs; [
@@ -26,7 +26,7 @@
     lua-language-server
   ]);
 
-  home.sessionVariables.EDITOR = "nvim";
+  home.sessionVariables.EDITOR = lib.mkForce "nvim";
 
   # Neovim
   #------------

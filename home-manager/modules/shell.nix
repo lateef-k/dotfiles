@@ -5,20 +5,20 @@ let util = (import ../../lib/util.nix config.lib);
 in {
 
   home.packages = (with pkgs; [
-    fzf
+    iw
     wget
     binutils
-    just
-    libarchive
     pipx
     ncdu
     gh
     tldr
     nix-doc
     gocryptfs
-    nerdfonts
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.iosevka
     uv
     lazygit
+    xclip
   ]) ++ (with pkgs.python311Packages; [ llm ]);
 
   programs.rofi = {

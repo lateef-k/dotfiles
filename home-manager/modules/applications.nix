@@ -8,13 +8,7 @@
     zotero_7
     neovide
     distrobox
-    inputs.ghostty.packages.x86_64-linux.default
   ];
-
-  home.file.".config/ghostty/config" = {
-    source = "${config.home.homeDirectory}/Dotfiles/config/ghostty";
-    recursive = true;
-  };
 
   programs.rofi = {
     enable = true;

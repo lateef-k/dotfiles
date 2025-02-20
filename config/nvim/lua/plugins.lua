@@ -19,6 +19,8 @@ local plugins = {
 		-- optional: provides snippets for the snippet source
 		dependencies = "rafamadriz/friendly-snippets",
 
+		version = "*",
+
 		-- use a release tag to download pre-built binaries
 		build = "nix run .#build-plugin",
 

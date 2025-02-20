@@ -6,6 +6,7 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -15,11 +16,14 @@
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    attic.url = "github:zhaofengli/attic";
+
+    deploy-rs.url = "github:serokell/deploy-rs";
+
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    ghostty = { url = "github:ghostty-org/ghostty"; };
   };
 
-  outputs = { ... }@inputs:
+  outputs = { self, home-manager, ... }@inputs:
     let
       mkSystem = (import ./lib/mkconfig.nix { inherit inputs; }).mkSystem;
       mkHome = (import ./lib/mkconfig.nix { inherit inputs; }).mkHome;
@@ -44,11 +48,6 @@
         system = "aarch64-linux";
       };
 
-      nixosConfigurations.vps = mkSystem {
-        name = "x86_64-vps";
-        system = "x86_64-linux";
-      };
-
       # Generic VM base
       nixosConfigurations.vm-test = mkVirtualMachine {
         name = "x86_64-vm-test";
@@ -58,11 +57,30 @@
       };
 
       darwinConfigurations."mini" = inputs.nix-darwin.lib.darwinSystem {
-        modules = [ ./nixos/machines/aarch64-darwin-mini/configuration.nix ];
+        specialArgs = { inherit inputs; };
+        modules = [
+          ./nixos/machines/aarch64-darwin-mini/configuration.nix
+          home-manager.darwinModules.home-manager
+          {
+            nixpkgs = { config = { allowUnfree = true; }; };
+            # `home-manager` config
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.ludvi = import ./home-manager/home-darwin.nix;
+            home-manager.extraSpecialArgs = {
+              rootPath = ./.;
+              inherit inputs;
+            };
+          }
+        ];
       };
 
+      checks = builtins.mapAttrs
+        (system: deployLib: deployLib.deployChecks self.deploy)
+        inputs.deploy-rs.lib;
+
       # Home config with gui
-      homeConfigurations."ludvi-full" = mkHome [
+      homeConfigurations."full" = mkHome [
         ./home-manager/modules/shell.nix
         ./home-manager/modules/editor.nix
         ./home-manager/modules/applications.nix
@@ -70,13 +88,12 @@
         ./home-manager/modules/base.nix
       ];
 
-      homeConfigurations."ludvi-headless" = mkHome [
+      homeConfigurations."headless" = mkHome [
         ./home-manager/modules/shell.nix
         ./home-manager/modules/editor.nix
         ./home-manager/modules/base.nix
       ];
 
-      homeConfigurations."ludvi-minimal" =
-        mkHome [ ./home-manager/modules/base.nix ];
+      homeConfigurations."minimal" = mkHome [ ./home-manager/modules/base.nix ];
     };
 }
