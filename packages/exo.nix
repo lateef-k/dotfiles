@@ -66,7 +66,6 @@ python3Packages.buildPythonApplication rec {
     mlx
     mlx-lm
     uvloop
-    #tinygrad
     (pkgs.python312Packages.tinygrad.overridePythonAttrs
       (old: { doCheck = false; }))
 
@@ -89,7 +88,7 @@ python3Packages.buildPythonApplication rec {
   # Tests require `mlx` which is not supported on linux.
   #doCheck = stdenv.hostPlatform.isDarwin;
 
-  # Tests hang on my darwin machine
+  # Tests hang on darwin 14
   doCheck = false;
 
   passthru = { updateScript = gitUpdater { rev-prefix = "v-"; }; };

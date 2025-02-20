@@ -58,8 +58,6 @@
   services.openssh.enable = true;
 
   programs.fish.enable = true;
-
-  services.nix-daemon.enable = true;
   nixpkgs.hostPlatform = "aarch64-darwin";
   documentation.info.enable = true;
 }

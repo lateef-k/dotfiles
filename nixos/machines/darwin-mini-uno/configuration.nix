@@ -11,6 +11,28 @@
 
   nix.settings.substituters = [ "http://localhost:8123?priority=10" ];
 
+  # this runs a persistent vm btw https://nixcademy.com/posts/macos-linux-builder/
+  # to ssh: 
+  # https://github.com/LnL7/nix-darwin/blob/678b22642abde2ee77ae2218ab41d802f010e5b0/modules/nix/linux-builder.nix#L215
+
+  nix.linux-builder = {
+    config = {
+      nix.settings.substituters = [ "http://192.168.68.57:8123?priority=1" ];
+    };
+    enable = true;
+    ephemeral = true;
+    maxJobs = 4;
+    config = {
+      virtualisation = {
+        darwin-builder = {
+          diskSize = 40 * 1024;
+          memorySize = 8 * 1024;
+        };
+        cores = 6;
+      };
+    };
+  };
+
   launchd.user.agents.nginx = {
     command =
       "${pkgs.nginx}/bin/nginx -c ${rootPath}/config/nginx-cache/nginx-server.conf -e /Users/ludvi/.local/state/nginx-cache/error.log";
