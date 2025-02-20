@@ -256,6 +256,7 @@ local plugins = {
 			"nvim-tree/nvim-web-devicons",
 			"MunifTanjim/nui.nvim",
 		},
+		lazy = false,
 		config = function()
 			require("neo-tree").setup({
 				buffer = {
@@ -269,6 +270,7 @@ local plugins = {
 						enabled = true,
 						leave_dirs_open = false,
 					},
+					hijack_netrw_behavior = "open_current",
 				},
 				window = {
 					mappings = {

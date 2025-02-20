@@ -1,5 +1,11 @@
 { inputs, lib, config, pkgs, ... }: {
 
+  # Notes: 
+  # just vm vm-test
+  # Run `sway` when you start
+
+  imports = [ ../../common.nix ];
+
   users.users = {
     ludvi = {
       initialPassword = "correcthorse";
@@ -24,7 +30,34 @@
       diskSize = 1024 * 50;
       cores = 4;
       graphics = true;
+      sharedDirectories = {
+        config = {
+          source = "/home/ludvi/Dotfiles";
+          target = "/home/ludvi/Dotfiles";
+        };
+      };
     };
+  };
+
+  # Enable Wayland/Sway-related services
+  programs.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+    extraPackages = with pkgs; [
+      swaylock
+      swayidle
+      wl-clipboard
+      mako
+      wofi
+      waybar
+    ];
+  };
+
+  # XDG Portal for screen sharing and better desktop integration
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
   virtualisation.vmVariantWithBootLoader = {
@@ -41,12 +74,12 @@
       graphics = true;
     };
   };
-
-  fileSystems."/" = {
-    device = "/dev/vda";
-    autoResize = true;
-    fsType = "ext4";
-  };
+  #
+  # fileSystems."/" = {
+  #   device = "/dev/vda";
+  #   autoResize = true;
+  #   fsType = "ext4";
+  # };
 
   boot = {
     growPartition = true;
@@ -56,11 +89,5 @@
       grub.device = "/dev/vda";
     };
   };
-  # sharedDirectories = {
-  # 	config = {
-  # 		source = "~/vm_data/$hostname";
-  # 		target = "/mnt/shared";
-  # 	};
-  # };
-  #
+  system.stateVersion = "24.05";
 }

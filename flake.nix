@@ -4,6 +4,7 @@
   inputs = {
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
@@ -12,23 +13,21 @@
 
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    ghostty = { url = "github:ghostty-org/ghostty"; };
   };
 
   outputs = { ... }@inputs:
     let
       mkSystem = (import ./lib/mkconfig.nix { inherit inputs; }).mkSystem;
       mkHome = (import ./lib/mkconfig.nix { inherit inputs; }).mkHome;
+      mkVirtualMachine =
+        (import ./lib/mkconfig.nix { inherit inputs; }).mkVirtualMachine;
     in {
       # t480 thinkpad
       nixosConfigurations.ludnix = mkSystem {
         name = "x86_64-linux-t480s";
-        system = "x86_64-linux";
-      };
-
-      # Generic VM base
-      nixosConfigurations.vm-test = mkSystem {
-        name = "x86_64-vm";
         system = "x86_64-linux";
       };
 
@@ -42,6 +41,19 @@
       nixosConfigurations.aarch64-ludnix-utm = mkSystem {
         name = "aarch64-linux-utm";
         system = "aarch64-linux";
+      };
+
+      nixosConfigurations.vps = mkSystem {
+        name = "x86_64-vps";
+        system = "x86_64-linux";
+      };
+
+      # Generic VM base
+      nixosConfigurations.vm-test = mkVirtualMachine {
+        name = "x86_64-vm-test";
+        system = "x86_64-linux";
+        home-modules =
+          [ ./home-manager/modules/base.nix ./home-manager/modules/sway.nix ];
       };
 
       # Home config with gui

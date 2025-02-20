@@ -8,11 +8,11 @@ let
   };
   # Instantiate nixpkgs
   pkgs = import inputs.nixpkgs {
-    system = "x86_64-linux";
+    system = builtins.currentSystem;
     config = nixpkgs-config;
   };
   pkgs-unstable = import inputs.nixpkgs-unstable {
-    system = "x86_64-linux";
+    system = builtins.currentSystem;
     config = nixpkgs-config;
   };
 in {
@@ -41,4 +41,25 @@ in {
       modules = [ ../home-manager/home.nix ] ++ home-modules;
     };
 
+  # Use home-manager as a module when testing with VMs
+  # Use home-manager as a module when testing with VMs
+  mkVirtualMachine = { name, system, home-modules }:
+    let rootPath = toString ../.;
+    in inputs.nixpkgs.lib.nixosSystem {
+      system = system;
+      specialArgs = { inherit inputs; };
+      modules = [
+        ../nixos/machines/${name}/configuration.nix
+        inputs.home-manager.nixosModules.home-manager
+        {
+          home-manager = {
+            extraSpecialArgs = { inherit rootPath; };
+            users.ludvi = { pkgs, ... }: {
+              imports = home-modules;
+              home.stateVersion = "24.05";
+            };
+          };
+        }
+      ];
+    };
 }

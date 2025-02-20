@@ -9,14 +9,24 @@
 
   # services.tailscale.enable = true;
   # networking.wireguard.enable = false;
-  networking.wg-quick.interfaces.wg3.configFile =
-    "/etc/wireguard/MullvadConfig/il-tlv-wg-101.conf";
+  # networking.wg-quick.interfaces.wg3.configFile =
+  #   "/etc/wireguard/MullvadConfig/fi-hel-wg-001.conf";
   networking.firewall.extraCommands = ''
     iptables -A nixos-fw -p tcp -s 192.168.8.0/24 -j nixos-fw-accept
   '';
 
-  networking.extraHosts =
-    "	192.168.122.246 kali\n	107.172.145.108 racknerd_vps\n	192.168.8.69 thinkcenter\n";
+  fileSystems."/mnt/synology" = {
+    device = "fatboy.local:/volume1/main";
+    fsType = "nfs";
+    options = [ "defaults" "nfsvers=4" "x-systemd.automount" "noauto" ];
+  };
+
+  networking.extraHosts = ''
+    192.168.122.246 kali	
+    107.172.145.108 racknerd_vps	
+    192.168.68.69 thinkcenter
+    192.168.8.69 thinkcenter-wifi
+  '';
 
   virtualisation.libvirtd = {
     enable = true;
@@ -50,6 +60,7 @@
 
   };
 
+  services.fwupd.enable = true;
   nixpkgs.config.pulseaudio = true;
   hardware.pulseaudio.enable = true;
 

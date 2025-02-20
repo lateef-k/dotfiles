@@ -29,6 +29,7 @@
   #------------
   programs.neovim = {
     enable = true;
+    viAlias = true;
     package =
       inputs.neovim-nightly-overlay.packages.${pkgs.system}.default; # If you want to use Neovim nightly
     plugins = [ pkgs-unstable.vimPlugins.nvim-treesitter.withAllGrammars ];

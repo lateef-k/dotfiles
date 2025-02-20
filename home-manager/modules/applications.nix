@@ -7,7 +7,14 @@
     libreoffice-qt
     zotero_7
     neovide
+    distrobox
+    inputs.ghostty.packages.x86_64-linux.default
   ];
+
+  home.file.".config/ghostty/config" = {
+    source = "${config.home.homeDirectory}/Dotfiles/config/ghostty";
+    recursive = true;
+  };
 
   programs.rofi = {
     enable = true;
@@ -29,4 +36,11 @@
     enable = true;
     package = pkgs-unstable.vscode.fhs;
   };
+
+  services.gnome-keyring = {
+    enable = true;
+    components =
+      [ "pkcs11" "secrets" ]; # didnt include ssh cause i dont need it here
+  };
+
 }
