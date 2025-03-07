@@ -44,7 +44,11 @@
 
   environment.systemPackages = with pkgs; [
     (python3Packages.callPackage ../packages/exo.nix { })
-    ollama
+    (pkgs.callPackage ../packages/ollama.nix {
+      buildGoModule = buildGoModule.override { go = go_1_24; };
+    })
+    just
+    rsync
   ];
 
   users.users.ludvi = {

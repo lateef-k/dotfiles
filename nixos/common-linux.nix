@@ -52,10 +52,13 @@
     };
   };
 
+  environment.systemPackages = with pkgs; [ parallel ];
+
   time.timeZone = "Asia/Kuwait";
   i18n.defaultLocale = "en_US.UTF-8";
   programs.fish.enable = true;
   programs.git.enable = true;
   programs.ssh.startAgent = true;
+  programs.nix-ld.enable = true;
 
 }

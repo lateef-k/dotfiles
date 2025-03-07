@@ -1,52 +1,46 @@
 # Main commands
 # --------------------------------------------------------------------------------
 system := `uname`
+hostname := `hostname -s` #-s remove .local from macos
+
+nix NIXOS_OUTPUT:
+	#!/usr/bin/env sh
+	if [ "{{system}}" = "Darwin" ]; then
+		cmd="darwin-rebuild"
+	elif [ "{{system}}" = "Linux" ]; then
+		cmd="nixos-rebuild"
+	else
+		echo "Unsupported operating system: {{system}}"
+		exit 1
+	fi
+	sudo $cmd switch --flake .#{{NIXOS_OUTPUT}}
 
 home HOME_PROFILE:
 	# Example usage: just home HOME_PROFILE=ludvi-headless
 	home-manager switch --flake .#{{HOME_PROFILE}} --impure
 
-nix NIXOS_OUTPUT:
+bump:
 	#!/usr/bin/env sh
-	if [ "{{system}}" = "Darwin" ]; then
-		nix run --extra-experimental-features nix-command --extra-experimental-features flakes --show-trace  nix-darwin -- switch --flake .#{{NIXOS_OUTPUT}} --impure
-	elif [ "{{system}}" = "Linux" ]; then
-		sudo nixos-rebuild switch --show-trace --flake .#{{NIXOS_OUTPUT}} --impure
-	else
-		echo "Unsupported operating system: {{system}}"
-		exit 1
-	fi
-home-debug HOME_PROFILE:
-	# Example usage: just home-debug HOME_PROFILE=ludvi-headless
-	home-manager switch --show-trace --flake .#{{HOME_PROFILE}} --impure
-# --------------------------------------------------------------------------------
+	nix flake lock --update-input nixpkgs
+	git add flake.lock
+	COMMIT_MSG=$(nix flake info | rg '.+(github:nixos/nixpkgs[^?]+)[^(]+(.+)' -r '$1 $2')
+	git commit -m "bump $COMMIT_MSG" flake.lock
+	echo "bump(nixpkgs): $COMMIT_MSG"
 
-# Generations
-# --------------------------------------------------------------------------------
+# [ GENERATIONS ]
+# ******************************
 list-generations:
 	sudo nix-env --list-generations --profile /nix/var/nix/profiles/system
 
 rollback GENERATION_NUM:
 	sudo nix-env --switch-generation {{GENERATION_NUM}} --profile /nix/var/nix/profiles/system
-# --------------------------------------------------------------------------------
+# ******************************
 
-# Initial setup
-# --------------------------------------------------------------------------------
-home-init HOME_MANAGER_RELEASE='release-24.11':
-	nix run github:nix-community/home-manager/{{HOME_MANAGER_RELEASE}} -- init --switch
-
-
-init-disk NIXOS_OUTPUT DISK:
-	# Example usage: just init-disk NIXOS_OUTPUT=ludnix DISK=/dev/sda
-	sudo nix --experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --show-trace --write-efi-boot-entries --flake '.#{{NIXOS_OUTPUT}}' --disk main {{DISK}}
-# --------------------------------------------------------------------------------
-
-
-# VMs
-# --------------------------------------------------------------------------------
+# [VMs]
+# ******************************
 vm NIXOS_OUTPUT:
 	sudo nixos-rebuild build-vm --flake .#{{NIXOS_OUTPUT}} --impure
 
 vm-with-boot:
 	sudo nix --show-trace build -L '.#nixosConfigurations.vm-test.config.system.build.vmWithBootLoader'
-# --------------------------------------------------------------------------------
+# ******************************

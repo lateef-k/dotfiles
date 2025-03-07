@@ -116,7 +116,7 @@ local plugins = {
 			{
 				"<leader>S",
 				function()
-					require("fzf-lua").lsp_workspace_symbols()
+					require("fzf-lua").lsp_live_workspace_symbols()
 				end,
 				desc = "List workspace symbols",
 			},

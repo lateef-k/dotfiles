@@ -9,9 +9,10 @@
   # once i get the narinfo, i can download the package from the url in the output:
   # `wget localhost:8123/nar/{hash}.nar.xz`
 
-  nix.settings.substituters = [ "http://localhost:8123?priority=10" ];
+  nix.settings.substituters =
+    lib.mkAfter [ "http://localhost:8123?priority=10" ];
 
-  environment.systemPackages = with pkgs; [ nginx ];
+  environment.systemPackages = with pkgs; [ nginx ollama ];
 
   # this runs a persistent vm btw https://nixcademy.com/posts/macos-linux-builder/
   # to ssh: 
@@ -35,10 +36,18 @@
     };
   };
 
+  system.activationScripts.postActivation.text = ''
+        # Create directory if it doesn't exist
+        mkdir -p /tmp/nginx
+        # You can also set permissions if needed
+    		chown -R ludvi:wheel /tmp/nginx
+  '';
+
   launchd.user.agents.nginx = {
     command =
-      "${pkgs.nginx}/bin/nginx -c config/nginx-cache/nginx-server.conf -e /Users/ludvi/.local/state/nginx-cache/error.log";
+      "${pkgs.nginx}/bin/nginx -c ${inputs.self}/config/nginx-cache/nginx-server.conf -e /tmp/nginx/error_e.log";
     serviceConfig = {
+      StandardErrorPath = "/tmp/nginx_service.log";
       KeepAlive = true;
       RunAtLoad = true;
       UserName =

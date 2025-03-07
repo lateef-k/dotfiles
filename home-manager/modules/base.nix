@@ -52,7 +52,7 @@ in {
   programs.starship = { enable = true; };
 
   xdg.configFile = util.symlinkFiles {
-    sourceDir = "${config.home.homeDirectory}/Dotfiles/config/fish/conf.d";
+    sourceDir = "${inputs.self}/config/fish/conf.d";
     targetDir = "fish/conf.d";
   } // {
     "starship.toml".source =

@@ -17,7 +17,8 @@
             107.172.145.108 racknerd_vps	
             192.168.68.69 thinkcenter
             192.168.8.69 thinkcenter-wifi
-      			192.168.68.59 uno-mac 
+      			192.168.68.57 uno-mac 
+      			192.168.68.59 deux-mac 
     '';
   };
 
@@ -35,7 +36,7 @@
   services.avahi = {
     enable = true;
     nssmdns4 = true;
-    # openFirewall = true;
+    openFirewall = true;
     publish = {
       enable = true;
       addresses = true;

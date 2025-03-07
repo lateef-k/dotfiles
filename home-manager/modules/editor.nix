@@ -10,6 +10,7 @@
   ];
 
   home.packages = (with pkgs; [
+    aider-chat
     sqlite
     gnumake
     python312
@@ -39,8 +40,7 @@
   };
   xdg.configFile = {
     "nvim" = {
-      source = config.lib.file.mkOutOfStoreSymlink
-        "${config.home.homeDirectory}/Dotfiles/config/nvim";
+      source = config.lib.file.mkOutOfStoreSymlink "${inputs.self}/config/nvim";
     };
   };
 

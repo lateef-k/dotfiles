@@ -4,11 +4,7 @@
   # just vm vm-test
   # Run `sway` when you start
 
-  imports = [
-    ./hardware-configuration.nix
-    ../../modules/docker.nix
-    ../../common-linux.nix
-  ];
+  imports = [ ../../common-linux.nix ];
 
   networking = {
     networkmanager.enable = true;
@@ -22,8 +18,46 @@
     '';
   };
 
+  disko.devices = {
+    disk = {
+      main = {
+        # When using disko-install, we will overwrite this value from the commandline
+        device = "/dev/disk/by-id/some-disk-id";
+        type = "disk";
+        content = {
+          type = "gpt";
+          partitions = {
+            MBR = {
+              type = "EF02"; # for grub MBR
+              size = "1M";
+              priority = 1; # Needs to be first partition
+            };
+            ESP = {
+              type = "EF00";
+              size = "500M";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+              };
+            };
+            root = {
+              size = "100%";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/";
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+
   virtualisation.vmVariant = {
     # following configuration is added only when building VM with build-vm
+    virtualisation.fileSystems."/persist".neededForBoot = true;
     virtualisation = {
       forwardPorts = [{
         from = "host";
@@ -36,25 +70,11 @@
       graphics = true;
       sharedDirectories = {
         config = {
-          source = "/home/ludvi/Dotfiles";
-          target = "/home/ludvi/Dotfiles";
+          source = "/home/ludvi/Admin";
+          target = "/home/ludvi/Admin";
         };
       };
     };
-  };
-
-  # Enable Wayland/Sway-related services
-  programs.sway = {
-    enable = true;
-    wrapperFeatures.gtk = true;
-    extraPackages = with pkgs; [
-      swaylock
-      swayidle
-      wl-clipboard
-      mako
-      wofi
-      waybar
-    ];
   };
 
   # XDG Portal for screen sharing and better desktop integration

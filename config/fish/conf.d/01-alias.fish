@@ -12,7 +12,7 @@ alias ,pt="pstree -p"
 alias ,tmuxpid="tmux list-panes -a -F \"#{pane_pid}: #{session_id} #{window_id} #{pane_id}\" | grep "
 alias ,tmuxthispid="tmux display -p \"#{pane_pid}\""
 alias dci="docker image list"
-alias ,d="cd ~/Dotfiles/ && nvim --cmd 'autocmd User VeryLazy FzfLua files'"
+alias ,d="cd ~/Admin/dotfiles/ && nvim --cmd 'autocmd User VeryLazy FzfLua files'"
 
 alias sqlite3="rlwrap sqlite3"
 

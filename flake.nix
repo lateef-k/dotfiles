@@ -2,19 +2,19 @@
   description = "Ludvi's Nix Config";
 
   inputs = {
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
-
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    nix-index-database.url = "github:nix-community/nix-index-database";
-    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
@@ -39,20 +39,20 @@
       };
 
       # Generic VM base
-      nixosConfigurations.vm-test = mkVirtualMachine {
+      nixosConfigurations.vm-test = mkSystem {
         name = "x86_64-vm-test";
         system = "x86_64-linux";
-        home-modules =
-          [ ./home-manager/modules/base.nix ./home-manager/modules/sway.nix ];
+        # home-modules =
+        #   [ ./home-manager/modules/base.nix ./home-manager/modules/sway.nix ];
       };
 
-      darwinConfigurations."mini-uno" = mkSystem {
-        name = "darwin-mini-uno";
+      darwinConfigurations."uno-mac" = mkSystem {
+        name = "darwin-uno-mac";
         system = "aarch64-darwin";
       };
 
-      darwinConfigurations."mini-deux" = mkSystem {
-        name = "darwin-mini-deux";
+      darwinConfigurations."deux-mac" = mkSystem {
+        name = "darwin-deux-mac";
         system = "aarch64-darwin";
       };
 

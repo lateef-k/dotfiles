@@ -2,14 +2,14 @@
 
 python3Packages.buildPythonApplication rec {
   pname = "exo";
-  version = "0.0.13-alpha";
+  version = "0.0.15-alpha";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "exo-explore";
     repo = "exo";
     tag = "v${version}";
-    hash = "sha256-qUDVWtDXVUo+JvfK0TC+DK/Z6I5lbuThomxjNwQ+Tlw=";
+    hash = "sha256-GoYfpr6oFpreWQtSomOwgfzSoBAbjqGZ1mcc0u9TBl4=";
   };
 
   mlx = python3Packages.buildPythonPackage rec {
