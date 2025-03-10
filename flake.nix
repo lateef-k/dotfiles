@@ -16,8 +16,36 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
+    # nix-rosetta-builder.url = "github:cpick/nix-rosetta-builder";
+    # nix-rosetta-builder.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-rosetta-builder.url = "github:lateef-k/nix-rosetta-builder";
+    nix-rosetta-builder.inputs.nixpkgs.follows = "nixpkgs";
+
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+
+    # [DARWIN]
+    #  **************************************
+    nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
+    nix-homebrew.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Use the formulas defined in the homebrew repos
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
+    #  **************************************
   };
+
+  nixConfig = { download-buffer-size = 100000000; }; # 100mb
 
   outputs = { self, home-manager, ... }@inputs:
     let

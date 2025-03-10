@@ -8,14 +8,13 @@
     defaultGateway = "192.168.64.1";
     networkmanager.enable = true;
     hostName = "nix-utm";
-    nameservers = [ "8.8.8.8" "8.8.4.4" ];
+    nameservers = [ "192.168.68.57" "8.8.8.8" "8.8.4.4" ];
     interfaces.enp0s1.ipv4.addresses = [{
       address = "192.168.64.42";
       prefixLength = 24;
     }];
     extraHosts = ''
             107.172.145.108 racknerd_vps	
-            192.168.68.69 thinkcenter
             192.168.8.69 thinkcenter-wifi
       			192.168.68.57 uno-mac 
       			192.168.68.59 deux-mac 
@@ -31,6 +30,13 @@
       # Remove if you want to SSH using passwords
       PasswordAuthentication = false;
     };
+  };
+
+  programs.ssh = {
+    extraConfig = ''
+      Host thinkcenter
+        ForwardAgent yes
+    '';
   };
 
   services.avahi = {

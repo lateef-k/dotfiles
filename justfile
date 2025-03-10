@@ -8,24 +8,27 @@ nix NIXOS_OUTPUT:
 	if [ "{{system}}" = "Darwin" ]; then
 		cmd="darwin-rebuild"
 	elif [ "{{system}}" = "Linux" ]; then
-		cmd="nixos-rebuild"
+		cmd="sudo nixos-rebuild"
 	else
 		echo "Unsupported operating system: {{system}}"
 		exit 1
 	fi
-	sudo $cmd switch --flake .#{{NIXOS_OUTPUT}}
+	$cmd switch --flake .#{{NIXOS_OUTPUT}}
 
 home HOME_PROFILE:
 	# Example usage: just home HOME_PROFILE=ludvi-headless
 	home-manager switch --flake .#{{HOME_PROFILE}} --impure
 
-bump:
+bump INPUT:
 	#!/usr/bin/env sh
-	nix flake lock --update-input nixpkgs
+	nix flake lock --update-input {{INPUT}}
 	git add flake.lock
-	COMMIT_MSG=$(nix flake info | rg '.+(github:nixos/nixpkgs[^?]+)[^(]+(.+)' -r '$1 $2')
-	git commit -m "bump $COMMIT_MSG" flake.lock
-	echo "bump(nixpkgs): $COMMIT_MSG"
+	LOCKED_JSON=$(nix flake metadata --json | jq --arg input "{{INPUT}}" '.locks.nodes[.locks.nodes.root.inputs[$input]].locked')
+	REV=$(echo "$LOCKED_JSON" | jq -r '.rev')
+	DATE=$(echo "$LOCKED_JSON" | jq -r '.lastModified | strftime("%Y-%m-%d")')
+	COMMIT_MSG="bump({{INPUT}}): rev-$REV on $DATE"
+	git commit -m "$COMMIT_MSG" flake.lock
+
 
 # [ GENERATIONS ]
 # ******************************

@@ -14,11 +14,18 @@
     		chown -R ludvi:wheel /tmp/nginx
   '';
 
+  networking = {
+    dns = [ "192.168.68.57" "8.8.8.8" ];
+    search = [ "home" ];
+    knownNetworkServices =
+      [ "Thunderbolt Bridge" "Ethernet" "USB 10/100/1000 LAN" "Wi-Fi" ];
+
+  };
   launchd.user.agents.nginx = {
     command =
-      "${pkgs.nginx}/bin/nginx -c ${inputs.self}/config/nginx-cache/nginx-client-darwin.conf -e /tmp/nginx/error_e.log";
+      "${pkgs.nginx}/bin/nginx -c ${inputs.self}/config/nginx-cache/nginx-client-darwin.conf -e /tmp/nginx_error_e.log";
     serviceConfig = {
-      StandardErrorPath = "/tmp/nginx_service.log";
+      StandardErrorPath = "/tmp/nginx_service_err_e.log";
       KeepAlive = true;
       RunAtLoad = true;
       UserName =
