@@ -19,6 +19,7 @@ in {
     uv
     lazygit
     xclip
+    jq
   ]) ++ (with pkgs.python311Packages; [ llm ]);
 
   programs.rofi = {
