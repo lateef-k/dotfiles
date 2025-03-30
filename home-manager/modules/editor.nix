@@ -10,7 +10,6 @@
   ];
 
   home.packages = (with pkgs; [
-    aider-chat
     sqlite
     gnumake
     python312
@@ -25,6 +24,13 @@
     ruff
     nixd
     lua-language-server
+
+    # runs with the correct dynamica libraries
+    (pkgs.writeShellScriptBin "aider" ''
+      export LD_LIBRARY_PATH=$NIX_LD_LIBRARY_PATH
+      exec ${pkgs.pipx}/bin/pipx "run" "aider-chat"
+    '')
+
   ]);
 
   home.sessionVariables.EDITOR = lib.mkForce "nvim";
@@ -38,11 +44,16 @@
       inputs.neovim-nightly-overlay.packages.${pkgs.system}.default; # If you want to use Neovim nightly
     plugins = [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
   };
+
   xdg.configFile = {
     "nvim" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${inputs.self}/config/nvim";
+      source = config.lib.file.mkOutOfStoreSymlink
+        "${config.home.homeDirectory}/Admin/dotfiles/config/nvim";
     };
   };
+
+  home.file.".aider.conf.yml".source =
+    "${config.home.homeDirectory}/Admin/dotfiles/config/aider.conf.yml";
 
   xdg.dataFile = {
     # prepend this path when starting treesitter, and it'll see the parsers

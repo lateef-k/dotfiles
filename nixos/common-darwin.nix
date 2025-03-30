@@ -67,12 +67,7 @@
     casks = [ "orbstack" ];
   };
 
-  environment.systemPackages = with pkgs; [
-    (python3Packages.callPackage ../packages/exo.nix { })
-    ollama
-    just
-    rsync
-  ];
+  environment.systemPackages = with pkgs; [ ollama just rsync ];
 
   users.users.ludvi = {
     home = "/Users/ludvi";
@@ -87,4 +82,5 @@
   programs.fish.enable = true;
   nixpkgs.hostPlatform = "aarch64-darwin";
   documentation.info.enable = true;
+  services.tailscale.enable = true;
 }

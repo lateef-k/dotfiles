@@ -2,23 +2,21 @@
 # Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
 { inputs, lib, config, pkgs, ... }: {
 
-  imports = [ ./hardware-configuration.nix ../../common-linux.nix ];
+  imports = [
+    ./hardware-configuration.nix
+    ../../common-linux.nix
+    ../../modules/cache-proxy.nix
+  ];
 
   networking = {
     defaultGateway = "192.168.64.1";
     networkmanager.enable = true;
     hostName = "nix-utm";
-    nameservers = [ "192.168.68.57" "8.8.8.8" "8.8.4.4" ];
+    nameservers = [ "1.1.1.1" "1.0.0.1" ];
     interfaces.enp0s1.ipv4.addresses = [{
       address = "192.168.64.42";
       prefixLength = 24;
     }];
-    extraHosts = ''
-            107.172.145.108 racknerd_vps	
-            192.168.8.69 thinkcenter-wifi
-      			192.168.68.57 uno-mac 
-      			192.168.68.59 deux-mac 
-    '';
   };
 
   services.openssh = {
@@ -47,12 +45,6 @@
       enable = true;
       addresses = true;
     };
-  };
-
-  services.nginx = {
-    enable = true;
-    config = builtins.readFile
-      (inputs.self + /config/nginx-cache/nginx-client-linux.conf);
   };
 
   disko.devices = {

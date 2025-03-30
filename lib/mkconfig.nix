@@ -5,13 +5,13 @@
   mkSystem = { name, system }:
     if (system == "aarch64-darwin") then
       inputs.nix-darwin.lib.darwinSystem {
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs system; };
         modules = [ "${inputs.self}/nixos/machines/${name}/configuration.nix" ];
       }
     else
       inputs.nixpkgs.lib.nixosSystem {
         system = system;
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs system; };
         modules = [
           inputs.disko.nixosModules.disko
           inputs.nix-index-database.nixosModules.nix-index

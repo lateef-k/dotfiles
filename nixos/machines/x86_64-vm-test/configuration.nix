@@ -8,14 +8,7 @@
 
   networking = {
     networkmanager.enable = true;
-    nameservers = [ "8.8.8.8" "8.8.4.4" ];
-    extraHosts = ''
-            107.172.145.108 racknerd_vps	
-            192.168.68.69 thinkcenter
-            192.168.8.69 thinkcenter-wifi
-      			192.168.68.59 uno-mac 
-
-    '';
+    nameservers = [ "1.1.1.1" "1.0.0.1" ];
   };
 
   disko.devices = {

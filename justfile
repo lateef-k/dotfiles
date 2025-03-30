@@ -3,7 +3,7 @@
 system := `uname`
 hostname := `hostname -s` #-s remove .local from macos
 
-nix NIXOS_OUTPUT:
+nix SUBCOMMAND NIXOS_OUTPUT:
 	#!/usr/bin/env sh
 	if [ "{{system}}" = "Darwin" ]; then
 		cmd="darwin-rebuild"
@@ -13,7 +13,7 @@ nix NIXOS_OUTPUT:
 		echo "Unsupported operating system: {{system}}"
 		exit 1
 	fi
-	$cmd switch --flake .#{{NIXOS_OUTPUT}}
+	$cmd {{SUBCOMMAND}} --impure --flake .#{{NIXOS_OUTPUT}}
 
 home HOME_PROFILE:
 	# Example usage: just home HOME_PROFILE=ludvi-headless

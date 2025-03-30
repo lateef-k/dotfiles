@@ -9,7 +9,6 @@
       trusted-users = [ "ludvi" ];
       substituters = [
         # these priorities override the cache-info
-        "http://localhost:8444?priority=10"
         "https://nix-community.cachix.org?priority=20"
         "https://cache.nixos.org?priority=30"
       ];
@@ -32,6 +31,11 @@
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
   };
 
+  networking = {
+    networkmanager.enable = true;
+    nameservers = [ "1.1.1.1" "1.0.0.1" ];
+  };
+
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -52,13 +56,12 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [ parallel ];
-
   time.timeZone = "Asia/Kuwait";
   i18n.defaultLocale = "en_US.UTF-8";
   programs.fish.enable = true;
   programs.git.enable = true;
   programs.ssh.startAgent = true;
   programs.nix-ld.enable = true;
+  services.tailscale.enable = true;
 
 }

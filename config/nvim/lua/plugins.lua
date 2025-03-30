@@ -22,7 +22,7 @@ local plugins = {
 		version = "*",
 
 		-- use a release tag to download pre-built binaries
-		build = "nix run .#build-plugin",
+		-- build = "nix run .#build-plugin",
 
 		opts = {
 			keymap = {
@@ -41,9 +41,6 @@ local plugins = {
 			-- accept = { auto_brackets = { enabled = true } }
 			-- experimental signature help support
 			-- trigger = { signature_help = { enabled = true } }
-			sources = {
-				cmdline = {},
-			},
 		},
 		-- allows extending the enabled_providers array elsewhere in your config
 		-- without having to redefining it

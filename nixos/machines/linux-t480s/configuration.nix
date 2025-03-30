@@ -2,36 +2,20 @@
 
   imports = [
     ./hardware-configuration.nix
-    ../../modules/docker.nix
     ../../common-linux.nix
+    ../../modules/docker.nix
+    ../../modules/cache-proxy.nix
   ];
 
   environment.systemPackages = with pkgs; [ virt-manager ];
 
-  # services.tailscale.enable = true;
-
   services.fwupd.enable = true;
-  # nixpkgs.config.pulseaudio = true;
-  # hardware.pulseaudio.enable = true;
 
   # networking.wireguard.enable = false;
   # networking.wg-quick.interfaces.wg3.configFile =
   #   "/etc/wireguard/MullvadConfig/fi-hel-wg-001.conf";
 
-  networking = {
-    hostName = "nix-t480s";
-    firewall.extraCommands =
-      "	iptables -A nixos-fw -p tcp -s 192.168.8.0/24 -j nixos-fw-accept\n";
-    networkmanager.enable = true;
-    nameservers = [ "8.8.8.8" "8.8.4.4" ];
-    extraHosts = ''
-            107.172.145.108 racknerd_vps	
-            192.168.68.69 thinkcenter
-            192.168.8.69 thinkcenter-wifi
-      			192.168.68.59 uno-mac 
-
-    '';
-  };
+  networking = { hostName = "nix-t480s"; };
 
   fileSystems."/mnt/synology" = {
     device = "fatboy.local:/volume1/main";
