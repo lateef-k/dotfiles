@@ -27,10 +27,6 @@
     # [DARWIN]
     #  **************************************
 
-    nix-orbstack.url = "path:./modules/nix-orbstack/";
-    nix-orbstack.inputs.nixpkgs.follows = "nixpkgs";
-    nix-orbstack.inputs.nix-darwin.follows = "nix-darwin";
-
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     nix-homebrew.inputs.nixpkgs.follows = "nixpkgs";
 
