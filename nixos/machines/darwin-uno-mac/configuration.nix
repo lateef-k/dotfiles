@@ -26,12 +26,6 @@
     		chown -R ludvi:wheel /tmp/nginx
   '';
 
-  networking = {
-    dns = [ "1.1.1.1" "1.0.0.1" ];
-    knownNetworkServices =
-      [ "Thunderbolt Bridge" "Ethernet" "USB 10/100/1000 LAN" "Wi-Fi" ];
-  };
-
   launchd.user.agents.nginx = {
     serviceConfig = {
       ProgramArguments = [

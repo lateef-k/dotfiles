@@ -26,6 +26,11 @@
 
     # [DARWIN]
     #  **************************************
+
+    nix-orbstack.url = "path:./modules/nix-orbstack/";
+    nix-orbstack.inputs.nixpkgs.follows = "nixpkgs";
+    nix-orbstack.inputs.nix-darwin.follows = "nix-darwin";
+
     nix-homebrew.url = "github:zhaofengli-wip/nix-homebrew";
     nix-homebrew.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -97,6 +102,12 @@
         ./home-manager/modules/shell.nix
         ./home-manager/modules/editor.nix
         ./home-manager/modules/base.nix
+        ({ pkgs, ... }: {
+          programs.vscode = {
+            enable = true;
+            package = pkgs.vscode.fhs;
+          };
+        })
       ];
 
       homeConfigurations."minimal" = mkHome [ ./home-manager/modules/base.nix ];

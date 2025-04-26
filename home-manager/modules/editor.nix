@@ -26,11 +26,12 @@
     lua-language-server
 
     # runs with the correct dynamica libraries
-    (pkgs.writeShellScriptBin "aider" ''
-      export LD_LIBRARY_PATH=$NIX_LD_LIBRARY_PATH
-      exec ${pkgs.pipx}/bin/pipx "run" "aider-chat"
-    '')
-
+    # (pkgs.writeShellScriptBin "aider" ''
+    #   export LD_LIBRARY_PATH=$NIX_LD_LIBRARY_PATH
+    #   exec ${pkgs.pipx}/bin/pipx "run" "aider-chat"
+    # '')
+    #
+    aider-chat
   ]);
 
   home.sessionVariables.EDITOR = lib.mkForce "nvim";

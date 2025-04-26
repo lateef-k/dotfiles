@@ -300,7 +300,9 @@ local plugins = {
 			end, { noremap = true, silent = true })
 		end,
 		config = {
-
+			window = {
+				layout = "float",
+			},
 			-- Define keymap for starting CopilotChat
 			mappings = {
 				complete = {

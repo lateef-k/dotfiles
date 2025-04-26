@@ -45,6 +45,12 @@
     };
   };
 
+  networking = {
+    dns = [ "1.1.1.1" "1.0.0.1" ];
+    knownNetworkServices =
+      [ "Thunderbolt Bridge" "Ethernet" "USB 10/100/1000 LAN" "Wi-Fi" ];
+  };
+
   # This is needed because homebrew.* in nix-darwin doesn't install, only manages an existing installation
   nix-homebrew = {
     # Install Homebrew under the default prefix
@@ -64,7 +70,8 @@
 
   homebrew = {
     enable = true;
-    casks = [ "orbstack" ];
+    # casks = [ "orbstack" ];
+    onActivation.cleanup = "zap"; # uninstall + delete associated files
   };
 
   environment.systemPackages = with pkgs; [ ollama just rsync ];

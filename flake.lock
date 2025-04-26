@@ -376,15 +376,14 @@
         ]
       },
       "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-nSL7K8SbMhb2HEL5WeXtH7KTbAZd95tKj7c9dnwo76c=",
         "path": "./modules/nix-orbstack/",
         "type": "path"
       },
       "original": {
         "path": "./modules/nix-orbstack/",
         "type": "path"
-      }
+      },
+      "parent": []
     },
     "nix-rosetta-builder": {
       "inputs": {

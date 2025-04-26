@@ -1,14 +1,12 @@
 { inputs, lib, config, pkgs, ... }: {
 
-  imports = [ ../../common-darwin.nix ../../modules/cache-proxy.nix ];
+  imports = [
+    ../../common-darwin.nix
+    ../../modules/cache-proxy.nix
+    inputs.nix-orbstack.darwinModules.nix-orbstack
+  ];
 
-  networking = {
-    dns = [ "1.1.1.1" "1.0.0.1" ];
-    search = [ "home" ];
-    knownNetworkServices =
-      [ "Thunderbolt Bridge" "Ethernet" "USB 10/100/1000 LAN" "Wi-Fi" ];
-
-  };
+  services.nix-orbstack.enable = true;
 
   system.stateVersion = 5;
 }

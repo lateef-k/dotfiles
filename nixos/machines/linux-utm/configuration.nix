@@ -10,9 +10,7 @@
 
   networking = {
     defaultGateway = "192.168.64.1";
-    networkmanager.enable = true;
     hostName = "nix-utm";
-    nameservers = [ "1.1.1.1" "1.0.0.1" ];
     interfaces.enp0s1.ipv4.addresses = [{
       address = "192.168.64.42";
       prefixLength = 24;
@@ -31,11 +29,38 @@
   };
 
   programs.ssh = {
+    # equivalent to `ssh -t ludvi@uno-mac ssh orb`
     extraConfig = ''
-      Host thinkcenter
-        ForwardAgent yes
+                              Host uno-vm
+                              	HostName uno-mac
+                        				User ludvi
+                              	RequestTTY yes
+                              	RemoteCommand ssh orb
+
+                  						Host uno-mac
+                  							HostName uno-mac
+                  							User ludvi
+      													RequestTTY yes
+            										RemoteCommand fish
+                  						Host deux-mac
+                  							HostName deux-mac
+                  							User ludvi
+      													RequestTTY yes
+            										RemoteCommand fish
     '';
+    # 
   };
+
+  services.xserver = {
+    enable = true;
+    desktopManager = {
+      xterm.enable = false;
+      xfce.enable = true;
+    };
+
+  };
+
+  services.displayManager.defaultSession = "xfce";
 
   services.avahi = {
     enable = true;
