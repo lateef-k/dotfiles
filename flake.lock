@@ -366,25 +366,6 @@
         "type": "github"
       }
     },
-    "nix-orbstack": {
-      "inputs": {
-        "nix-darwin": [
-          "nix-darwin"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "path": "./modules/nix-orbstack/",
-        "type": "path"
-      },
-      "original": {
-        "path": "./modules/nix-orbstack/",
-        "type": "path"
-      },
-      "parent": []
-    },
     "nix-rosetta-builder": {
       "inputs": {
         "nixos-generators": "nixos-generators",
@@ -502,7 +483,6 @@
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",
-        "nix-orbstack": "nix-orbstack",
         "nix-rosetta-builder": "nix-rosetta-builder",
         "nixpkgs": "nixpkgs_3"
       }
