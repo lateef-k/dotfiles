@@ -41,12 +41,12 @@
                   							HostName uno-mac
                   							User ludvi
       													RequestTTY yes
-            										RemoteCommand fish
+            										# RemoteCommand fish
                   						Host deux-mac
                   							HostName deux-mac
                   							User ludvi
       													RequestTTY yes
-            										RemoteCommand fish
+            										# RemoteCommand fish
     '';
     # 
   };

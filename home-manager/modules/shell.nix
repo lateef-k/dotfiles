@@ -22,7 +22,16 @@ in lib.mkMerge [
       uv
       lazygit
       jq
+      claude-code
+      pkgs.playwright-driver.browsers
     ]) ++ (with pkgs.python312Packages; [ llm ]);
+
+    programs.fish = {
+      interactiveShellInit = ''
+              export PLAYWRIGHT_BROWSERS_PATH=${pkgs.playwright-driver.browsers}
+              export PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS=true
+        		'';
+    };
 
     programs.direnv = {
       enable = true;

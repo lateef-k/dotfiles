@@ -71,6 +71,17 @@ vim.opt.foldlevel = 99
 vim.g.markdown_folding = 1 -- enable markdown folding
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+vim.diagnostic.config({
+	-- Use the default configuration
+	virtual_lines = true,
+
+	-- Alternatively, customize specific options
+	-- virtual_lines = {
+	--  -- Only show virtual line diagnostics for the current cursor line
+	--  current_line = true,
+	-- },
+})
+
 -- Mapping (not including plugins)
 
 vim.g.mapleader = " "

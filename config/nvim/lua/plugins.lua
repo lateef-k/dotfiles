@@ -216,6 +216,21 @@ local plugins = {
 			})
 			require("mini.tabline").setup()
 			require("mini.statusline").setup()
+
+			local map_multistep = require("mini.keymap").map_multistep
+
+			-- NOTE: this won't insert tab always, press <C-v><Tab> for that
+			local tab_steps = {
+				"increase_indent",
+				"jump_after_close",
+			}
+			map_multistep("i", "<Tab>", tab_steps)
+
+			local shifttab_steps = {
+				"decrease_indent",
+				"jump_before_open",
+			}
+			map_multistep("i", "<S-Tab>", shifttab_steps)
 		end,
 		event = "VeryLazy",
 	},
@@ -277,104 +292,92 @@ local plugins = {
 			{ "<leader>e", "<cmd>Neotree toggle<CR>", desc = "Toggle Neotree" },
 		},
 	},
-	{
-		"CopilotC-Nvim/CopilotChat.nvim",
-		init = function()
-			-- Define a function to toggle CopilotChat
-
-			-- Set the keybinding to call the toggle function
-			vim.keymap.set({ "n", "v" }, "<leader>c", function()
-				local copilot_chat_win = nil
-				for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-					local buf = vim.api.nvim_win_get_buf(win)
-					local filetype = vim.bo[buf].filetype
-					if filetype == "copilot-chat" then
-						copilot_chat_win = win
-					end
-				end
-				if copilot_chat_win ~= nil then
-					vim.api.nvim_win_close(copilot_chat_win, true)
-				else
-					vim.cmd("CopilotChat") -- Open CopilotChat if it's closed
-				end
-			end, { noremap = true, silent = true })
-		end,
-		config = {
-			window = {
-				layout = "float",
-			},
-			-- Define keymap for starting CopilotChat
-			mappings = {
-				complete = {
-					detail = "Use @<Tab> or /<Tab> for options.",
-					insert = "<Tab>",
-				},
-				close = {
-					normal = "q",
-					insert = "<C-c>",
-				},
-				reset = {
-					normal = "<C-r>",
-				},
-				submit_prompt = {
-					normal = "<CR>",
-					insert = "<C-s>",
-				},
-				accept_diff = {
-					normal = "<C-y>",
-					insert = "<C-y>",
-				},
-				yank_diff = {
-					normal = "gy",
-					register = '"',
-				},
-				show_diff = {
-					normal = "gd",
-				},
-				show_info = {
-					normal = "gp",
-				},
-				show_context = {
-					normal = "gs",
-				},
-			},
-		},
-		build = "make tiktoken",
-		dependencies = { { "nvim-lua/plenary.nvim" } },
-	},
-	{
-		"zbirenbaum/copilot.lua",
-		config = true,
-		-- panel = {
-		--   enabled = true,
-		--   auto_refresh = false,
-		--   keymap = {
-		--     jump_prev = "[[",
-		--     jump_next = "]]",
-		--     accept = "<CR>",
-		--     refresh = "gr",
-		--     open = "<M-CR>"
-		--   },
-		--   layout = {
-		--     position = "bottom", -- | top | left | right
-		--     ratio = 0.4
-		--   },
-		-- },
-		-- suggestion = {
-		--   enabled = true,
-		--   auto_trigger = false,
-		--   hide_during_completion = true,
-		--   debounce = 75,
-		--   keymap = {
-		--     accept = "<M-l>",
-		--     accept_word = false,
-		--     accept_line = false,
-		--     next = "<M-]>",
-		--     prev = "<M-[>",
-		--     dismiss = "<C-]>",
-		--   },
-		-- },
-	},
+	-- {
+	-- 	"CopilotC-Nvim/CopilotChat.nvim",
+	-- 	init = function()
+	-- 		-- Define a function to toggle CopilotChat
+	--
+	-- 		-- Set the keybinding to call the toggle function
+	-- 		vim.keymap.set({ "n", "v" }, "<leader>c", function()
+	-- 			local copilot_chat_win = nil
+	-- 			for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+	-- 				local buf = vim.api.nvim_win_get_buf(win)
+	-- 				local filetype = vim.bo[buf].filetype
+	-- 				if filetype == "copilot-chat" then
+	-- 					copilot_chat_win = win
+	-- 				end
+	-- 			end
+	-- 			if copilot_chat_win ~= nil then
+	-- 				vim.api.nvim_win_close(copilot_chat_win, true)
+	-- 			else
+	-- 				vim.cmd("CopilotChat") -- Open CopilotChat if it's closed
+	-- 			end
+	-- 		end, { noremap = true, silent = true })
+	-- 	end,
+	-- 	config = {
+	-- 		window = {
+	-- 			layout = "float",
+	-- 		},
+	-- 		-- Define keymap for starting CopilotChat
+	-- 		mappings = {
+	-- 			complete = {
+	-- 				detail = "Use @<Tab> or /<Tab> for options.",
+	-- 				insert = "<Tab>",
+	-- 			},
+	-- 			close = {
+	-- 				normal = "q",
+	-- 				insert = "<C-c>",
+	-- 			},
+	-- 			reset = {
+	-- 				normal = "<C-r>",
+	-- 			},
+	-- 			submit_prompt = {
+	-- 				normal = "<CR>",
+	-- 				insert = "<C-s>",
+	-- 			},
+	-- 			accept_diff = {
+	-- 				normal = "<C-y>",
+	-- 				insert = "<C-y>",
+	-- 			},
+	-- 			yank_diff = {
+	-- 				normal = "gy",
+	-- 				register = '"',
+	-- 			},
+	-- 			show_diff = {
+	-- 				normal = "gd",
+	-- 			},
+	-- 			show_info = {
+	-- 				normal = "gp",
+	-- 			},
+	-- 			show_context = {
+	-- 				normal = "gs",
+	-- 			},
+	-- 		},
+	-- 	},
+	-- 	build = "make tiktoken",
+	-- 	dependencies = { { "nvim-lua/plenary.nvim" } },
+	-- },
+	-- {
+	-- 	"zbirenbaum/copilot.lua",
+	-- 	config = true,
+	-- 	panel = {
+	-- 		enabled = false,
+	-- 	},
+	-- 	suggestion = {
+	-- 		enabled = true,
+	-- 		auto_trigger = false,
+	-- 		hide_during_completion = false,
+	-- 		debounce = 75,
+	-- 		keymap = {
+	-- 			accept = "<M-l>",
+	-- 			accept_word = false,
+	-- 			accept_line = false,
+	-- 			next = "<M-]>",
+	-- 			prev = "<M-[>",
+	-- 			dismiss = "<C-]>",
+	-- 		},
+	-- 	},
+	-- },
 	{
 		"tpope/vim-fugitive",
 	},
