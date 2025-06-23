@@ -6,6 +6,7 @@
     ./hardware-configuration.nix
     ../../common-linux.nix
     ../../modules/cache-proxy.nix
+    ../../modules/docker.nix
   ];
 
   networking = {
@@ -17,6 +18,9 @@
     }];
   };
 
+  networking.firewall.extraCommands = ''
+    iptables -A nixos-fw -p tcp -s 192.168.64.0/24 -j nixos-fw-accept
+  '';
   services.openssh = {
     enable = true;
     settings = {
@@ -31,12 +35,6 @@
   programs.ssh = {
     # equivalent to `ssh -t ludvi@uno-mac ssh orb`
     extraConfig = ''
-                              Host uno-vm
-                              	HostName uno-mac
-                        				User ludvi
-                              	RequestTTY yes
-                              	RemoteCommand ssh orb
-
                   						Host uno-mac
                   							HostName uno-mac
                   							User ludvi

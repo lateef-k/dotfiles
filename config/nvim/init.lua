@@ -73,7 +73,7 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.diagnostic.config({
 	-- Use the default configuration
-	virtual_lines = true,
+	virtual_lines = false,
 
 	-- Alternatively, customize specific options
 	-- virtual_lines = {

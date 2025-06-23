@@ -1,6 +1,21 @@
 -- Plugin specs
 local plugins = {
-	{ "aserowy/tmux.nvim", config = true, event = "VeryLazy" },
+	{
+		"aserowy/tmux.nvim",
+		config = true,
+		event = "VeryLazy",
+		keys = {
+			{ "<C-h>", "<cmd>lua require'tmux'.move_left()<cr>", mode = { "n", "i", "t" } },
+			{ "<C-j>", "<cmd>lua require'tmux'.move_bottom()<cr>", mode = { "n", "i", "t" } },
+			{ "<C-k>", "<cmd>lua require'tmux'.move_top()<cr>", mode = { "n", "i", "t" } },
+			{ "<C-l>", "<cmd>lua require'tmux'.move_right()<cr>", mode = { "n", "i", "t" } },
+		},
+		opts = {
+			navigation = {
+				enable_default_keybindings = true,
+			},
+		},
+	},
 	{
 		"folke/lazydev.nvim",
 		ft = "lua", -- only load on lua files
@@ -41,6 +56,11 @@ local plugins = {
 			-- accept = { auto_brackets = { enabled = true } }
 			-- experimental signature help support
 			-- trigger = { signature_help = { enabled = true } }
+			sources = {
+				per_filetype = {
+					codecompanion = { "codecompanion" },
+				},
+			},
 		},
 		-- allows extending the enabled_providers array elsewhere in your config
 		-- without having to redefining it
@@ -193,6 +213,7 @@ local plugins = {
 					lua = { "stylua" },
 					nix = { "nixfmt" },
 					python = { "black", "isort" },
+					typescript = { "prettier" },
 					-- python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
 					markdown = { "mdformat" },
 				},
@@ -412,33 +433,117 @@ local plugins = {
 		end,
 	},
 	{ "nvim-treesitter/nvim-treesitter-context", config = true },
-	-- {
-	-- 	"sainnhe/gruvbox-material",
-	-- 	lazy = false,
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		vim.g.gruvbox_material_enable_italic = true
-	-- 		vim.g.gruvbox_material_background = "hard"
-	-- 		vim.cmd.colorscheme("gruvbox-material")
-	-- 	end,
-	-- },
+	{
+		"sainnhe/gruvbox-material",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.g.gruvbox_material_enable_italic = true
+			vim.cmd.colorscheme("gruvbox-material")
+		end,
+	},
 	{
 		"mbbill/undotree",
 	},
+	-- {
+	-- 	"neanias/everforest-nvim",
+	-- 	version = false,
+	-- 	lazy = false,
+	-- 	priority = 1000, -- make sure to load this before all the other start plugins
+	-- 	-- Optional; default configuration will be used if setup isn't called.
+	-- 	config = function()
+	-- 		require("everforest").setup({
+	-- 			background = "hard",
+	-- 			italics = true,
+	-- 			ui_contrast = "low",
+	-- 		})
+	-- 		vim.cmd([[colorscheme everforest]])
+	-- 	end,
+	-- },
+	--
 	{
-		"neanias/everforest-nvim",
-		version = false,
-		lazy = false,
-		priority = 1000, -- make sure to load this before all the other start plugins
-		-- Optional; default configuration will be used if setup isn't called.
+		"olimorris/codecompanion.nvim",
+		keys = {
+			{ "<leader>c", "<Cmd>CodeCompanionChat Toggle<CR>" },
+		},
 		config = function()
-			require("everforest").setup({
-				background = "hard",
-				italics = true,
-				ui_contrast = "low",
+			require("codecompanion").setup({
+				strategies = {
+					chat = {
+						adapter = "openai",
+					},
+					inline = {
+						adapter = "openai",
+						keymaps = {
+							accept_change = {
+								modes = { n = "ga" },
+								description = "Accept the suggested change",
+							},
+							reject_change = {
+								modes = { n = "gr" },
+								description = "Reject the suggested change",
+							},
+						},
+					},
+					cmd = {
+						adapter = "openai",
+					},
+				},
 			})
-			vim.cmd([[colorscheme everforest]])
 		end,
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+		},
+	},
+	{
+		"folke/flash.nvim",
+		event = "VeryLazy",
+		---@type Flash.Config
+		opts = {
+			modes = {
+				char = {
+					enabled = false,
+				},
+				search = {
+					enabled = true,
+				},
+			},
+		},
+		keys = {
+			{
+				"s",
+				mode = "o",
+				function()
+					require("flash").remote()
+				end,
+				desc = "Remote Flash",
+			},
+			{
+				"x",
+				mode = { "n", "x", "o" },
+				function()
+					require("flash").treesitter()
+				end,
+				desc = "Flash Treesitter",
+			},
+			{
+				"X",
+				mode = { "o", "x" },
+				function()
+					require("flash").treesitter_search()
+				end,
+				desc = "Treesitter Search",
+			},
+			{
+				"<c-s>",
+				mode = { "c" },
+				function()
+					require("flash").toggle()
+				end,
+				desc = "Toggle Flash Search",
+			},
+		},
 	},
 }
 

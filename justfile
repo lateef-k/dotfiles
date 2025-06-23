@@ -13,7 +13,7 @@ nix SUBCOMMAND NIXOS_OUTPUT:
 		echo "Unsupported operating system: {{system}}"
 		exit 1
 	fi
-	$cmd {{SUBCOMMAND}} --impure --flake .#{{NIXOS_OUTPUT}}
+	$cmd {{SUBCOMMAND}} --impure --flake .#{{NIXOS_OUTPUT}} --show-trace
 
 home HOME_PROFILE:
 	# Example usage: just home HOME_PROFILE=ludvi-headless
