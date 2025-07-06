@@ -98,11 +98,19 @@
         ./home-manager/modules/shell.nix
         ./home-manager/modules/editor.nix
         ./home-manager/modules/base.nix
+      ];
+
+      homeConfigurations."headless-notes" = mkHome [
+        ./home-manager/modules/shell.nix
+        ./home-manager/modules/editor.nix
+        ./home-manager/modules/base.nix
         ({ pkgs, ... }: {
+          home.packages = with pkgs; [ obsidian ];
           programs.vscode = {
             enable = true;
             package = pkgs.vscode.fhs;
           };
+
         })
       ];
 

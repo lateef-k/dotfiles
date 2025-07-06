@@ -1,5 +1,12 @@
 -- Plugin specs
+--
+local command = vim.api.nvim_create_user_command
+
 local plugins = {
+
+	{
+		"mbbill/undotree",
+	},
 	{
 		"aserowy/tmux.nvim",
 		config = true,
@@ -11,6 +18,9 @@ local plugins = {
 			{ "<C-l>", "<cmd>lua require'tmux'.move_right()<cr>", mode = { "n", "i", "t" } },
 		},
 		opts = {
+			copy_sync = {
+				enable = false, -- fix neovim not finding systme clipboard
+			},
 			navigation = {
 				enable_default_keybindings = true,
 			},
@@ -83,6 +93,17 @@ local plugins = {
 
 			-- print(vim.inspect(lspconfig["ruff_lsp"]))
 		end,
+
+		dependencies = {
+			{
+				"nvim-flutter/flutter-tools.nvim",
+				lazy = false,
+				dependencies = {
+					"nvim-lua/plenary.nvim",
+				},
+				config = true,
+			},
+		},
 		event = "VeryLazy",
 	},
 	{
@@ -433,18 +454,15 @@ local plugins = {
 		end,
 	},
 	{ "nvim-treesitter/nvim-treesitter-context", config = true },
-	{
-		"sainnhe/gruvbox-material",
-		lazy = false,
-		priority = 1000,
-		config = function()
-			vim.g.gruvbox_material_enable_italic = true
-			vim.cmd.colorscheme("gruvbox-material")
-		end,
-	},
-	{
-		"mbbill/undotree",
-	},
+	-- {
+	-- 	"sainnhe/gruvbox-material",
+	-- 	lazy = false,
+	-- 	priority = 1000,
+	-- 	config = function()
+	-- 		vim.g.gruvbox_material_enable_italic = true
+	-- 		vim.cmd.colorscheme("gruvbox-material")
+	-- 	end,
+	-- },
 	-- {
 	-- 	"neanias/everforest-nvim",
 	-- 	version = false,
@@ -461,6 +479,12 @@ local plugins = {
 	-- 	end,
 	-- },
 	--
+	{
+		"rebelot/kanagawa.nvim",
+		config = function()
+			vim.cmd("colorscheme kanagawa")
+		end,
+	},
 	{
 		"olimorris/codecompanion.nvim",
 		keys = {
@@ -509,7 +533,20 @@ local plugins = {
 					enabled = true,
 				},
 			},
+			label = {
+				rainbow = {
+					enabled = true,
+					-- number between 1 and 9
+					shade = 5,
+				},
+			},
 		},
+		lazy = false,
+		init = function()
+			command("FlashToggleSearch", function()
+				require("flash").toggle()
+			end, { desc = "Toggle flash for forward and backward search" })
+		end,
 		keys = {
 			{
 				"s",
@@ -517,23 +554,23 @@ local plugins = {
 				function()
 					require("flash").remote()
 				end,
-				desc = "Remote Flash",
+				desc = "remote flash",
 			},
 			{
-				"x",
+				"m",
 				mode = { "n", "x", "o" },
 				function()
 					require("flash").treesitter()
 				end,
-				desc = "Flash Treesitter",
+				desc = "flash treesitter",
 			},
 			{
-				"X",
+				"x",
 				mode = { "o", "x" },
 				function()
 					require("flash").treesitter_search()
 				end,
-				desc = "Treesitter Search",
+				desc = "treesitter search",
 			},
 			{
 				"<c-s>",
@@ -541,9 +578,51 @@ local plugins = {
 				function()
 					require("flash").toggle()
 				end,
-				desc = "Toggle Flash Search",
+				desc = "toggle flash search",
 			},
 		},
+	},
+	{
+		"obsidian-nvim/obsidian.nvim",
+		version = "*", -- recommended, use latest release instead of latest commit
+		lazy = true,
+		ft = "markdown",
+		-- replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+		event = {
+			-- if you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+			-- e.g. "bufreadpre " .. vim.fn.expand "~" .. "/my-vault/*.md"
+			-- refer to `:h file-pattern` for more examples
+			"bufreadpre ~/documents/centre/*.md",
+			"bufnewfile ~/documents/centre/*.md",
+		},
+		dependencies = {
+			-- required.
+			"nvim-lua/plenary.nvim",
+
+			-- see above for full list of optional dependencies ☝️
+		},
+		---@module 'obsidian'
+		---@type obsidian.config
+		opts = {
+			workspaces = {
+				{
+					name = "personal",
+					path = "~/Documents/Centre/",
+				},
+			},
+
+			-- see below for full list of options 👇
+		},
+		keys = {
+			{ "<leader>nn", "<cmd>cd ~/Documents/Centre/ | Obsidian quick_switch<cr>" },
+			{ "<leader>ns", "<cmd>cd ~/Documents/Centre/ | Obsidian search<cr>" },
+			{ "<leader>nt", "<cmd>cd ~/Documents/Centre/ | Obsidian tags<cr>" },
+			{ "<leader>nd", "<cmd>cd ~/Documents/Centre/ | Obsidian dailies<cr>" },
+		},
+	},
+	{
+		"meanderingprogrammer/render-markdown.nvim",
+		ft = { "markdown", "codecompanion" },
 	},
 }
 
