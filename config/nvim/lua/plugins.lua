@@ -19,7 +19,7 @@ local plugins = {
 		},
 		opts = {
 			copy_sync = {
-				enable = false, -- fix neovim not finding systme clipboard
+				enable = true, -- fix neovim not finding systme clipboard
 			},
 			navigation = {
 				enable_default_keybindings = true,
