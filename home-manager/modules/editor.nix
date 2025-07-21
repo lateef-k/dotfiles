@@ -27,6 +27,7 @@
     nixd
     lua-language-server
     flutter
+    prettierd
 
     # runs with the correct dynamica libraries
     # (pkgs.writeShellScriptBin "aider" ''

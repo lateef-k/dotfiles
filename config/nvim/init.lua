@@ -1,12 +1,26 @@
+-- DEFAULTS                                                *lsp-defaults*
 --
---                                                 *grr* *gra* *grn* *i_CTRL-S*
--- Some keymaps are created unconditionally when Nvim starts:
+-- When the Nvim LSP client starts it enables diagnostics |vim.diagnostic| (see
+-- |vim.diagnostic.config()| to customize). It also sets various default options,
+-- listed below, if (1) the language server supports the functionality and (2)
+-- the options are empty or were set by the builtin runtime (ftplugin) files. The
+-- options are not restored when the LSP client is stopped or detached.
+--
+-- GLOBAL DEFAULTS
+--                                 *grr* *gra* *grn* *gri* *grt* *i_CTRL-S* *an* *in*
+-- These GLOBAL keymaps are created unconditionally when Nvim starts:
 -- - "grn" is mapped in Normal mode to |vim.lsp.buf.rename()|
 -- - "gra" is mapped in Normal and Visual mode to |vim.lsp.buf.code_action()|
 -- - "grr" is mapped in Normal mode to |vim.lsp.buf.references()|
+-- - "gri" is mapped in Normal mode to |vim.lsp.buf.implementation()|
+-- - "grt" is mapped in Normal mode to |vim.lsp.buf.type_definition()|
+-- - "gO" is mapped in Normal mode to |vim.lsp.buf.document_symbol()|
 -- - CTRL-S is mapped in Insert mode to |vim.lsp.buf.signature_help()|
+-- - "an" and "in" are mapped in Visual mode to outer and inner incremental
+--   selections, respectively, using |vim.lsp.buf.selection_range()|
+--   diagnostics: ctrl-w d
 --
---
+-- BUFFER-LOCAL DEFAULTS
 -- - 'omnifunc' is set to |vim.lsp.omnifunc()|, use |i_CTRL-X_CTRL-O| to trigger
 --   completion.
 -- - 'tagfunc' is set to |vim.lsp.tagfunc()|. This enables features like
@@ -17,26 +31,7 @@
 --   - To opt out of this use |gw| instead of gq, or clear 'formatexpr' on |LspAttach|.
 -- - |K| is mapped to |vim.lsp.buf.hover()| unless |'keywordprg'| is customized or
 --   a custom keymap for `K` exists.
---
-if vim.g.neovide then
-	-- Set font size for zoomed-out appearance
-	vim.o.guifont = "FiraCode Nerd Font:h7" -- Replace with your preferred font and size
 
-	-- Disable animated cursor
-
-	vim.g.neovide_position_animation_length = 0
-	vim.g.neovide_cursor_animation_length = 0.00
-	vim.g.neovide_cursor_trail_size = 0
-	vim.g.neovide_cursor_animate_in_insert_mode = false
-	vim.g.neovide_cursor_animate_command_line = false
-	vim.g.neovide_scroll_animation_far_lines = 0
-	vim.g.neovide_scroll_animation_length = 0.00
-
-	-- Optional: Adjust Neovide-specific settings for performance
-	vim.g.neovide_refresh_rate = 120
-	vim.g.neovide_transparency = 1
-end
--- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
@@ -73,30 +68,22 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.diagnostic.config({
 	-- Use the default configuration
-	virtual_lines = false,
 
 	-- Alternatively, customize specific options
-	-- virtual_lines = {
-	--  -- Only show virtual line diagnostics for the current cursor line
-	--  current_line = true,
-	-- },
+	virtual_lines = {
+		--  -- Only show virtual line diagnostics for the current cursor line
+		current_line = true,
+	},
 })
 
 -- Mapping (not including plugins)
 
 vim.g.mapleader = " "
-
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 map({ "i", "t" }, "jk", "<Esc>", { desc = "Exit insert/terminal mode with 'jk'" })
 map({ "i", "t" }, "kj", "<Esc>", { desc = "Exit insert/terminal mode with 'kj'" })
-map("n", "]b", "<cmd>bnext<CR>", { desc = "Go to the next buffer" })
-map("n", "[b", "<cmd>bprevious<CR>", { desc = "Go to the previous buffer" })
-map("n", "]q", "<cmd>cnext<CR>", { desc = "Go to the next quickfix item" })
-map("n", "[q", "<cmd>cprevious<CR>", { desc = "Go to the previous quickfix item" })
-map("n", "grd", function()
-	vim.diagnostic.open_float(nil, { scope = "line" })
-end, { desc = "Show diagnostics for the current line in a floating window", unpack(opts) })
+
 vim.g["diagnostics_active"] = true
 vim.api.nvim_create_user_command("ToggleDiagnostics", function()
 	if vim.g.diagnostics_active then
@@ -118,13 +105,8 @@ autocmd("FileType", {
 	command = "setlocal tabstop=4 shiftwidth=4 softtabstop=4",
 })
 autocmd("FileType", {
-	pattern = "lua",
+	pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
 	command = "setlocal tabstop=4 shiftwidth=4 softtabstop=4",
-})
-
-autocmd("FileType", {
-	pattern = { "typescript", "javascript" },
-	command = "setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab",
 })
 autocmd("TextYankPost", {
 	pattern = "*",
@@ -142,6 +124,46 @@ autocmd("BufWinEnter", {
 	pattern = "*.*",
 	command = "silent! loadview",
 })
+autocmd({ "FocusGained", "FocusLost" }, { -- resize when created new tmux panes
+	pattern = "*",
+	command = "silent! wincmd =",
+})
 -- Commands
+local command = vim.api.nvim_create_user_command
 -- Setup lazy.nvim
 require("lazy").setup(require("plugins"))
+
+--- LSPs
+---
+-- 	"neovim/nvim-lspconfig",
+-- 	config = function()
+-- 		local lspconfig = require("lspconfig")
+-- 		local servers = {
+-- 			"pyright",
+-- 			"nixd",
+-- 			"lua_ls",
+-- 			"bashls",
+-- 			"ts_ls",
+-- 		}
+-- 		for _, lsp in ipairs(servers) do
+-- 			lspconfig[lsp].setup({})
+-- 		end
+--
+-- 		-- print(vim.inspect(lspconfig["ruff_lsp"]))
+
+-- vim.lsp.config("basedpyright", {
+-- 	settings = {
+-- 		basedpyright = {
+-- 			analysis = {
+-- 				typeCheckingMode = "standard",
+-- 			},
+-- 		},
+-- 	},
+-- })
+vim.lsp.set_log_level("debug")
+-- vim.lsp.enable("basedpyright")
+vim.lsp.enable("pyright")
+vim.lsp.enable("nixd")
+vim.lsp.enable("lua_ls")
+vim.lsp.enable("bashls")
+vim.lsp.enable("ts_ls")

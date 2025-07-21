@@ -3,7 +3,6 @@
 local command = vim.api.nvim_create_user_command
 
 local plugins = {
-
 	{
 		"mbbill/undotree",
 	},
@@ -18,9 +17,6 @@ local plugins = {
 			{ "<C-l>", "<cmd>lua require'tmux'.move_right()<cr>", mode = { "n", "i", "t" } },
 		},
 		opts = {
-			copy_sync = {
-				enable = true, -- fix neovim not finding systme clipboard
-			},
 			navigation = {
 				enable_default_keybindings = true,
 			},
@@ -40,11 +36,12 @@ local plugins = {
 	{ "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
 	{
 		"saghen/blink.cmp",
-		lazy = false, -- lazy loading handled internally
+		lazy = true, -- lazy loading handled internally
 		-- optional: provides snippets for the snippet source
 		dependencies = "rafamadriz/friendly-snippets",
 
 		version = "*",
+		event = { "InsertEnter", "CmdlineEnter" },
 
 		-- use a release tag to download pre-built binaries
 		-- build = "nix run .#build-plugin",
@@ -62,6 +59,10 @@ local plugins = {
 				["<C-b>"] = { "scroll_documentation_up", "fallback" },
 				["<C-f>"] = { "scroll_documentation_down", "fallback" },
 			},
+			completion = {
+				-- Show documentation when selecting a completion item
+				documentation = { auto_show = true, auto_show_delay_ms = 0 },
+			},
 			-- experimental auto-brackets support
 			-- accept = { auto_brackets = { enabled = true } }
 			-- experimental signature help support
@@ -69,6 +70,14 @@ local plugins = {
 			sources = {
 				per_filetype = {
 					codecompanion = { "codecompanion" },
+				},
+				providers = {
+					cmdline = {
+						-- ignores cmdline completions when executing shell commands cause WSL hangs
+						enabled = function()
+							return vim.fn.getcmdtype() ~= ":" or not vim.fn.getcmdline():match("^[%%0-9,'<>%-]*!")
+						end,
+					},
 				},
 			},
 		},
@@ -78,36 +87,17 @@ local plugins = {
 	},
 	{
 		"neovim/nvim-lspconfig",
-		config = function()
-			local lspconfig = require("lspconfig")
-			local servers = {
-				"pyright",
-				"nixd",
-				"lua_ls",
-				"bashls",
-				"ts_ls",
-			}
-			for _, lsp in ipairs(servers) do
-				lspconfig[lsp].setup({})
-			end
-
-			-- print(vim.inspect(lspconfig["ruff_lsp"]))
-		end,
-
-		dependencies = {
-			{
-				"nvim-flutter/flutter-tools.nvim",
-				lazy = false,
-				dependencies = {
-					"nvim-lua/plenary.nvim",
-				},
-				config = true,
-			},
-		},
 		event = "VeryLazy",
 	},
 	{
 		"ibhagwan/fzf-lua",
+		opts = {
+			-- winopts = {
+			-- 	preview = {
+			-- 		default = "bat",
+			-- 	},
+			-- },
+		},
 		keys = {
 			{
 				"<leader>b",
@@ -161,7 +151,8 @@ local plugins = {
 			{
 				"<leader>/",
 				function()
-					require("fzf-lua").grep_project()
+					-- require("fzf-lua").grep_project()
+					require("fzf-lua").live_grep_native()
 				end,
 				desc = "Grep in project",
 			},
@@ -208,6 +199,13 @@ local plugins = {
 				desc = "Show jumplist",
 			},
 			{
+				"<leader>gg",
+				function()
+					require("fzf-lua").builtin({ query = "^git_" }) -- passed to fzf
+				end,
+				desc = "Show git related search",
+			},
+			{
 				"grr",
 				function()
 					require("fzf-lua").lsp_references()
@@ -220,6 +218,22 @@ local plugins = {
 					require("fzf-lua").lsp_definitions()
 				end,
 				desc = "Go to LSP definitions",
+			},
+			{
+				"<C-x><C-f>",
+				function()
+					require("fzf-lua").complete_path()
+				end,
+				desc = "Go to LSP definitions",
+				mode = { "x", "i", "v" },
+			},
+			{
+				"<C-x><C-l>",
+				function()
+					require("fzf-lua").complete_bline()
+				end,
+				desc = "Go to LSP definitions",
+				mode = { "x", "i", "v" },
 			},
 		},
 		cmd = "FzfLua",
@@ -234,7 +248,12 @@ local plugins = {
 					lua = { "stylua" },
 					nix = { "nixfmt" },
 					python = { "black", "isort" },
-					typescript = { "prettier" },
+					typescript = { "prettierd" },
+					typescriptreact = { "prettierd" },
+					javascript = { "prettierd" },
+					javascriptreact = { "prettierd" },
+					json = { "prettierd" },
+					html = { "prettierd" },
 					-- python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
 					markdown = { "mdformat" },
 				},
@@ -257,7 +276,40 @@ local plugins = {
 				search_method = "cover_or_next",
 			})
 			require("mini.tabline").setup()
-			require("mini.statusline").setup()
+			require("mini.statusline").setup({
+				content = {
+					active = function()
+						local mode, mode_hl = MiniStatusline.section_mode({ trunc_width = 120 })
+						local git = MiniStatusline.section_git({ trunc_width = 40 })
+						local diff = MiniStatusline.section_diff({ trunc_width = 75 })
+						local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75 })
+						local lsp = MiniStatusline.section_lsp({ trunc_width = 75 })
+						local filename = MiniStatusline.section_filename({ trunc_width = 140 })
+						local fileinfo = MiniStatusline.section_fileinfo({ trunc_width = 120 })
+						local location = MiniStatusline.section_location({ trunc_width = 75 })
+						local search = MiniStatusline.section_searchcount({ trunc_width = 75 })
+						local function show_macro_recording()
+							local recording_register = vim.fn.reg_recording()
+							if recording_register == "" then
+								return ""
+							else
+								return "Recording @" .. recording_register
+							end
+						end
+
+						return MiniStatusline.combine_groups({
+							{ hl = mode_hl, strings = { mode } },
+							{ hl = "MiniStatuslineDevinfo", strings = { git, diff, diagnostics, lsp } },
+							"%<", -- Mark general truncate point
+							{ hl = "MiniStatuslineFilename", strings = { filename } },
+							"%=", -- End left alignment
+							{ hl = "MiniStatuslineFileinfo", strings = { show_macro_recording() } },
+							{ hl = "MiniStatuslineFileinfo", strings = { fileinfo } },
+							{ hl = mode_hl, strings = { search, location } },
+						})
+					end,
+				},
+			})
 
 			local map_multistep = require("mini.keymap").map_multistep
 
@@ -334,94 +386,9 @@ local plugins = {
 			{ "<leader>e", "<cmd>Neotree toggle<CR>", desc = "Toggle Neotree" },
 		},
 	},
-	-- {
-	-- 	"CopilotC-Nvim/CopilotChat.nvim",
-	-- 	init = function()
-	-- 		-- Define a function to toggle CopilotChat
-	--
-	-- 		-- Set the keybinding to call the toggle function
-	-- 		vim.keymap.set({ "n", "v" }, "<leader>c", function()
-	-- 			local copilot_chat_win = nil
-	-- 			for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-	-- 				local buf = vim.api.nvim_win_get_buf(win)
-	-- 				local filetype = vim.bo[buf].filetype
-	-- 				if filetype == "copilot-chat" then
-	-- 					copilot_chat_win = win
-	-- 				end
-	-- 			end
-	-- 			if copilot_chat_win ~= nil then
-	-- 				vim.api.nvim_win_close(copilot_chat_win, true)
-	-- 			else
-	-- 				vim.cmd("CopilotChat") -- Open CopilotChat if it's closed
-	-- 			end
-	-- 		end, { noremap = true, silent = true })
-	-- 	end,
-	-- 	config = {
-	-- 		window = {
-	-- 			layout = "float",
-	-- 		},
-	-- 		-- Define keymap for starting CopilotChat
-	-- 		mappings = {
-	-- 			complete = {
-	-- 				detail = "Use @<Tab> or /<Tab> for options.",
-	-- 				insert = "<Tab>",
-	-- 			},
-	-- 			close = {
-	-- 				normal = "q",
-	-- 				insert = "<C-c>",
-	-- 			},
-	-- 			reset = {
-	-- 				normal = "<C-r>",
-	-- 			},
-	-- 			submit_prompt = {
-	-- 				normal = "<CR>",
-	-- 				insert = "<C-s>",
-	-- 			},
-	-- 			accept_diff = {
-	-- 				normal = "<C-y>",
-	-- 				insert = "<C-y>",
-	-- 			},
-	-- 			yank_diff = {
-	-- 				normal = "gy",
-	-- 				register = '"',
-	-- 			},
-	-- 			show_diff = {
-	-- 				normal = "gd",
-	-- 			},
-	-- 			show_info = {
-	-- 				normal = "gp",
-	-- 			},
-	-- 			show_context = {
-	-- 				normal = "gs",
-	-- 			},
-	-- 		},
-	-- 	},
-	-- 	build = "make tiktoken",
-	-- 	dependencies = { { "nvim-lua/plenary.nvim" } },
-	-- },
-	-- {
-	-- 	"zbirenbaum/copilot.lua",
-	-- 	config = true,
-	-- 	panel = {
-	-- 		enabled = false,
-	-- 	},
-	-- 	suggestion = {
-	-- 		enabled = true,
-	-- 		auto_trigger = false,
-	-- 		hide_during_completion = false,
-	-- 		debounce = 75,
-	-- 		keymap = {
-	-- 			accept = "<M-l>",
-	-- 			accept_word = false,
-	-- 			accept_line = false,
-	-- 			next = "<M-]>",
-	-- 			prev = "<M-[>",
-	-- 			dismiss = "<C-]>",
-	-- 		},
-	-- 	},
-	-- },
 	{
 		"tpope/vim-fugitive",
+		event = "CmdlineEnter",
 	},
 	{
 		"lewis6991/gitsigns.nvim",
@@ -463,32 +430,20 @@ local plugins = {
 	-- 		vim.cmd.colorscheme("gruvbox-material")
 	-- 	end,
 	-- },
-	-- {
-	-- 	"neanias/everforest-nvim",
-	-- 	version = false,
-	-- 	lazy = false,
-	-- 	priority = 1000, -- make sure to load this before all the other start plugins
-	-- 	-- Optional; default configuration will be used if setup isn't called.
-	-- 	config = function()
-	-- 		require("everforest").setup({
-	-- 			background = "hard",
-	-- 			italics = true,
-	-- 			ui_contrast = "low",
-	-- 		})
-	-- 		vim.cmd([[colorscheme everforest]])
-	-- 	end,
-	-- },
-	--
 	{
-		"rebelot/kanagawa.nvim",
+		"shaunsingh/nord.nvim",
+		version = false,
+		lazy = false,
+		priority = 1000, -- make sure to load this before all the other start plugins
+		-- Optional; default configuration will be used if setup isn't called.
 		config = function()
-			vim.cmd("colorscheme kanagawa")
+			vim.cmd([[colorscheme nord]])
 		end,
 	},
 	{
 		"olimorris/codecompanion.nvim",
 		keys = {
-			{ "<leader>c", "<Cmd>CodeCompanionChat Toggle<CR>" },
+			{ "<leader>c", "<Cmd>CodeCompanionChat Toggle<CR>", mode = { "v", "n" } },
 		},
 		config = function()
 			require("codecompanion").setup({
@@ -592,8 +547,8 @@ local plugins = {
 			-- if you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
 			-- e.g. "bufreadpre " .. vim.fn.expand "~" .. "/my-vault/*.md"
 			-- refer to `:h file-pattern` for more examples
-			"bufreadpre ~/documents/centre/*.md",
-			"bufnewfile ~/documents/centre/*.md",
+			string.format("bufreadpre %s*.md", os.getenv("OBSIDIAN_HOME")),
+			string.format("bufnewfile %s*.md", os.getenv("OBSIDIAN_HOME")),
 		},
 		dependencies = {
 			-- required.
@@ -607,17 +562,35 @@ local plugins = {
 			workspaces = {
 				{
 					name = "personal",
-					path = "~/Documents/Centre/",
+					path = string.format("%s", os.getenv("OBSIDIAN_HOME")),
 				},
 			},
 
+			picker = {
+				-- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', 'mini.pick' or 'snacks.pick'.
+				name = "fzf-lua",
+				-- Optional, configure key mappings for the picker. These are the defaults.
+				-- Not all pickers support all mappings.
+				note_mappings = {
+					-- Create a new note from your query.
+					new = "<C-x>",
+					-- Insert a link to the selected note.
+					insert_link = "<C-l>",
+				},
+				tag_mappings = {
+					-- Add tag(s) to current note.
+					tag_note = "<C-x>",
+					-- Insert a tag at the current location.
+				},
+			},
 			-- see below for full list of options 👇
 		},
 		keys = {
-			{ "<leader>nn", "<cmd>cd ~/Documents/Centre/ | Obsidian quick_switch<cr>" },
-			{ "<leader>ns", "<cmd>cd ~/Documents/Centre/ | Obsidian search<cr>" },
-			{ "<leader>nt", "<cmd>cd ~/Documents/Centre/ | Obsidian tags<cr>" },
-			{ "<leader>nd", "<cmd>cd ~/Documents/Centre/ | Obsidian dailies<cr>" },
+			{ "<leader>nn", string.format("<cmd>cd %s | Obsidian quick_switch<cr>", os.getenv("OBSIDIAN_HOME")) },
+			{ "<leader>ne", string.format("<cmd>cd %s | Obsidian new<cr>", os.getenv("OBSIDIAN_HOME")) },
+			{ "<leader>ns", string.format("<cmd>cd %s | Obsidian search<cr>", os.getenv("OBSIDIAN_HOME")) },
+			{ "<leader>nt", string.format("<cmd>cd %s | Obsidian tags<cr>", os.getenv("OBSIDIAN_HOME")) },
+			{ "<leader>nd", string.format("<cmd>cd %s | Obsidian dailies<cr>", os.getenv("OBSIDIAN_HOME")) },
 		},
 	},
 	{

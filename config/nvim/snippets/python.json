@@ -1,0 +1,38 @@
+{
+  "argparse": {
+    "prefix": "argparse",
+    "body": [
+      "parser = argparse.ArgumentParser(description='${1:desc}')",
+      "parser.add_argument('${2:arg}', type=${3:str}, help='${4:argument}')",
+      "args = parser.parse_args()",
+      "${2} = args.${2}"
+    ]
+  },
+  "tempdir": {
+    "prefix": "tempdir",
+    "body": [
+      "with tempfile.TemporaryDirectory() as tmp_dir:",
+      "\ttmpdir = Path(tmp_dir)"
+    ]
+  },
+  "pdbexception1": {
+    "prefix": "pdbonexception1",
+    "body": [
+      "import pdb",
+      "def enter_post_mortem(type, value, traceback):",
+      "\tpdb.pm()",
+      "sys.excepthook = enter_post_mortem"
+    ]
+  },
+  "pdbexception2": {
+    "prefix": "pdbonexception1",
+    "body": [
+      "try:",
+      "\t${1}",
+      "except:",
+      "\textype, value, tb = sys.exc_info()",
+      "\ttraceback.print_exc()",
+      "\tpdb.post_mortem(tb)"
+    ]
+  }
+}

@@ -43,6 +43,12 @@
     };
   };
 
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
+  services.pcscd.enable = true;
+
   users.users = {
     ludvi = {
       initialPassword = "correcthorse";
@@ -60,7 +66,7 @@
   i18n.defaultLocale = "en_US.UTF-8";
   programs.fish.enable = true;
   programs.git.enable = true;
-  programs.ssh.startAgent = true;
+  # programs.ssh.startAgent = true;
   programs.nix-ld.enable = true;
   services.tailscale.enable = true;
 
