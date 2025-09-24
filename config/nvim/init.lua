@@ -63,6 +63,7 @@ vim.opt.fillchars = { fold = " " }
 vim.opt.foldmethod = "indent"
 vim.opt.foldenable = false
 vim.opt.foldlevel = 99
+vim.opt.conceallevel = 1
 vim.g.markdown_folding = 1 -- enable markdown folding
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -160,7 +161,6 @@ require("lazy").setup(require("plugins"))
 -- 		},
 -- 	},
 -- })
-vim.lsp.set_log_level("debug")
 -- vim.lsp.enable("basedpyright")
 vim.lsp.enable("pyright")
 vim.lsp.enable("nixd")

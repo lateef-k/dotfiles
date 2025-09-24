@@ -24,6 +24,7 @@ in lib.mkMerge [
       jq
       claude-code
       pkgs.playwright-driver.browsers
+      tree
     ]) ++ (with pkgs.python312Packages; [ llm ]);
 
     programs.fish = {

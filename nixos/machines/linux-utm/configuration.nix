@@ -74,7 +74,7 @@
     disk = {
       main = {
         # When using disko-install, we will overwrite this value from the commandline
-        device = "/dev/disk/by-id/some-disk-id";
+        device = "/dev/disk/by-id/6e3af812-4e1d-43ea-a677-699bb9f15945";
         type = "disk";
         content = {
           type = "gpt";

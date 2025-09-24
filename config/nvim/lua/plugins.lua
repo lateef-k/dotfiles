@@ -557,13 +557,37 @@ local plugins = {
 			-- see above for full list of optional dependencies ☝️
 		},
 		---@module 'obsidian'
-		---@type obsidian.config
 		opts = {
 			workspaces = {
 				{
 					name = "personal",
 					path = string.format("%s", os.getenv("OBSIDIAN_HOME")),
 				},
+			},
+
+			daily_notes = {
+				-- Optional, if you keep daily notes in a separate directory.
+				folder = "Journal",
+				-- Optional, if you want to change the date format for the ID of daily notes.
+				date_format = "dddd, MMMM Do YYYY",
+				time_format = "h:mm:ss a",
+				-- Optional, if you want to change the date format of the default alias of daily notes.
+				alias_format = "%B %-d, %Y",
+				-- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
+				template = "daily.md",
+			},
+			templates = {
+				folder = "00-Misc/templates",
+				date_format = "%Y-%m-%d",
+				time_format = "%H:%M",
+				-- A map for custom variables, the key should be the variable and the value a function.
+				-- Functions are called with obsidian.TemplateContext objects as their sole parameter.
+				-- See: https://github.com/obsidian-nvim/obsidian.nvim/wiki/Template#substitutions
+				substitutions = {},
+
+				-- A map for configuring unique directories and paths for specific templates
+				--- See: https://github.com/obsidian-nvim/obsidian.nvim/wiki/Template#customizations
+				customizations = {},
 			},
 
 			picker = {
@@ -578,16 +602,14 @@ local plugins = {
 					insert_link = "<C-l>",
 				},
 				tag_mappings = {
-					-- Add tag(s) to current note.
 					tag_note = "<C-x>",
-					-- Insert a tag at the current location.
 				},
 			},
-			-- see below for full list of options 👇
 		},
 		keys = {
 			{ "<leader>nn", string.format("<cmd>cd %s | Obsidian quick_switch<cr>", os.getenv("OBSIDIAN_HOME")) },
-			{ "<leader>ne", string.format("<cmd>cd %s | Obsidian new<cr>", os.getenv("OBSIDIAN_HOME")) },
+			{ "<leader>nw", string.format("<cmd>cd %s | Obsidian new<cr>", os.getenv("OBSIDIAN_HOME")) },
+			{ "<leader>ne", string.format("<cmd>cd %s | Neotree toggle<cr>", os.getenv("OBSIDIAN_HOME")) },
 			{ "<leader>ns", string.format("<cmd>cd %s | Obsidian search<cr>", os.getenv("OBSIDIAN_HOME")) },
 			{ "<leader>nt", string.format("<cmd>cd %s | Obsidian tags<cr>", os.getenv("OBSIDIAN_HOME")) },
 			{ "<leader>nd", string.format("<cmd>cd %s | Obsidian dailies<cr>", os.getenv("OBSIDIAN_HOME")) },
@@ -596,6 +618,12 @@ local plugins = {
 	{
 		"meanderingprogrammer/render-markdown.nvim",
 		ft = { "markdown", "codecompanion" },
+		opts = {
+			heading = {
+				enabled = true,
+				atx = false,
+			},
+		},
 	},
 }
 

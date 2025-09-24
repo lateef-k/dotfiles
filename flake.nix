@@ -104,6 +104,7 @@
         ./home-manager/modules/shell.nix
         ./home-manager/modules/editor.nix
         ./home-manager/modules/base.nix
+        ./home-manager/modules/obsidian.nix
         ({ pkgs, ... }: {
           home.packages = with pkgs; [ obsidian ];
           programs.vscode = {

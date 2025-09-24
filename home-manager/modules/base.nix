@@ -8,6 +8,7 @@ in {
 
   programs.git = {
     enable = true;
+    lfs.enable = true;
     includes = [{ path = "${inputs.self}/config/gitconfig"; }];
   };
   programs.vim = {
