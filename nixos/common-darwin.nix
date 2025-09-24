@@ -51,30 +51,7 @@
       [ "Thunderbolt Bridge" "Ethernet" "USB 10/100/1000 LAN" "Wi-Fi" ];
   };
 
-  # This is needed because homebrew.* in nix-darwin doesn't install, only manages an existing installation
-  nix-homebrew = {
-    # Install Homebrew under the default prefix
-    enable = true;
-    # Apple Silicon Only: Also install Homebrew under the default Intel prefix for Rosetta 2
-    enableRosetta = false;
-    # User owning the Homebrew prefix
-    user = "ludvi";
-
-    # Optional: Enable fully-declarative tap management
-    #
-    # With mutableTaps disabled, taps can no longer be added imperatively with `brew tap`.
-    mutableTaps = true;
-    # Automatically migrate existing Homebrew installations
-    autoMigrate = true;
-  };
-
-  homebrew = {
-    enable = true;
-    # casks = [ "orbstack" ];
-    onActivation.cleanup = "zap"; # uninstall + delete associated files
-  };
-
-  environment.systemPackages = with pkgs; [ ollama just rsync ];
+  environment.systemPackages = with pkgs; [ just rsync ];
 
   users.users.ludvi = {
     home = "/Users/ludvi";
@@ -87,7 +64,6 @@
 
   services.openssh.enable = true;
   programs.fish.enable = true;
-  nixpkgs.hostPlatform = "aarch64-darwin";
   documentation.info.enable = true;
   services.tailscale.enable = true;
 }

@@ -4,7 +4,6 @@
     ./hardware-configuration.nix
     ../../common-linux.nix
     ../../modules/docker.nix
-    ../../modules/cache-proxy.nix
   ];
 
   environment.systemPackages = with pkgs; [ virt-manager ];
