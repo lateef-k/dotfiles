@@ -1,12 +1,10 @@
 { inputs, lib, config, pkgs, ... }: {
 
   home.packages = with pkgs; [
-    obsidian
     # discord
     dbeaver-bin
     libreoffice-qt
     zotero_7
-    distrobox
   ];
 
   programs.rofi = {
@@ -35,25 +33,6 @@
     enable = true;
     components =
       [ "pkcs11" "secrets" ]; # didnt include ssh cause i dont need it here
-  };
-
-  systemd.user.services.obsidian = {
-    enable = true;
-    content = ''
-            [Unit]
-            Description=Start Obsidian at login
-            After=graphical-session.target
-
-            [Service]
-            Type=simple
-            ExecStart=${pkgs.obsidian}/bin/obsidian
-            Restart=on-failure
-            Environment=DISPLAY=:0
-            Environment=XAUTHORITY=%h/.Xauthority
-
-            [Install]
-            WantedBy=default.target
-      		'';
   };
 
 }

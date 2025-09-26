@@ -2,15 +2,6 @@
 
 { inputs, lib, config, pkgs, ... }: {
 
-  # imports = [
-  #   "${
-  #     fetchTarball
-  #     "https://github.com/msteen/nixos-vscode-server/tarball/master"
-  #   }/modules/vscode-server/home.nix"
-  # ];
-  # services.vscode-server.enable = true;
-  # services.vscode-server.enableFHS = true;
-
   home.packages = (with pkgs; [
     sqlite
     gnumake
@@ -28,13 +19,6 @@
     lua-language-server
     flutter
     prettierd
-
-    # runs with the correct dynamica libraries
-    # (pkgs.writeShellScriptBin "aider" ''
-    #   export LD_LIBRARY_PATH=$NIX_LD_LIBRARY_PATH
-    #   exec ${pkgs.pipx}/bin/pipx "run" "aider-chat"
-    # '')
-    #
     aider-chat
   ]);
 

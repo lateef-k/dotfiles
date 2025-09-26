@@ -1,16 +1,26 @@
 { inputs, lib, config, pkgs, ... }:
 
-let util = (import ../../lib/util.nix config.lib);
-
-in {
-  home.packages =
-    (with pkgs; [ just libarchive cachix ripgrep fd mosh rlwrap file fzf ]);
+{
+  home.packages = (with pkgs; [
+    zoxide
+    just
+    libarchive
+    cachix
+    ripgrep
+    fd
+    mosh
+    rlwrap
+    file
+    fzf
+    starship
+  ]);
 
   programs.git = {
     enable = true;
     lfs.enable = true;
     includes = [{ path = "${inputs.self}/config/gitconfig"; }];
   };
+
   programs.vim = {
     enable = true;
     defaultEditor = true;
@@ -23,9 +33,6 @@ in {
       set clipboard=unnamedplus
     '';
   };
-  programs.zoxide.enable = true;
-
-  home.sessionVariables.EDITOR = lib.mkDefault "vim";
 
   programs.tmux = {
     enable = true;
@@ -50,19 +57,14 @@ in {
       lib.strings.fileContents "${inputs.self}/config/fish/config.fish";
   };
 
-  programs.starship = { enable = true; };
-
-  xdg.configFile = util.symlinkFiles {
-    sourceDir = "${inputs.self}/config/fish/conf.d";
-    targetDir = "fish/conf.d";
-  } // {
-    "starship.toml".source =
-      config.lib.file.mkOutOfStoreSymlink "${inputs.self}/config/starship.toml";
-  };
-
   programs.readline = {
     enable = true;
     extraConfig = lib.strings.fileContents "${inputs.self}/config/inputrc";
+  };
+
+  xdg.configFile = {
+    "starship.toml".source =
+      config.lib.file.mkOutOfStoreSymlink "${inputs.self}/config/starship.toml";
   };
 
 }

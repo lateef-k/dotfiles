@@ -2,5 +2,7 @@
 
   imports = [ ../../common-darwin.nix ];
 
+  networking.hostName = "uno-mac";
+
   system.stateVersion = 5;
 }

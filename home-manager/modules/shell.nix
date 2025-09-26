@@ -11,10 +11,8 @@ in lib.mkMerge [
     home.packages = (with pkgs; [
       wget
       binutils
-      pipx
       ncdu
       gh
-      tldr
       nix-doc
       gocryptfs
       nerd-fonts.jetbrains-mono
@@ -22,7 +20,6 @@ in lib.mkMerge [
       uv
       lazygit
       jq
-      claude-code
       pkgs.playwright-driver.browsers
       tree
     ]) ++ (with pkgs.python312Packages; [ llm ]);
