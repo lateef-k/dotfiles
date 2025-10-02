@@ -62,6 +62,11 @@
     extraConfig = lib.strings.fileContents "${inputs.self}/config/inputrc";
   };
 
+  programs.starship = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
   xdg.configFile = {
     "starship.toml".source =
       config.lib.file.mkOutOfStoreSymlink "${inputs.self}/config/starship.toml";
