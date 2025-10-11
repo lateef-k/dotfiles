@@ -558,6 +558,7 @@ local plugins = {
 		},
 		---@module 'obsidian'
 		opts = {
+			legacy_commands = false,
 			workspaces = {
 				{
 					name = "personal",
@@ -607,12 +608,36 @@ local plugins = {
 			},
 		},
 		keys = {
-			{ "<leader>nn", string.format("<cmd>cd %s | Obsidian quick_switch<cr>", os.getenv("OBSIDIAN_HOME")) },
-			{ "<leader>nw", string.format("<cmd>cd %s | Obsidian new<cr>", os.getenv("OBSIDIAN_HOME")) },
-			{ "<leader>ne", string.format("<cmd>cd %s | Neotree toggle<cr>", os.getenv("OBSIDIAN_HOME")) },
-			{ "<leader>ns", string.format("<cmd>cd %s | Obsidian search<cr>", os.getenv("OBSIDIAN_HOME")) },
-			{ "<leader>nt", string.format("<cmd>cd %s | Obsidian tags<cr>", os.getenv("OBSIDIAN_HOME")) },
-			{ "<leader>nd", string.format("<cmd>cd %s | Obsidian dailies<cr>", os.getenv("OBSIDIAN_HOME")) },
+			{
+				"<leader>nn",
+				string.format("<cmd>cd %s | Obsidian quick_switch<cr>", os.getenv("OBSIDIAN_HOME")),
+				desc = "Obsidian Quick Switch",
+			},
+			{
+				"<leader>nw",
+				string.format("<cmd>cd %s | Obsidian new<cr>", os.getenv("OBSIDIAN_HOME")),
+				desc = "Obsidian New Note",
+			},
+			{
+				"<leader>ne",
+				string.format("<cmd>cd %s | Neotree toggle<cr>", os.getenv("OBSIDIAN_HOME")),
+				desc = "Obsidian Neotree",
+			},
+			{
+				"<leader>ns",
+				string.format("<cmd>cd %s | Obsidian search<cr>", os.getenv("OBSIDIAN_HOME")),
+				desc = "Obsidian Search",
+			},
+			{
+				"<leader>nt",
+				string.format("<cmd>cd %s | Obsidian tags<cr>", os.getenv("OBSIDIAN_HOME")),
+				desc = "Obsidian Tags",
+			},
+			{
+				"<leader>nd",
+				string.format("<cmd>cd %s | Obsidian dailies<cr>", os.getenv("OBSIDIAN_HOME")),
+				desc = "Obsidian Dailies",
+			},
 		},
 	},
 	{

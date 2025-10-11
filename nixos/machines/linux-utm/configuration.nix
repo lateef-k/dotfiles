@@ -4,9 +4,13 @@
 
   imports = [
     ./hardware-configuration.nix
-    ../../common-linux.nix
-    ../../modules/docker.nix
+    ../../modules/base.nix
+    ../../modules/extra.nix
+    ../../modules/secret.nix
   ];
+
+  sops.age.sshKeyPaths = [ "/home/ludvi/.ssh/sops-nix" ];
+  sys-extra.docker.enable = true;
 
   networking = {
     defaultGateway = "192.168.64.1";

@@ -1,7 +1,6 @@
 { inputs, lib, config, pkgs, ... }: {
 
-  imports = [ ../../common-darwin.nix ];
-
+  imports = [ ../../modules/base.nix ../../modules/secret.nix ];
   networking.hostName = "deux-mac";
 
   system.stateVersion = 5;

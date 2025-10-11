@@ -45,5 +45,8 @@ alias dci="docker image list"
 alias ,d="cd ~/Admin/dotfiles/ && nvim --cmd 'autocmd User VeryLazy FzfLua files'"
 # Abbreviations
 abbr -a nix-shell 'nix-shell --command fish'
-abbr -a cd 'z'
+
+if test (command -v z)
+	abbr -a cd 'z'
+end
 # -------------------------------------------------------

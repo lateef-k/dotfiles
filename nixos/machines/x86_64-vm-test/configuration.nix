@@ -4,7 +4,7 @@
   # just vm vm-test
   # Run `sway` when you start
 
-  imports = [ ../../common-linux.nix ];
+  imports = [ ../../common.nix ];
 
   networking = {
     networkmanager.enable = true;

@@ -1,10 +1,10 @@
-{ inputs, lib, config, pkgs, ... }: {
+{ inputs, lib, config, pkgs, ... }:
 
-  imports = [
-    ./hardware-configuration.nix
-    ../../common-linux.nix
-    ../../modules/docker.nix
-  ];
+let modules = import ../../default.nix;
+in {
+
+  imports =
+    [ ./hardware-configuration.nix ../../common.nix modules.extra.docker ];
 
   environment.systemPackages = with pkgs; [ virt-manager ];
 

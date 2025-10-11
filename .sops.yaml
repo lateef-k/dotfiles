@@ -1,0 +1,10 @@
+keys:
+  - &personal age1c7pkl2a5khwr63mkvgvpf3gpvl3ypnp6z5ean8335a8fqc06tdvqeenkpl
+  - &uno_mac age1zac8r9hyg8pzhd6fc5pfa2wyyeaujsd6l2gr0ura93g4ns2v6qxss7qtqs
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini|sops)$
+    key_groups:
+      - age:
+          - *personal
+          - *uno_mac
+
