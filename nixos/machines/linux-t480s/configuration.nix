@@ -1,12 +1,15 @@
-{ inputs, lib, config, pkgs, ... }:
+{ inputs, lib, config, pkgs, ... }: {
 
-let modules = import ../../default.nix;
-in {
-
-  imports =
-    [ ./hardware-configuration.nix ../../common.nix modules.extra.docker ];
+  imports = [
+    ./hardware-configuration.nix
+    ../../modules/base.nix
+    ../../modules/extra.nix
+    ../../modules/secret.nix
+  ];
 
   environment.systemPackages = with pkgs; [ virt-manager ];
+
+  sys-extra.docker.enable = true;
 
   services.fwupd.enable = true;
 
