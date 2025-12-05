@@ -107,7 +107,7 @@ autocmd("FileType", {
 })
 autocmd("FileType", {
 	pattern = { "typescript", "javascript", "typescriptreact", "javascriptreact" },
-	command = "setlocal tabstop=4 shiftwidth=4 softtabstop=4",
+	command = "setlocal tabstop=2 shiftwidth=2 softtabstop=2",
 })
 autocmd("TextYankPost", {
 	pattern = "*",
@@ -167,3 +167,4 @@ vim.lsp.enable("nixd")
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("bashls")
 vim.lsp.enable("ts_ls")
+vim.lsp.enable("gopls")

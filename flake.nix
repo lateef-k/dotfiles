@@ -23,7 +23,15 @@
 
   };
 
-  nixConfig = { download-buffer-size = 100000000; }; # 100mb
+  nixConfig = {
+    download-buffer-size = 100000000;
+    substituters = [ "https://cache.nixos.org?priority=30" ];
+    trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    ];
+
+  }; # 100mb
 
   outputs = { self, home-manager, ... }@inputs:
     let
@@ -74,6 +82,7 @@
         bundle.extra.neovim.enable = true;
         bundle.extra.dev.enable = true;
         bundle.shell.enable = true;
+        bundle.extra.browserAutomation.enable = true;
       };
       #
       homeConfigurations."headless-notes" = mkHome {

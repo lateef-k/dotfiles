@@ -47,16 +47,29 @@ in {
         nixd
         stylua
         nodejs_22
+        bun
+        deno
         flutter
         python312
         black
         isort
         pyright
         ruff
+        gopls
+        go
+        php
         nodePackages.typescript-language-server
         nodePackages.bash-language-server
         lua-language-server
         prettierd
+        binutils
+        wget
+        (pkgs.writeShellScriptBin "claude" ''
+          npx @anthropic-ai/claude-code@2.0.59 "$@"
+        '')
+        (pkgs.writeShellScriptBin "opencode" ''
+          npx opencode-ai@1.0.133 "$@"
+        '')
       ];
     })
 

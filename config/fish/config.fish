@@ -36,8 +36,8 @@ set -x EDITOR vim
 alias nvimdiff="nvim -d"
 alias ,g="lazygit"
 
-alias c="llm --model gpt-4.1-mini --system 'Answer directly. Do not elaborate unless instructed. If you are asked to provide code or a command, provide only that and nothing more'"
-alias cl="llm --model gpt-4.1-mini --system 'Answer directly. Do not elaborate unless instructed. If you are asked to provide code or a command, provide only that and nothing more' --continue"
+alias c="llm --model gpt-5-mini -o reasoning_effort minimal --system 'Answer directly. Do not elaborate unless instructed. If you are asked to provide code or a command, provide only that and nothing more'"
+alias cl="llm --model gpt-5-mini -o reasoning_effort low --system 'Answer directly. Do not elaborate unless instructed. If you are asked to provide code or a command, provide only that and nothing more' --continue"
 alias ,hmi="nix-store --query --references ~/.nix-profile/ | head -n 1 | xargs nix-store --query --references"
 alias ,ni="nix-store --query --references /run/current-system/sw | xargs nix-store --query --references"
 alias dci="docker image list"

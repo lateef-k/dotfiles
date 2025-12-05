@@ -9,7 +9,7 @@ FLAKE := .
 SUBCOMMAND ?= switch
 
 ifeq ($(SYSTEM),Darwin)
-	CMD = darwin-rebuild
+	CMD = sudo darwin-rebuild
 else ifeq ($(SYSTEM),Linux)
 	CMD = sudo nixos-rebuild
 else

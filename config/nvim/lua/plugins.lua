@@ -268,6 +268,11 @@ local plugins = {
 		event = "InsertEnter",
 	},
 	{
+		"lukas-reineke/indent-blankline.nvim",
+		main = "ibl",
+		config = true,
+	},
+	{
 		"echasnovski/mini.nvim",
 		config = function()
 			require("mini.ai").setup({ search_method = "cover_or_nearest" })
@@ -421,25 +426,25 @@ local plugins = {
 		end,
 	},
 	{ "nvim-treesitter/nvim-treesitter-context", config = true },
-	-- {
-	-- 	"sainnhe/gruvbox-material",
-	-- 	lazy = false,
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		vim.g.gruvbox_material_enable_italic = true
-	-- 		vim.cmd.colorscheme("gruvbox-material")
-	-- 	end,
-	-- },
 	{
-		"shaunsingh/nord.nvim",
-		version = false,
+		"sainnhe/gruvbox-material",
 		lazy = false,
-		priority = 1000, -- make sure to load this before all the other start plugins
-		-- Optional; default configuration will be used if setup isn't called.
+		priority = 1000,
 		config = function()
-			vim.cmd([[colorscheme nord]])
+			vim.g.gruvbox_material_enable_italic = true
+			vim.cmd.colorscheme("gruvbox-material")
 		end,
 	},
+	-- {
+	-- 	"shaunsingh/nord.nvim",
+	-- 	version = false,
+	-- 	lazy = false,
+	-- 	priority = 1000, -- make sure to load this before all the other start plugins
+	-- 	-- Optional; default configuration will be used if setup isn't called.
+	-- 	config = function()
+	-- 		vim.cmd([[colorscheme nord]])
+	-- 	end,
+	-- },
 	{
 		"olimorris/codecompanion.nvim",
 		keys = {

@@ -12,6 +12,13 @@
   sops.age.sshKeyPaths = [ "/home/ludvi/.ssh/sops-nix" ];
   sys-extra.docker.enable = true;
 
+  services.openvpn.servers = {
+    htb = {
+      config = "config /home/ludvi/Admin/dotfiles/htb.ovpn ";
+      updateResolvConf = true;
+    };
+  };
+
   networking = {
     defaultGateway = "192.168.64.1";
     hostName = "nix-utm";
