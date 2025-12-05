@@ -64,6 +64,10 @@ list-generations:
 rollback:
 	sudo nix-env --switch-generation $(GENERATION_NUM) --profile /nix/var/nix/profiles/system
 
+gc:
+	sudo nix-collect-garbage -d
+	sudo nix store gc
+
 
 # ============================================================
 # [ VM BUILDS ]

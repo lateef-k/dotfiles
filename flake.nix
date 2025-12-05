@@ -76,6 +76,7 @@
         bundle.extra.obsidian.enable = true;
         bundle.extra.gui.enable = true;
         bundle.shell.enable = true;
+        bundle.pentest.enable = true;
       };
       #
       homeConfigurations."headless" = mkHome {

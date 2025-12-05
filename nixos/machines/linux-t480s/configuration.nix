@@ -12,10 +12,15 @@
   sys-extra.docker.enable = true;
 
   services.fwupd.enable = true;
+  sops.age.sshKeyPaths = [ "/home/ludvi/.ssh/sops-nix" ];
 
   # networking.wireguard.enable = false;
   # networking.wg-quick.interfaces.wg3.configFile =
   #   "/etc/wireguard/MullvadConfig/fi-hel-wg-001.conf";
+
+  services.openvpn.servers = {
+    htb = { config = "config /home/ludvi/Desktop/labs_aakp640.ovpn "; };
+  };
 
   networking = { hostName = "nix-t480s"; };
 
