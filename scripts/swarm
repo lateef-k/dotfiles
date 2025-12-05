@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ---- Args: AGENT + 1..N MODELS ----
+if [ "$#" -lt 2 ]; then
+  echo "Usage: $0 AGENT MODEL1 [MODEL2 ...]" >&2
+  exit 1
+fi
+
+AGENT="$1"
+shift
+MODELS=("$@")
+
+# ---- Preconditions ----
+if [ -z "${TMUX:-}" ]; then
+  echo "ERROR: Must be run inside tmux." >&2
+  exit 1
+fi
+
+if [ ! -f "README.md" ]; then
+  echo "ERROR: README.md missing in current directory." >&2
+  exit 1
+fi
+
+# ---- Absolute paths ----
+BASE_DIR="$(pwd -P)"
+BASE_NAME="$(basename "$BASE_DIR")"
+PARENT_DIR="$(dirname "$BASE_DIR")"
+
+# ---- Build output directories ----
+DIRS=()
+
+for MODEL in "${MODELS[@]}"; do
+  # Strip provider prefix: openrouter/anthropic/claude-sonnet-4.5 → claude-sonnet-4.5
+  MODEL_NAME="${MODEL##*/}"
+
+  TARGET_DIR="${PARENT_DIR}/${BASE_NAME}-${MODEL_NAME}"
+  DIRS+=( "$TARGET_DIR" )
+done
+
+# ---- Create all dirs first ----
+echo "Creating directories:"
+for dir in "${DIRS[@]}"; do
+  echo "  $dir"
+  mkdir -p "$dir"
+done
+
+# ---- Copy project into each directory ----
+echo "Copying project contents..."
+for dir in "${DIRS[@]}"; do
+  cp -a "${BASE_DIR}/." "$dir"
+done
+
+# ---- Launch tmux panes ----
+WIN_NAME="opencode-${BASE_NAME}"
+
+for i in "${!MODELS[@]}"; do
+  MODEL="${MODELS[$i]}"
+  DIR="${DIRS[$i]}"
+
+  CMD="opencode --agent $AGENT --model $MODEL --prompt \"\$(cat README.md)\""
+
+  if [ "$i" -eq 0 ]; then
+    tmux new-window -n "$WIN_NAME" -c "$DIR" bash -lc "$CMD"
+  elif [ "$i" -eq 1 ]; then
+    tmux split-window -h -c "$DIR" bash -lc "$CMD"
+  else
+    tmux split-window -v -c "$DIR" bash -lc "$CMD"
+  fi
+done
+
+tmux select-layout even-vertical
+
+echo "Spawned ${#MODELS[@]} opencode agents:"
+for i in "${!MODELS[@]}"; do
+  echo "  ${MODELS[$i]} → ${DIRS[$i]}"
+done
+
